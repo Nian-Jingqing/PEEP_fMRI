@@ -12,11 +12,11 @@ P.project.name                  = 'PEEP';
 P.project.part                  = 'Pilot-01';
 P.pharmacological.day2          = 'NaCl'; % Set wheteher receive Naloxone or NACL on day 2/day3
 P.pharmacological.day3          = 'Naloxone';
-P.devices.arduino               = 1; % if '' or [], will not try to use Arduino
-P.devices.thermoino             = []; % if '' or [], will not try to use Arduino
+P.devices.arduino               = []; % if '' or [], will not try to use Arduino
+P.devices.thermoino             = 1; % if '' or [], will not try to use Arduino
 P.devices.SCR                   = 0; % SCR is used set to 1
-P.devices.bike                  = 1; % indicate whether bike is used
-P.devices.belt                  = 1; % HR belt
+P.devices.bike                  = []; % indicate whether bike is used
+P.devices.belt                  = []; % HR belt
 P.devices.trigger               = 0; % 1 single parallel port, arduino; rest undefined
 P.toggles.doPainOnly            = 1; % VAS rating painful from 0 (not 50)
 P.toggles.doConfirmAdaptive     = 1; % do adaptive VAS target regression with confirmation
@@ -113,7 +113,7 @@ if P.devices.arduino
         disp('other');
     elseif strcmp(P.env.hostname,'LAPTOP-41MRBS8P')
         P.com.arduino = 'COM5'; % CPAR: depends on PC - work laptop COM3 - experiment laptop COM5
-        P.path.cpar = fullfile(cd,'..','CPAR');
+        P.path.cpar = fullfile('C:\Users\nold\PEEP\fMRI\Code\CPAR\LabBench.CPAR-master\cpar');
         disp('experimentlaptop');
 
     elseif strcmp(P.env.hostname,'isna0291933759f')
@@ -130,8 +130,9 @@ if P.devices.thermoino
         P.path.thermoino = '';
         disp('stimpc1');
     elseif strcmp(P.env.hostname,'LAPTOP-41MRBS8P')
-        P.com.thermoino = 'COM3'; % CPAR: depends on PC - work laptop COM3 - experiment laptop COM5
-        P.path.thermoino = fullfile(cd,'..','CPAR');
+        P.com.thermoino = 'COM6'; % CPAR: depends on PC - work laptop COM3 - experiment laptop COM5
+        P.path.thermoino = fullfile('C:\Users\nold\PEEP\fMRI\Code\peep_functions_fMRI\thermoino');
+        P.com.thermoinoBaud= 115200;
         disp('experimentlaptop');
     elseif strcmp(P.env.hostname,'isna0291933759f')
         P.com.thermoino = 'COM6'; % CPAR: depends on PC - work laptop COM6 - experiment laptop COM5

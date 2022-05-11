@@ -64,7 +64,7 @@ if P.devices.thermoino
 
     % instantiate serial object for thermoino control
     UseThermoino('Kill');
-    UseThermoino('Init',P.com.thermoino,P.com.thermoinoBaud,P.pain.bT,P.pain.rS); % returns handle of serial object
+    UseThermoino('Init',P.com.thermoino,P.com.thermoinoBaud,P.pain.thermoino.bT,P.pain.thermoino.rS); % returns handle of serial object
 end
 
 % intensityResponse = input('Please enter calibrated intensitiy on the bike as [low high].\n');

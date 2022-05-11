@@ -30,12 +30,12 @@ keyEscStr = upper(char(P.keys.keyList(P.keys.name.esc)));
 
 fprintf(['Indicate which step you want to start at: ' ...
     '\n%s) General Welcome ' ...
-    '\n%s) Pressure Calib: Pre-exposure & Awiszus & VAS training ' ...
-    '\n%s) Pressure Calib: Calibration/Psychometric Scaling ' ...
-    '\n%s) Pressure Calib: Calibration/VAS Target Regression ' ...
     '\n%s) Heat Calib: Pre-exposure & Awiszus & VAS training ' ...
     '\n%s) Heat Calib: Calibration/Psychometric Scaling' ...
     '\n%s) Heat Calib: Calibration/VAS Target Regression' ...
+    '\n%s) Pressure Calib: Pre-exposure & Awiszus & VAS training ' ...
+    '\n%s) Pressure Calib: Calibration/Psychometric Scaling ' ...
+    '\n%s) Pressure Calib: Calibration/VAS Target Regression ' ...
     '\n%s) Bike FTP Calibration (Day1)'...
     '\n%s) Day 2: Warm Up ' ...
     '\n%s) Day 2: 4 x 10 Min Cycling ' ...
@@ -51,28 +51,28 @@ while 1
             fprintf('Start at General Welcome (Day 1)\n');
             break;
         elseif find(keyCode) == P.keys.n1
-            P.startSection=1;
-            fprintf('Start at Pressure Calib: Pre-exposure & Awiszus & VAS Training (Day 1)\n');
-            break;
-        elseif find(keyCode) == P.keys.n2
-            P.startSection=2;
-            fprintf('Start at Pressure Calib: Calibration/Psychometric Scaling (Day 1)\n');
-            break;
-        elseif find(keyCode) == P.keys.n3
-            P.startSection=3;
-            fprintf('Start at Pressure Calibration/VAS Target Regression (Day 1) \n');
-            break;
-        elseif find(keyCode) == P.keys.n4
             P.startSection=4;
             fprintf('Start at Heat Calib: Pre-exposure & Awiszus & VAS Training (Day 1)\n');
             break;
-        elseif find(keyCode) == P.keys.n5
+        elseif find(keyCode) == P.keys.n2
             P.startSection=5;
             fprintf('Start at Heat Calib: Calibration/Psychometric Scaling (Day 1)\n');
             break;
-        elseif find(keyCode) == P.keys.n6
+        elseif find(keyCode) == P.keys.n3
             P.startSection=6;
             fprintf('Start at Heat Calibration/VAS Target Regression (Day 1)\n');
+            break;
+        elseif find(keyCode) == P.keys.n4
+            P.startSection=1;
+            fprintf('Start at Pressure Calib: Pre-exposure & Awiszus & VAS Training (Day 1)\n');
+            break;
+        elseif find(keyCode) == P.keys.n5
+            P.startSection=2;
+            fprintf('Start at Pressure Calib: Calibration/Psychometric Scaling (Day 1)\n');
+            break;
+        elseif find(keyCode) == P.keys.n6
+            P.startSection=3;
+            fprintf('Start at Pressure Calibration/VAS Target Regression (Day 1) \n');
             break;
         elseif find(keyCode) == P.keys.n7
             P.startSection=7;

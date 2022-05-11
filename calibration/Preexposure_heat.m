@@ -13,8 +13,8 @@ function [abort,preexPainful_heat]=Preexposure_heat(P,O,varargin)
         fprintf('[Initial trial, showing P.style.white cross for %1.1f seconds, red cross for %1.1f seconds]\n',P.presentation.sPreexpITI,P.presentation.sPreexpCue);
 
         if ~O.debug.toggleVisual
-            Screen('FillRect', P.display.w, P.style.white, P.style.whiteFix1); 
-            Screen('FillRect', P.display.w, P.style.white, P.style.whiteFix2); 
+            Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix1);
+            Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix2);
             tCrossOn = Screen('Flip',P.display.w);                      % gets timing of event for PutLog                        
         else
             tCrossOn = GetSecs;
@@ -25,8 +25,8 @@ function [abort,preexPainful_heat]=Preexposure_heat(P,O,varargin)
         end
 
         if ~O.debug.toggleVisual
-            Screen('FillRect', P.display.w, P.style.red, P.style.whiteFix1); 
-            Screen('FillRect', P.display.w, P.style.red, P.style.whiteFix2); 
+            Screen('FillRect', P.display.w, P.style.red, P.fixcross.Fix1);
+            Screen('FillRect', P.display.w, P.style.red, P.fixcross.Fix2);
             tCueOn = Screen('Flip',P.display.w);                      % gets timing of event for PutLog
         else
             tCueOn = GetSecs;
@@ -41,8 +41,8 @@ function [abort,preexPainful_heat]=Preexposure_heat(P,O,varargin)
         for i = 1:length(preExpInts)
             if i>1 % preexposure ITIs
                 if ~O.debug.toggleVisual
-                    Screen('FillRect', P.display.w, P.style.white, P.style.whiteFix1); 
-                    Screen('FillRect', P.display.w, P.style.white, P.style.whiteFix2); 
+                    Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix1);
+                    Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix2);
                     tCrossOn = Screen('Flip',P.display.w);                      % gets timing of event for PutLog
                 else
                     tCrossOn = GetSecs;
@@ -55,8 +55,8 @@ function [abort,preexPainful_heat]=Preexposure_heat(P,O,varargin)
                 end            
 
                 if ~O.debug.toggleVisual
-                    Screen('FillRect', P.display.w, P.style.red, P.style.whiteFix1); 
-                    Screen('FillRect', P.display.w, P.style.red, P.style.whiteFix2); 
+                    Screen('FillRect', P.display.w, P.style.red, P.fixcross.Fix1);
+                    Screen('FillRect', P.display.w, P.style.red, P.fixcross.Fix2);
                     tCueOn = Screen('Flip',P.display.w);                      % gets timing of event for PutLog
                 else
                     tCueOn = GetSecs;
@@ -86,7 +86,7 @@ function [abort,preexPainful_heat]=Preexposure_heat(P,O,varargin)
                     if abort; break; end % only break because we want the temperature to return to BL before we quit
                 end
                 
-                UseThermoino('Set',P.pain.bT); % open channel for arduino to ramp down        
+                UseThermoino('Set',P.pain.thermoino.bT); % open channel for arduino to ramp down        
                 
                 if ~abort
                     while GetSecs < tStimStart+sum(stimDuration)
@@ -119,6 +119,6 @@ function [abort,preexPainful_heat]=Preexposure_heat(P,O,varargin)
         end
         send_trigger(P,O,sprintf('vas_on'));
         
-        preexPainful_heat = QueryPreexPain(P,O,preExpInts);
+        preexPainful_heat = QueryPreexPain_heat(P,O,preExpInts);
         
     end

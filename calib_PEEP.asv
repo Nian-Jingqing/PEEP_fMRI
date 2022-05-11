@@ -151,7 +151,7 @@ end
 
 if P.startSection < 2
 
- %   [abort]=ShowInstruction(P,1);
+    [abort]=ShowInstruction(P,1);
     if abort;QuickCleanup(P);return;end
 
     [abort,preexPainful_heat]=Preexposure_heat(P,O); % sends four triggers, waits ITI seconds after each
@@ -160,7 +160,7 @@ if P.startSection < 2
 
     %% VAS Training
     load(P.out.file.paramCalib,'P','O');
-    %ShowIntroduction(P,2);
+    ShowIntroduction(P,2);
 
     %for i = 2:P.pain.VAStraining.nRatings
     %    [P,abort] = VASTraining(P,O,i,dev);
@@ -173,7 +173,8 @@ end
 
 
     %% Awiszus Method
-     
+
+%     if P.startSection<5        
         if preexPainful_heat==0
              P.awiszus.thermoino.mu = 44.0;
          else
@@ -186,7 +187,7 @@ end
          P = DoAwiszus_heat(P,O);
      %else
      %    P = GetAwiszus(P);
-
+     %end
  
 %% Step 2: Calibration 
 
@@ -215,7 +216,7 @@ if P.startSection < 3
 
     %%%%%%%%%%%%%%%%%%%%%%%
     % LEAD OUT
-    %ShowInstruction(P,O,4);
+    ShowInstruction(P,O,4);
 
     sca;
     ListenChar(0);

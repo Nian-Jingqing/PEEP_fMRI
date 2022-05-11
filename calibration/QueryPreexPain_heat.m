@@ -26,7 +26,7 @@
                 if strcmp(P.language,'de')
                     [P.display.screenRes.width, upperEight]=DrawFormattedText(P.display.w, 'War einer dieser Reize (mindestens) LEICHT SCHMERZHAFT für Sie?', 'center', upperEight, P.style.white);            
                     [P.display.screenRes.width, upperEight]=DrawFormattedText(P.display.w, ['Falls ja, drücken Sie bitte ' keyPainful '.'], 'center', upperEight+P.lineheight, P.style.white);            
-                    [P.display.screenRes.width, upperEight]=DrawFormattedText(P.display.w, ['Falls nein, drücken Sie bitte ' keyNotPainful '.'], 'center', upperEight+P.lineheight, P.style.white);            
+                    [P.display.screenRes.width, upperEight]=DrawFormattedText(P.display.w, ['Falls nein, drücken Sie bitte ' keyNotPainful '.'], 'center', upperEight+P.lineheight + 5, P.style.white);            
                 elseif strcmp(P.language,'en')
                     [P.display.screenRes.width, upperEight]=DrawFormattedText(P.display.w, 'Was one of these stimuli (at least) SLIGHTLY PAINFUL for you?', 'center', upperEight, P.style.white);            
                     [P.display.screenRes.width, upperEight]=DrawFormattedText(P.display.w, ['If yes, please press ' keyPainful '.'], 'center', upperEight+P.lineheight, P.style.white);            
@@ -39,7 +39,7 @@
                 if strcmp(P.language,'de')
                     [P.display.screenRes.width, upperEight]=DrawFormattedText(P.display.w, 'War dieser Reiz (mindestens) LEICHT SCHMERZHAFT für Sie?', 'center', upperEight, P.style.white);
                     [P.display.screenRes.width, upperEight]=DrawFormattedText(P.display.w, ['Falls ja, drücken Sie bitte ' keyPainful '.'], 'center', upperEight+P.lineheight, P.style.white);            
-                    [P.display.screenRes.width, upperEight]=DrawFormattedText(P.display.w, ['Falls nein, drücken Sie bitte ' keyNotPainful '.'], 'center', upperEight+P.lineheight, P.style.white);            
+                    [P.display.screenRes.width, upperEight]=DrawFormattedText(P.display.w, ['Falls nein, drücken Sie bitte ' keyNotPainful '.'], 'center', upperEight+P.lineheight+5, P.style.white);            
                 elseif strcmp(P.language,'en')
                     [P.display.screenRes.width, upperEight]=DrawFormattedText(P.display.w, 'Was this stimulus (at least) SLIGHTLY PAINFUL for you?', 'center', upperEight, P.style.white);
                     [P.display.screenRes.width, upperEight]=DrawFormattedText(P.display.w, ['If yes, please press ' keyPainful '.'], 'center', upperEight+P.lineheight, P.style.white);            

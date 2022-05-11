@@ -18,3 +18,4 @@ O.pain.step2Range       = [];
 % O.devices.trigger  = 0;
 O.devices.eyetracker    = 0; % if no override is desired, comment out or rmfield in project-specific scripts (isfield query); ANY entry in this variable will suppress eyetracker initialization
 O.exercise.duration = 10;
+O.send_trigger = 1;
