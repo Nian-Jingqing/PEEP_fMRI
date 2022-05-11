@@ -159,6 +159,7 @@ for block = 1:P.pain.PEEP.nBlocks
 
             % Loop through the number of pain trials per block
             clear trial
+            
             for trial = 1:P.pain.PEEP.trialsPerBlock
 
                 
