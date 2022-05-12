@@ -11,8 +11,9 @@ P.keys.name.right               = KbName('RightArrow');
 P.keys.name.left                = KbName('LeftArrow');
 P.keys.name.esc                 = KbName('Escape');
 
+P.keys.notPainful                  = KbName('LeftArrow');
 P.keys.painful                  = KbName('RightArrow');
-P.keys.notPainful               = KbName('LeftArrow');
+
 
 % Use in the scanner
 %P.keys.confirm                  = KbName('2@'); % yellow button (down)

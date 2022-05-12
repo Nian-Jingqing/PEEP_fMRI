@@ -273,7 +273,7 @@ P.presentation.sStimPlateauPreexp; % as per InstantiateParameters; modify if des
 P.presentation.sStimPlateau; % as per InstantiateParameters; modify if desired
 
 %% for Thresholding (Section 2)
-P.presentation.sMinMaxThreshITIs = [4 8]; % seconds between stimuli; will be randomized between two values - to use constant ITI, use two identical values
+P.presentation.sMinMaxThreshITIs = [6 10]; % seconds between stimuli; will be randomized between two values - to use constant ITI, use two identical values
 P.presentation.sMinMaxThreshCues = [0.5 2]; % jittered time prior to the stimulus that the white cross turns red; can be [0 0] (to turn off red cross altogether), but else MUST NOT BE LOWER THAN 0.5
 
 %% for Sections >2
@@ -284,7 +284,8 @@ P.presentation.sMinMaxPlateauCues = [0.5 2]; % should correspond to overrides th
 P.presentation.NValidationSessions = 0;
 P.presentation.n_max_varTrial      = 6;
         
-%[P.presentation.thresholdITIs,P.presentation.thresholdCues]=DetermineITIsAndCues(P.awiszus.N,P.presentation.sMinMaxThreshITIs,P.presentation.sMinMaxThreshCues);
+addpath(genpath(P.path.scriptBase))
+[P.presentation.thresholdITIs,P.presentation.thresholdCues]=DetermineITIsAndCues(P.awiszus.thermoino.N,P.presentation.sMinMaxThreshITIs,P.presentation.sMinMaxThreshCues);
 P.presentation.firstThresholdITI = 5;
 P.presentation.firstThresholdCue = max(P.presentation.sMinMaxThreshCues);
 

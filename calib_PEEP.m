@@ -221,13 +221,13 @@ if P.startSection < 3
     ListenChar(0);
 
     if nargout>1
-        varargout{1} = P.painCalibData;
+        varargout{1} = P.pain.calibration.heat;
     end
 
 end
-    %%%%%%%%%%%%%%%%%%%%%%%
-    % END
-    %%%%%%%%%%%%%%%%%%%%%%%
+%     %%%%%%%%%%%%%%%%%%%%%%%
+%     % END
+%     %%%%%%%%%%%%%%%%%%%%%%%
 
 
 % =======================================================================
