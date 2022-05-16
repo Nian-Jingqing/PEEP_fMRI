@@ -1,4 +1,4 @@
-function [abort,P,expVAS]=ApplyStimulusPain(P,O,trialPressure,cuff,block,trial,expVAS)
+function [abort,P,expVAS]=ApplyStimulusPain(P,O,trialPressure,cuff,block,trial,expVAS,mod)
 
 % Define output file path CPAr Data
 cparFile = fullfile(P.out.dirExp,[P.out.file.CPAR '_experiment.mat']);
@@ -65,7 +65,7 @@ while ~abort
 
         % VAS Rating and Output
         if ~O.debug.toggleVisual
-            [abort,P,expVAS] = expStimVASRating(P,O,block,cuff,trial,trialPressure,expVAS);
+            [abort,P,expVAS] = expStimVASRating(P,O,block,cuff,trial,trialPressure,expVAS,mod);
         end
 
         

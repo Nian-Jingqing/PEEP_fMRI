@@ -17,9 +17,16 @@ addpath('C:\Users\nold\PEEP\fMRI\Code\peep_functions_fMRI')
 
 %% ------------------ Experiment Preparations -------------------------
 
+% Activate needed modalities 
+P.devices.arduino               = []; % if '' or [], will not try to use Arduino
+P.devices.thermoino             = 1; % if '' or [], will not try to use Arduino
+P.devices.bike                  = []; % indicate whether bike is used
+P.devices.belt                  = []; % HR belt
+
 % Instantiate Parameters and Overrides
-P                       = InstantiateParameters;
+P                       = InstantiateParameters(P);
 O                       = InstantiateOverrides;
+
 
 % Add paths CPAR
 if P.devices.arduino
@@ -48,21 +55,21 @@ commandwindow;
 %% ----------------- Initialise Thermode ---------------------------------------
 
 if P.devices.thermoino
-   
+
     UseThermoino('Kill');
     UseThermoino('Init',P.com.thermoino,P.com.thermoinoBaud,P.pain.thermoino.bT,P.pain.thermoino.rS); % returns handle of serial object
 
-   % if initSuccessThermoino
-   %    P.thermoino.init = initSuccessThermoino;
-   % else
-   %     warning('\nThermoino initialization not successful, aborting!');
-   %     abort = 1;
-   % end
-   % if abort
-   %    return;
-   % end
+    % if initSuccessThermoino
+    %    P.thermoino.init = initSuccessThermoino;
+    % else
+    %     warning('\nThermoino initialization not successful, aborting!');
+    %     abort = 1;
+    % end
+    % if abort
+    %    return;
+    % end
 
-   
+
 end
 
 
@@ -142,157 +149,165 @@ P.time.scriptStart      = GetSecs;
 
 %% Step 0: General Welcome
 
-if P.startSection < 1
-    ShowIntroduction(P,0);
-end
+% if P.startSection < 1
+%     ShowIntroduction(P,0);
+% end
+% 
+% 
+% %% Step 1: Pre Exposure and Awiszus Method + VAS Training
+% 
+ if P.devices.thermoino
+% 
+%     %if P.startSection < 2
+% 
+%         %   [abort]=ShowInstruction(P,1);
+%         if abort;QuickCleanup(P);return;end
+% 
+%         [abort,preexPainful_heat]=Preexposure_heat(P,O); % sends four triggers, waits ITI seconds after each
+% 
+%         if abort;QuickCleanup(P);return;end
+% 
+%    %else
+%    %     preexPainful_heat = 1; % then we start with the conservative assumption that the top preexposure temp was experienced as painful
+%     %end
+% 
+% 
+%     %% Awiszus Method
+% 
+%     if preexPainful_heat==0
+%         P.awiszus.thermoino.mu = 44.0;
+%     else
+%         P.awiszus.thermoino.mu = 43.0;
+%     end
+%     fprintf('\nReady FIRST THRESHOLD at %1.1f°C.\n',P.awiszus.mu);
+% 
+%     %         [abort]=ShowInstruction(P,O,2,1);
+%     if abort;QuickCleanup(P);return;end
+%     P = DoAwiszus_heat(P,O);
+% %else
+% %    P = GetAwiszus(P);
+% 
+% 
+%         %% VAS Training
+%         load(P.out.file.paramCalib,'P','O');
+%         
+%         
+%         %ShowIntroduction(P,2);
+% 
+%         %for i = 2:P.pain.VAStraining.nRatings
+%         %    [P,abort] = VASTraining(P,O,i,dev);
+%         %    i = i + 1;
+%         %end
 
+    %% Step 2: Calibration
 
-%% Step 1: Pre Exposure and Awiszus Method + VAS Training
+    if P.startSection < 3
 
-if P.startSection < 2
+        load(P.out.file.paramCalib,'P','O');
+        P=DetermineSteps(P);
+        [P.presentation.plateauITIs,P.presentation.plateauCues]=DetermineITIsAndCues(numel(P.plateaus.step2Order),P.presentation.sMinMaxPlateauITIs,P.presentation.sMinMaxPlateauCues); % DEPRECATED, use if balanced ITIs/Cues are desired; currently, everything is random within the range defined by P.presentation.sMinMaxPlateau*
+        P.presentation.firstPlateauITI = 5; % override, no reason for this to be so long
+        P.presentation.firstPlateauCue = max(P.presentation.sMinMaxPlateauCues);
 
- %   [abort]=ShowInstruction(P,1);
-    if abort;QuickCleanup(P);return;end
+        WaitSecs(0.2);
 
-    [abort,preexPainful_heat]=Preexposure_heat(P,O); % sends four triggers, waits ITI seconds after each
-    
-    if abort;QuickCleanup(P);return;end
+        if ~O.debug.toggleVisual
+            Screen('Flip',P.display.w);
+        end
 
-    %% VAS Training
-    load(P.out.file.paramCalib,'P','O');
-    %ShowIntroduction(P,2);
+        P.time.plateauStart=GetSecs;
 
-    %for i = 2:P.pain.VAStraining.nRatings
-    %    [P,abort] = VASTraining(P,O,i,dev);
-    %    i = i + 1;
-    %end
+        [abort,P]=TrialControl(P,O);
+        if abort;QuickCleanup(P);return;end
 
-else
-    preexPainful_heat = 1; % then we start with the conservative assumption that the top preexposure temp was experienced as painful
-end
+        %%%%%%%%%%%%%%%%%%%%%%%
+        % REPORTING
+        P.time.scriptEnd=GetSecs;
+        PrintDurations(P); % simple output function to see how long the calibration took
 
+        %%%%%%%%%%%%%%%%%%%%%%%
+        % LEAD OUT
+        %ShowInstruction(P,O,4);
 
-    %% Awiszus Method
-     
-        if preexPainful_heat==0
-             P.awiszus.thermoino.mu = 44.0;
-         else
-             P.awiszus.thermoino.mu = 43.0;
-         end            
-         fprintf('\nReady FIRST THRESHOLD at %1.1f°C.\n',P.awiszus.mu); 
- 
-%         [abort]=ShowInstruction(P,O,2,1);            
-         if abort;QuickCleanup(P);return;end
-         P = DoAwiszus_heat(P,O);
-     %else
-     %    P = GetAwiszus(P);
+        sca;
+        ListenChar(0);
 
- 
-%% Step 2: Calibration 
+        if nargout>1
+            varargout{1} = P.pain.calibration.heat;
+        end
 
-if P.startSection < 3
-
-    P=DetermineSteps(P);
-    [P.presentation.plateauITIs,P.presentation.plateauCues]=DetermineITIsAndCues(numel(P.plateaus.step2Order),P.presentation.sMinMaxPlateauITIs,P.presentation.sMinMaxPlateauCues); % DEPRECATED, use if balanced ITIs/Cues are desired; currently, everything is random within the range defined by P.presentation.sMinMaxPlateau*
-    P.presentation.firstPlateauITI = 5; % override, no reason for this to be so long
-    P.presentation.firstPlateauCue = max(P.presentation.sMinMaxPlateauCues);
-
-    WaitSecs(0.2);
-
-    if ~O.debug.toggleVisual
-        Screen('Flip',P.display.w);
     end
-
-    P.time.plateauStart=GetSecs;
-
-    [abort,P]=TrialControl(P,O);
-    if abort;QuickCleanup(P);return;end
-
-    %%%%%%%%%%%%%%%%%%%%%%%
-    % REPORTING
-    P.time.scriptEnd=GetSecs;
-    PrintDurations(P); % simple output function to see how long the calibration took
-
-    %%%%%%%%%%%%%%%%%%%%%%%
-    % LEAD OUT
-    %ShowInstruction(P,O,4);
-
-    sca;
-    ListenChar(0);
-
-    if nargout>1
-        varargout{1} = P.pain.calibration.heat;
-    end
+    %     %%%%%%%%%%%%%%%%%%%%%%%
+    %     % END
+    %     %%%%%%%%%%%%%%%%%%%%%%%
 
 end
-%     %%%%%%%%%%%%%%%%%%%%%%%
-%     % END
-%     %%%%%%%%%%%%%%%%%%%%%%%
-
 
 % =======================================================================
 %% Block 1b: Calibration Pressure Cuff
 % =======================================================================
 
+if P.devices.arduino
+    %% Step 3: Pre Exposure and Awiszus Method + VAS Training
 
-%% Step 3: Pre Exposure and Awiszus Method + VAS Training
+    if P.startSection < 4
+        ShowIntroduction(P,1);
+        [P,abort] = PreExposureAwiszus(P,O,dev);
 
-if P.startSection < 4
-    ShowIntroduction(P,1);
-    [P,abort] = PreExposureAwiszus(P,O,dev);
+        % VAS Training
+        load(P.out.file.paramCalib,'P','O');
+        ShowIntroduction(P,2);
 
-    % VAS Training
-    load(P.out.file.paramCalib,'P','O');
-    ShowIntroduction(P,2);
-
-    for i = 2:P.pain.VAStraining.nRatings
-        [P,abort] = VASTraining(P,O,i,dev);
-        i = i + 1;
+        for i = 2:P.pain.VAStraining.nRatings
+            [P,abort] = VASTraining(P,O,i,dev);
+            i = i + 1;
+        end
     end
+
+
+    %% Step 4: Calibration: Psychometric Scaling
+
+    if P.startSection < 5
+        load(P.out.file.paramCalib,'P','O');
+        ShowIntroduction(P,3);
+        [P,abort] = PsychometricScaling(P,O);
+
+    end
+
+    %% Step 5: Calibration: VAS Target Regresion
+
+    if  P.startSection < 6
+        load(P.out.file.paramCalib,'P','O');
+        [P,abort] = TargetRegressionVAS(P,O);
+
+    end
+
+
+
 end
-
-
-%% Step 4: Calibration: Psychometric Scaling
-
-if P.startSection < 5
-    load(P.out.file.paramCalib,'P','O');
-    ShowIntroduction(P,3);
-    [P,abort] = PsychometricScaling(P,O);
-
-end
-
-%% Step 5: Calibration: VAS Target Regresion
-
-if  P.startSection < 6
-    load(P.out.file.paramCalib,'P','O');
-    [P,abort] = TargetRegressionVAS(P,O);
-
-end
-
-
-
-
 
 % ======================================================================
 %%  Block 2: Bike Calibration FTP
 % ======================================================================
 
-if P.startSection == 6
-    load(P.out.file.paramCalib,'P','O');
-    [FTP,P] = calibBike_FTP(P,O,bike,belt);
+if P.devices.bike
+
+    if P.startSection == 6
+        load(P.out.file.paramCalib,'P','O');
+        [FTP,P] = calibBike_FTP(P,O,bike,belt);
+    end
+
+
+    if abort
+        QuickCleanup(P,dev);
+        return;
+    else
+        ListenChar(0);
+        fprintf('\nC A L I B R A T I O N    C O M P L E T E\n');
+        sca;
+    end
+
 end
-
-
-if abort
-    QuickCleanup(P,dev);
-    return;
-else
-    ListenChar(0);
-    fprintf('\nC A L I B R A T I O N    C O M P L E T E\n');
-    sca;
-
-end
-
 %%%%%%%
 % END %
 %%%%%%%

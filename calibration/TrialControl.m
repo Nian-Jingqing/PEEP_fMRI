@@ -8,7 +8,7 @@
             if P.toggles.doScaleTransl && P.toggles.doPainOnly
                 P.toggles.doPainOnly = 0; % this is the whole point here, to translate the y/n binary via the two-dimensional VAS to the unidimensional
 
-                [abort]=ShowInstruction(P,O,7,1);            
+%                [abort]=ShowInstruction(P,O,7,1);            
                 if abort;QuickCleanup(P);return;end  
 
                 step0Order = [P.pain.calibration.heat.AwThr P.pain.calibration.heat.AwThr+0.2 P.pain.calibration.heat.AwThr-0.2]; % provide some perithreshold intensities
@@ -16,7 +16,7 @@
                 fprintf('\n========SCALE TRANSLATION========\n');
                 for nStep0Trial = 1:numel(step0Order)
                     fprintf('\n=======TRIAL %d of %d=======\n',nStep0Trial,numel(step0Order));
-                    [abort]=ApplyStimulus(P,O,step0Order(nStep0Trial));
+                    [abort]=ApplyStimulus_heat(P,O,step0Order(nStep0Trial));
                     if abort; return; end
                     P=InstantiateCurrentTrial(P,O,-1,step0Order(nStep0Trial),-1);
                     P=PlateauRating(P,O);
@@ -26,7 +26,7 @@
 
                 P.toggles.doPainOnly = 1; % RESET
                 
-                [abort]=ShowInstruction(P,O,8,1);            
+%                [abort]=ShowInstruction(P,O,8,1);            
                 if abort;QuickCleanup(P);return;end                  
                 WaitSecs(0.5);
 
@@ -34,7 +34,7 @@
         end        
 
         if P.startSection<6
-            [abort]=ShowInstruction(P,O,3,1);            
+%            [abort]=ShowInstruction(P,O,3,1);            
             if abort;QuickCleanup(P);return;end  
         end
         
@@ -45,7 +45,7 @@
             fprintf('\n=========RATING TRAINING=========\n');
             for nStep0Trial = 1:numel(step0Order)
                 fprintf('\n=======TRIAL %d of %d=======\n',nStep0Trial,numel(step0Order));
-                [abort]=ApplyStimulus(P,O,step0Order(nStep0Trial));
+                [abort]=ApplyStimulus_heat(P,O,step0Order(nStep0Trial));
                 if abort; return; end
                 P=InstantiateCurrentTrial(P,O,0,step0Order(nStep0Trial));
                 P=PlateauRating(P,O);
@@ -65,10 +65,10 @@
                     abort=0;
                     [keyIsDown, ~, keyCode] = KbCheck();
                     if keyIsDown
-                        if find(keyCode) == P.keys.abort
+                        if find(keyCode) == P.keys.name.abort
                             abort=1;
                             return;
-                        elseif find(keyCode) == P.keys.resume
+                        elseif find(keyCode) == P.keys.name.confirm
                             break;
                         end
                     end         
@@ -85,7 +85,7 @@
                 fprintf('\n=PSYCHOMETRIC-PERCEPTUAL SCALING=\n');
                 for nStep1Trial = 1:numel(P.plateaus.step1Order)
                     fprintf('\n=======TRIAL %d of %d=======\n',nStep1Trial,numel(P.plateaus.step1Order));
-                    [abort]=ApplyStimulus(P,O,P.plateaus.step1Order(nStep1Trial));
+                    [abort]=ApplyStimulus_heat(P,O,P.plateaus.step1Order(nStep1Trial));
                     if abort; return; end
                     P=InstantiateCurrentTrial(P,O,1,P.plateaus.step1Order(nStep1Trial));
                     P=PlateauRating(P,O);
@@ -150,7 +150,7 @@
                 P = BetterGuess(P); % option to change FTRs if regression was off...
                 for nStep3Trial = 1:length(P.plateaus.step3Order)
                     fprintf('\n=======TRIAL %d of %d=======\n',nStep3Trial,length(P.plateaus.step3Order));
-                    [abort]=ApplyStimulus(P,O,P.plateaus.step3Order(nStep3Trial));
+                    [abort]=ApplyStimulus_heat(P,O,P.plateaus.step3Order(nStep3Trial));
                     if abort; return; end
                     P=InstantiateCurrentTrial(P,O,3,P.plateaus.step3Order(nStep3Trial),P.plateaus.step3TarVAS(nStep3Trial));
                     P=PlateauRating(P,O);
@@ -178,7 +178,7 @@
                     if ~isempty(nextStim)           
                         varTrial = varTrial+1;
                         fprintf('\n=======VARIABLE TRIAL %d=======\n',varTrial);
-                        [abort]=ApplyStimulus(P,O,nextStim);            
+                        [abort]=ApplyStimulus_heat(P,O,nextStim);            
                         if abort; return; end
                         % note: ITI could additionally subtract tValidation!
                         P=InstantiateCurrentTrial(P,O,4,nextStim,P.currentTrial.targetVAS);

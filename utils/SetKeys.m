@@ -21,11 +21,12 @@ P.keys.painful                  = KbName('RightArrow');
 %P.keys.name.right               = KbName('1!'); % blue button
 %P.keys.painful                 = KbName('3#'); % green button
 %P.keys.notPainful               = KbName('1!'); % blue button
+P.keys.pulse                    = KbName('5%');
 
 % Use with pointer
 %P.keys.name.right               = KbName('PageDown');
 %P.keys.name.left                = KbName('PageUp');
 P.keys.name.esc                 = KbName('delete');
 
-P.keys.name.trigger             = KbName('5');
+
 end

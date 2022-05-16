@@ -24,3 +24,6 @@ function textrIndex = GetImg(P)
 [textrIndex.TextureIndex25, textrIndex.imgsize25] = makeTxtrFromImg(fullfile([P.path.scriptBase,'\utils\img\VAStraining5.jpg']),'JPG',P);
 [textrIndex.TextureIndex26, textrIndex.imgsize26] = makeTxtrFromImg(fullfile([P.path.scriptBase,'\utils\img\VAStraining6.jpg']),'JPG',P);
 %[textrIndex.TextureIndex27, textrIndex.imgsize27] = makeTxtrFromImg('C:\Users\user\Desktop\PEEP\Behavioural\Code\peep_functions\utils\img\VAStraining7.jpg','JPG',P);
+
+% MR Wait
+[textrIndex.TextureIndex31, textrIndex.imgsize31] = makeTxtrFromImg(fullfile([P.path.scriptBase,'\utils\img\wait_MR.jpg']),'JPG',P);

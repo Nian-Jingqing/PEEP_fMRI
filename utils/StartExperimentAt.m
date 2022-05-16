@@ -10,6 +10,7 @@ P.keys.n3                 = KbName('3#'); % | Pressure Calib: Calibration/VAS Ta
 P.keys.n4                 = KbName('4$'); % | Heat Calib:  Preexposure & Awiszus & VAS Training (Day1)
 P.keys.n5                 = KbName('5%'); % | Heat Calib:  Calibration/Psychometric Scaling (Day1)
 P.keys.n6                 = KbName('6^'); % | Heat Calib: Calibration/VAS Target Regression (Day1)
+
 P.keys.n7                 = KbName('7&'); % | Bike FTP Calibration (Day1)
 
 P.keys.n8                 = KbName('8*'); % | Warm Up (Day 2)

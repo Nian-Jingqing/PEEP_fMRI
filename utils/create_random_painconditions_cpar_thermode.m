@@ -47,5 +47,5 @@ for n = 1:100
 end
 
 
-save('C:\Users\nold\PEEP\fMRI\Code\peep_functions_fMRI\utils\pain_conditions_cpar_thermode_Pilot-01','painconditions_all_subjects_cpar_thermode');
+save('C:\Users\nold\PEEP\fMRI\Code\peep_functions_fMRI\utils\pain_conditions_cpar_thermode_Pilot-01_day2','painconditions_all_subjects_cpar_thermode');
 

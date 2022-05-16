@@ -1,4 +1,4 @@
-function [abort,P,expVAS] = expStimVASRating(P,O,block,cuff,trial,trialPressure,expVAS)
+function [abort,P,expVAS] = expStimVASRating(P,O,block,cuff,trial,trialPressure,expVAS,mod)
 
 
 % Define output file path Rating and pressure data
@@ -29,13 +29,23 @@ while ~abort
             expVAS = VASData.expVAS;
         end
 
+        if mod == 1
+            mod = 'pressure';
+
+        elseif mod == 2
+            mod = 'heat';
+
+        end
+
         clear experimentData
-        experimentData.trialPressure = trialPressure;
+        experimentData.trialInt = trialPressure;
         experimentData.finalRating = finalRating;
         experimentData.reactionTime = reactionTime;
         experimentData.keyId = keyId;
         experimentData.keyTime = keyTime;
         experimentData.response = response;
+        experimentData.modality = mod;
+
 
 
         P.pain.PEEP.pressure(trial) = trialPressure;

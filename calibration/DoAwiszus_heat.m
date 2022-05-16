@@ -48,7 +48,7 @@ function [P] = DoAwiszus_heat(P,O)
         else
             %save([P.out.dir P.out.file], 'P');
             save(P.out.file.paramCalib,'P','O');
-            fprintf('\n\nThreshold determined around %1.1f°C, after %d trials.\nThreshold data and results saved under %s%s.mat.\n',P.pain.calibration.heat.AwThr,P.awiszus.thermoino.N,P.out.file.paramCalib);        
+            fprintf('\n\nThreshold determined around %1.1f°C, after %d trials.\nThreshold data and results saved under\n %s%s.mat.\n\n',P.pain.calibration.heat.AwThr,P.awiszus.thermoino.N,P.out.file.paramCalib);        
         end
 
         P.time.threshEnd=GetSecs;

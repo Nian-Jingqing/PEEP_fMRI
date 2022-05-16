@@ -466,10 +466,16 @@ elseif section == 4
 
     WaitSecs(0.4);
 
+elseif section == 5 % MR wait
+                
+    Screen('DrawTexture', P.display.w, P.textrIndex.TextureIndex31, [], [], 0);        
+    Screen('Flip', P.display.w);
+
+    WaitSecs(0.4);
 
 
 
-elseif section == 5 %Goodbye
+elseif section == 6 %Goodbye
 
     Screen('TextSize',P.display.w, 70);
     DrawFormattedText(P.display.w,strings.goodbye1,'center','center',P.style.white2);

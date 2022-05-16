@@ -8,6 +8,25 @@ function [abort,preexPainful_heat]=Preexposure_heat(P,O,varargin)
         
         abort=0;
         preexPainful_heat = NaN;
+
+        % Give experimenter chance to abort if neccesary
+        fprintf('\nContinue [%s], or abort [%s].\n',upper(char(P.keys.keyList(P.keys.name.confirm))),upper(char(P.keys.keyList(P.keys.name.esc))));
+
+        while 1
+            [keyIsDown, ~, keyCode] = KbCheck();
+            if keyIsDown
+                if find(keyCode) == P.keys.name.confirm
+                    break;
+                elseif find(keyCode) == P.keys.name.esc
+                    abort = 1;
+                    break;
+                end
+            end
+        end
+        if abort; return; end
+
+        WaitSecs(0.2);
+
         
         fprintf('\n==========================\nRunning preexposure sequence.\n');
         fprintf('[Initial trial, showing P.style.white cross for %1.1f seconds, red cross for %1.1f seconds]\n',P.presentation.sPreexpITI,P.presentation.sPreexpCue);

@@ -94,7 +94,7 @@ while numberOfSecondsRemaining  > 0
     elseif ratingsection == 2
 
         % Draw text for Painfulness
-        DrawFormattedText(window, 'Wie SCHMERZHAFT war der letzte Druckreiz?', 'center',yCenter-200, scaleColor);
+        DrawFormattedText(window, 'Wie SCHMERZHAFT war der letzte Reiz?', 'center',yCenter-200, scaleColor);
         DrawFormattedText(window, '(maximal 7 Sekunden Zeit)', 'center',yCenter-100, scaleColor);
 
         Screen('DrawText',window,'minimaler',axesRect(1)-150,yCenter+40,scaleColor);

@@ -1,7 +1,8 @@
-function P = InstantiateParameters
+function P = InstantiateParameters(P)
 
 %% General settings (should be changed)
-P.protocol.subID                = 98; % subject ID
+P.protocol.subID                = 99; % subject ID
+P.protocol.day                  = 2; % Test day 2 or 3
 P.calibration.cuff_arm          = 1; %Arm for pressure CALIBRATION [1 = LEFT, 2 = RIGHT]
 P.experiment.cuff_arm           = P.calibration.cuff_arm; % Set calibration and experiment cuff to same arm
 P.protocol.session              = 1;
@@ -12,14 +13,18 @@ P.project.name                  = 'PEEP';
 P.project.part                  = 'Pilot-01';
 P.pharmacological.day2          = 'NaCl'; % Set wheteher receive Naloxone or NACL on day 2/day3
 P.pharmacological.day3          = 'Naloxone';
-P.devices.arduino               = []; % if '' or [], will not try to use Arduino
+P.toggles.doPainOnly            = 1; % VAS rating painful from 0 (not 50)
+P.toggles.doConfirmAdaptive     = 1; % do adaptive VAS target regression with confirmation
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Maybe move this part to main scripts 
+P.devices.arduino               = 1; % if '' or [], will not try to use Arduino
 P.devices.thermoino             = 1; % if '' or [], will not try to use Arduino
 P.devices.SCR                   = 0; % SCR is used set to 1
 P.devices.bike                  = []; % indicate whether bike is used
 P.devices.belt                  = []; % HR belt
 P.devices.trigger               = 0; % 1 single parallel port, arduino; rest undefined
-P.toggles.doPainOnly            = 1; % VAS rating painful from 0 (not 50)
-P.toggles.doConfirmAdaptive     = 1; % do adaptive VAS target regression with confirmation
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 %%
@@ -142,6 +147,12 @@ if P.devices.thermoino
     end
 end
 
+%% ----------------------------------------------------------------
+%% MRI PARAMETERS 
+%% -----------------------------------------------------------------
+P.mri.dummy_scans = 5;
+
+
 %% communcation with spike PC
 P.com.port_addresses = [36912,36944]; 
 P.com.codes          = [32,64,128; % for port 36912
@@ -239,7 +250,21 @@ P.pain.thermoino.maxSaveTemp                  = 45; % max temp for calib
 P.pain.thermoino.minTemp                      = 40; % min temp for calib
 
 %% Calibration Thermode
+
+% Manual variable definition (hardcoded toggles)
+P.toggles.doPainOnly        = 1;
+P.toggles.doScaleTransl     = 1; % scale translation from binary via two-dimensional to uni-dimensional (only needed for P.toggles.doPainOnly==1)
+P.toggles.doPsyPrcScale     = 1; % psychometric-perceptual scaling; either this is REQUIRED, or numel(step2Range)>2
+P.toggles.doFixedInts       = 0;
+P.toggles.doPredetInts      = 1;
+P.toggles.doAdaptive        = 1; % adaptive procedure to fill up bins
+P.toggles.doConfirmAdaptive = 1;
+
 P.pain.calibration.heat                         = []; % preallocate variables
+P.pain.calibration.heat.notes{1} = 'Instantiated';
+P.pain.calibration.heat.PeriThrN = 1;
+
+   
 P.pain.calibration.rating                       = [];
 P.pain.calibration.calibStep.fixedTrials        = 2;
 P.pain.calibration.calibStep.adaptiveTrials     = 3;
@@ -256,7 +281,8 @@ P.pain.calibration.VASTargetsFixedPresetSteps   = [5,10,20];
 P.pain.calibration.VASTargetsVisual             = [10,20,30,40,50,60,70,80];
 P.pain.calibration.painTresholdPreset           = 30;
 P.pain.calibration.sStimPlateauCalib            = P.pain.preExposure.sStimPlateauPreExp; % duration of stim plateau in seconds
-P.pain.calibration.defaultpredPressureLinear     = [10 20 30 40 50 60 70 80]; % default predicted pressures if calibration fails completely
+P.pain.calibration.defaultpredHeatLinear        = [42 42.5 43 43.5 44 44.5 45 45.5]; % default predicted pressures if calibration fails completely
+
 
 %% Awiszus heat pain threshold search
 P.awiszus.thermoino.N                             = 6; % number of trials
@@ -289,6 +315,10 @@ addpath(genpath(P.path.scriptBase))
 P.presentation.firstThresholdITI = 5;
 P.presentation.firstThresholdCue = max(P.presentation.sMinMaxThreshCues);
 
+P.presentation.firstPlateauITI = 5; % override, no reason for this to be so long
+P.presentation.firstPlateauCue = max(P.presentation.sMinMaxPlateauCues);
+
+
 P.presentation.sPreexpITI = 5;
 P.presentation.sPreexpCue = 2;
 
@@ -302,15 +332,15 @@ P.presentation.sPreexpCue = 2;
     %         step1Seq = O.pain.step1Seq;
     %     end 
 
-%        if P.toggles.doFixedInts
+        if P.toggles.doFixedInts
     %         P.plateaus.step2Seq = [0.1 0.9 -2.0 0.4 -0.6 -0.2 1.6 -1.2]; % Example sequence for fixed intensities; legacy: PMParam
     %         P.plateaus.step2Seq = [0.1 1.6 -1.2 0.9]; % Example sequence for fixed intensities
-%            if ~isempty(O.pain.step2Range)
-%                P.plateaus.step2Seq = O.pain.step2Range;
-%            end
-%        else
-%            P.plateaus.step2Seq = []; % in this case, the entire section will be skipped
-%        end
+            if ~isempty(O.pain.step2Range)
+               P.plateaus.step2Seq = O.pain.step2Range;
+           end
+        else
+            P.plateaus.step2Seq = []; % in this case, the entire section will be skipped
+        end
 
         P.plateaus.step3TarVAS = [10 30 90]; % FOR USE WITH FIXED RATING TARGET PROCEDURE
     %     if ~isempty(O.pain.step3TarVAS)
@@ -356,6 +386,7 @@ P.FTP.parameters.coolDown = 1;
 
 % General
 P.pain.PEEP.nBlocks                              = 4; % number of experimental blocks and exercises
+P.pain.PEEP.block                                = 1; % Counter for block wll be updated after each block
 P.pain.PEEP.blocks                              = [1,2,3,4];
 P.pain.PEEP.nTrials                              = 18; %number of pains per block (4 pains 3 times)
 P.pain.PEEP.nStimuli                             = 3; % 3 different pain levels
@@ -425,69 +456,104 @@ P.exercise.condition = exercise_conditions_all_subjects(P.protocol.subID,:);
 % % Create matrix for random order of painconditions and each exercise block
 
 
-%% Load correct pressure pains (matrix) for correct subject
-%P.out.dirUtils = fullfile(P.path.experiment,'utils');
-filespec = strcat("pain_conditions_cpar_", P.project.part, ".mat");
-P.out.file.painConditions = fullfile(P.out.dirUtils,filespec);
-load(P.out.file.painConditions,'painconditions_all_subjects_cpar');
-P.pain.PEEP.painconditions_mat = painconditions_all_subjects_cpar(:,:,P.protocol.subID);
+% %% Load correct pressure pains (matrix) for correct subject
+% %P.out.dirUtils = fullfile(P.path.experiment,'utils');
+% filespec = strcat("pain_conditions_cpar_", P.project.part, ".mat");
+% P.out.file.painConditions = fullfile(P.out.dirUtils,filespec);
+% load(P.out.file.painConditions,'painconditions_all_subjects_cpar');
+% P.pain.PEEP.painconditions_mat = painconditions_all_subjects_cpar(:,:,P.protocol.subID);
+% 
+% 
+% if exist(P.out.file.painConditions,'file')
+%     load(P.out.file.painConditions,'painconditions_all_subjects_cpar');
+% else
+% 
+%     for n = 1:100
+% 
+%         for i = 1:4
+% 
+%             painconditions                       = repelem([3,5,7],3); % Different intensitiy conditions 1 = low (10 VAS), 3 = low-mid (30 VAS), 5 = high mid (50 VAS), 7 = high (70 VAS). Repeat each condition 12 times per block
+%             painconditions_ordering              = painconditions (randperm(length(painconditions)));
+%             painconditions_mat(i,:)              = painconditions_ordering;
+% 
+%         end
+% 
+%         painconditions_all_subjects_cpar(:,:,n) = painconditions_mat(:,:);
+% 
+%      %   save(['C:\Users\nold\PEEP\fMRI\Code\peep_functions\utils\pain_conditions_',P.project.part],'painconditions_all_subjects');
+% 
+%     end
+% 
+%     P.pain.PEEP.painconditions_mat = painconditions_all_subjects_cpar(:,:,P.protocol.subID);
+% 
+% end
+% 
+% %% Load correct thermode pains (matrix) for correct subject
+% %P.out.dirUtils = fullfile(P.path.experiment,'Code','utils');
+% filespec = strcat("pain_conditions_thermode_", P.project.part, ".mat");
+% P.out.file.painConditions_heat = fullfile(P.out.dirUtils,filespec);
+% load(P.out.file.painConditions_heat,'painconditions_all_subjects_thermode');
+% P.pain.PEEP.thermode.painconditions_mat = painconditions_all_subjects_thermode(:,:,P.protocol.subID);
+% 
+% 
+% if exist(P.out.file.painConditions_heat,'file')
+%     load(P.out.file.painConditions_heat,'painconditions_all_subjects_thermode');
+% else
+% 
+%     for n = 1:100
+% 
+%         for i = 1:4
+% 
+%             painconditions                       = repelem([3,5,7],3); % Different intensitiy conditions 1 = low (10 VAS), 3 = low-mid (30 VAS), 5 = high mid (50 VAS), 7 = high (70 VAS). Repeat each condition 12 times per block
+%             painconditions_ordering              = painconditions (randperm(length(painconditions)));
+%             painconditions_mat(i,:)              = painconditions_ordering;
+% 
+%         end
+% 
+%         painconditions_all_subjects_thermode(:,:,n) = painconditions_mat(:,:);
+% 
+%      %   save(['C:\Users\nold\PEEP\fMRI\Code\peep_functions\utils\pain_conditions_',P.project.part],'painconditions_all_subjects');
+% 
+%     end
+% 
+%     P.pain.PEEP.thermode.painconditions_mat = painconditions_all_subjects_thermode(:,:,P.protocol.subID);
+% 
+% end
 
+% Load cpar and thermode matrix for pain intensities depending on Day!!! 
 
-if exist(P.out.file.painConditions,'file')
-    load(P.out.file.painConditions,'painconditions_all_subjects_cpar');
-else
+if P.protocol.day == 2
+    
+    filespec = strcat("pain_conditions_cpar_thermode_", P.project.part, "_day2.mat");
+    P.out.file.painConditions = fullfile(P.out.dirUtils,filespec);
 
-    for n = 1:100
+    if exist(P.out.file.painConditions,'file')
+        load(P.out.file.painConditions,'painconditions_all_subjects_cpar_thermode');
+    else
 
-        for i = 1:4
-
-            painconditions                       = repelem([3,5,7],3); % Different intensitiy conditions 1 = low (10 VAS), 3 = low-mid (30 VAS), 5 = high mid (50 VAS), 7 = high (70 VAS). Repeat each condition 12 times per block
-            painconditions_ordering              = painconditions (randperm(length(painconditions)));
-            painconditions_mat(i,:)              = painconditions_ordering;
-
-        end
-
-        painconditions_all_subjects_cpar(:,:,n) = painconditions_mat(:,:);
-
-     %   save(['C:\Users\nold\PEEP\fMRI\Code\peep_functions\utils\pain_conditions_',P.project.part],'painconditions_all_subjects');
 
     end
 
-    P.pain.PEEP.painconditions_mat = painconditions_all_subjects_cpar(:,:,P.protocol.subID);
+    P.pain.PEEP.painconditions_mat = painconditions_all_subjects_cpar_thermode(:,:,P.protocol.subID);
 
-end
+    fprintf('Pain Conditions for Day 2 Loaded');
 
-%% Load correct thermode pains (matrix) for correct subject
-%P.out.dirUtils = fullfile(P.path.experiment,'Code','utils');
-filespec = strcat("pain_conditions_thermode_", P.project.part, ".mat");
-P.out.file.painConditions_heat = fullfile(P.out.dirUtils,filespec);
-load(P.out.file.painConditions_heat,'painconditions_all_subjects_thermode');
-P.pain.PEEP.thermode.painconditions_mat = painconditions_all_subjects_thermode(:,:,P.protocol.subID);
+elseif P.protocol.day == 3
 
+    filespec = strcat("pain_conditions_cpar_thermode_", P.project.part, "_day3.mat");
+    P.out.file.painConditions = fullfile(P.out.dirUtils,filespec);
 
-if exist(P.out.file.painConditions_heat,'file')
-    load(P.out.file.painConditions_heat,'painconditions_all_subjects_thermode');
-else
+    if exist(P.out.file.painConditions,'file')
+        load(P.out.file.painConditions,'painconditions_all_subjects_cpar_thermode');
+    else
 
-    for n = 1:100
-
-        for i = 1:4
-
-            painconditions                       = repelem([3,5,7],3); % Different intensitiy conditions 1 = low (10 VAS), 3 = low-mid (30 VAS), 5 = high mid (50 VAS), 7 = high (70 VAS). Repeat each condition 12 times per block
-            painconditions_ordering              = painconditions (randperm(length(painconditions)));
-            painconditions_mat(i,:)              = painconditions_ordering;
-
-        end
-
-        painconditions_all_subjects_thermode(:,:,n) = painconditions_mat(:,:);
-
-     %   save(['C:\Users\nold\PEEP\fMRI\Code\peep_functions\utils\pain_conditions_',P.project.part],'painconditions_all_subjects');
 
     end
 
-    P.pain.PEEP.thermode.painconditions_mat = painconditions_all_subjects_thermode(:,:,P.protocol.subID);
+    P.pain.PEEP.painconditions_mat = painconditions_all_subjects_cpar_thermode(:,:,P.protocol.subID);
+
+    fprintf('Pain Conditions for Day 3 Loaded');
 
 end
-
 
 end

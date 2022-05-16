@@ -12,13 +12,7 @@ strings = GetText;
 abort = 0;
 fprintf('\n==========================\nRunning Experiment.\n==========================\n');
 
-    
-if exist(P.out.file.paramExp,'file')
-    load(P.out.file.paramExp,'P');
 
-else
-    fprint('No parameters file loaded');
-end
 %% Retrieve predicted pressure intensity levels from calibration
 
 % retrieve predicted pressures (linear)
@@ -153,8 +147,8 @@ for block = P.pain.PEEP.block
             WaitSecs(2);
 
             PreExposure(P,O,dev);
-            WaitSecs(0.5);
-
+                        WaitSecs(0.5);
+ 
             % Give two pre exposure stimuli Heat
             fprintf('=========================================================\n');
             fprintf('\nPre Exposure: Heat\n');
@@ -172,25 +166,26 @@ for block = P.pain.PEEP.block
             fprintf('\nPain Start\n');
             fprintf('=========================================================\n');
 
- 
-             %Gleich geht es weiter (show to participant)
-             ShowIntroduction(P,5);
-%            fprintf('\nContinue [%s], or abort [%s].\n',upper(char(P.keys.keyList(P.keys.name.confirm))),upper(char(P.keys.keyList(P.keys.name.esc))));
-% 
-%             while 1
-%                 [keyIsDown, ~, keyCode] = KbCheck();
-%                 if keyIsDown
-%                     if find(keyCode) == P.keys.name.confirm
-%                         break;
-%                     elseif find(keyCode) == P.keys.name.esc
-%                         abort = 1;
-%                         break;
-%                     end
-%                 end
-%             end
-%             if abort; return; end
-% 
-%             WaitSecs(0.4);
+
+            %Gleich geht es weiter (show to participant)
+            %ShowIntroduction(P,5);
+           
+            fprintf('\nContinue [%s], or abort [%s].\n',upper(char(P.keys.keyList(P.keys.name.confirm))),upper(char(P.keys.keyList(P.keys.name.esc))));
+
+            while 1
+                [keyIsDown, ~, keyCode] = KbCheck();
+                if keyIsDown
+                    if find(keyCode) == P.keys.name.confirm
+                        break;
+                    elseif find(keyCode) == P.keys.name.esc
+                        abort = 1;
+                        break;
+                    end
+                end
+            end
+            if abort; return; end
+
+            WaitSecs(0.2);
 
 
             % ------------------------------------
@@ -203,10 +198,11 @@ for block = P.pain.PEEP.block
                 tCrossOn = Screen('Flip',P.display.w);
             else
                 tCrossOn = GetSecs;
-             end
-
+            end
             % Wait for 5 scanner pulses
             [t0_scan,secs] = wait_dummy_scans(P);
+
+
 
             % Loop through the number of pain trials per block
             clear trial
@@ -299,7 +295,7 @@ for block = P.pain.PEEP.block
 
                 % Wait for xx ITI before continuing
                 iti = P.project.ITI_rand(P.project.ITI_start);
-                fprintf(['\nITI: ',num2str(iti), ' seconds'])
+                fprintf(['ITI: ',num2str(iti), ' seconds'])
                 WaitSecs(iti);
                 tITIafterRating = GetSecs;
 

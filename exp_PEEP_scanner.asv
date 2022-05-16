@@ -12,21 +12,26 @@ clear all;
 restoredefaultpath
 
 % add script base path
-addpath('C:\Users\nold\PEEP\fMRI\Code\peep_functions_fMRI')
+addpath('C:\Users\user\Desktop\PEEP\fMRI\Code\peep_functions_fMRI')
 
 
 %% ------------------ Experiment Preparations -------------------------
 
-
 % Activate needed modalities 
 P.devices.arduino               = []; % if '' or [], will not try to use Arduino
 P.devices.thermoino             = []; % if '' or [], will not try to use Arduino
-P.devices.bike                  = 1; % indicate whether bike is used
-P.devices.belt                  = 1; % HR belt
+P.devices.bike                  = []; % indicate whether bike is used
+P.devices.belt                  = []; % HR belt
 
 % Instantiate Parameters and Overrides
 P                       = InstantiateParameters(P);
 O                       = InstantiateOverrides;
+
+
+% Add paths
+if P.devices.arduino
+    addpath(genpath(P.path.cpar));
+end
 
 addpath(genpath(P.path.scriptBase));
 addpath(genpath(P.path.PTB));
@@ -36,6 +41,24 @@ addpath(fullfile(P.path.PTB,'PsychBasic','MatlabWindowsFilesR2007a'));
 clear mex global functions;
 commandwindow;
 
+
+%% ----------------- Initial pressure cuff -----------------------------
+
+if P.devices.arduino
+    [abort,initSuccess,dev] = InitCPAR; % initialize CPAR
+
+    if initSuccess
+        P.cpar.init = initSuccess;
+        P.cpar.dev = dev;
+    else
+        warning('\nCPAR initialization not successful, aborting!');
+        abort = 1;
+    end
+    if abort
+        QuickCleanup(P,dev);
+        return;
+    end
+end
 
 %% -------------------- Initialise KICKR bike ----------------------------
 
@@ -90,31 +113,31 @@ P.time.stamp            = datestr(now,30);
 P.time.scriptStart      = GetSecs;
 
 
-% ========================================================================
-%%                              Cycling Experiment
-% ========================================================================
 
-%% Step 8: Warm up 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                              Experiment
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if P.startSection == 8
-    load(P.out.file.paramCalib,'P','O');
-    [P,O] = WarmUp(P,O);
-end
-
-%% Step 9: Cycling 
 
 if P.startSection == 9
-    load(P.out.file.paramCalib,'P','O');
-    ShowIntroduction(P,4);
-    RunExperiment_cycling(P,O);
+    %load(P.out.file.paramCalib,'P','O');
+    %ShowIntroduction(P,4);
+    RunExperiment_pain(P,O); % add dev!!!
 end
 
 %% Goodbye/End Experiment
 
-ListenChar(0);
-fprintf('\nC Y C L I N G    C O M P L E T E\n');
-sca;
+ShowIntroduction(P,5);
 
+if abort
+    QuickCleanup(P,dev);
+    return;
+else
+    ListenChar(0);
+    fprintf('\nE X P E R I M E N T    C O M P L E T E\n');
+    sca;
+
+end
 
 
 %%%%%%%
