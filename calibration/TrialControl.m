@@ -192,10 +192,12 @@
                 end      
             end
 
-            P = GetRegressionResults(P);
+            calibration = GetRegressionResults_heat(P);
+              calibration = GetRegressionResults(P,cuff);
+         P.pain.calibration.heat.results = calibration;
         else
             P = GetExistingCalibData(P);
-            P = GetRegressionResults(P);
+            calibration = GetRegressionResults_heat(P);
 %             if isempty(plateauLog)
 %                 error('Calibration data not found at %s. Aborting.',P.out.dir);
 %             end

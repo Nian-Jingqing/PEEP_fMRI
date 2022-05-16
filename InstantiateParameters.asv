@@ -18,11 +18,11 @@ P.toggles.doConfirmAdaptive     = 1; % do adaptive VAS target regression with co
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Maybe move this part to main scripts 
-P.devices.arduino               = []; % if '' or [], will not try to use Arduino
-P.devices.thermoino             = []; % if '' or [], will not try to use Arduino
+P.devices.arduino               = 1; % if '' or [], will not try to use Arduino
+P.devices.thermoino             = 1; % if '' or [], will not try to use Arduino
 P.devices.SCR                   = 0; % SCR is used set to 1
-P.devices.bike                  = 1; % indicate whether bike is used
-P.devices.belt                  = 1; % HR belt
+P.devices.bike                  = []; % indicate whether bike is used
+P.devices.belt                  = []; % HR belt
 P.devices.trigger               = 0; % 1 single parallel port, arduino; rest undefined
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -82,14 +82,12 @@ elseif P.protocol.day == 3
     P.out.dirExp = fullfile(P.path.experiment,'Data','LogExperiment',P.project.part,['sub' sprintf('%03d',P.protocol.subID)],string_day);
     P.out.file.paramExp = fullfile(P.out.dirExp,['parameters_sub' sprintf('%03d',P.protocol.subID) '.mat']);
 
-else
+else 
     disp('No Day specified');
     P.out.dirExp = fullfile(P.path.experiment,'Data','LogExperiment',P.project.part,['sub' sprintf('%03d',P.protocol.subID)]);
     P.out.file.paramExp = fullfile(P.out.dirExp,['parameters_sub' sprintf('%03d',P.protocol.subID) '.mat']);
 
-end
-
-% Create output paths
+  % Create output paths
 %P.out.dirExp = fullfile(P.path.experiment,'Data','LogExperiment',P.project.part,['sub' sprintf('%03d',P.protocol.subID)]);
 P.out.dirCalib = fullfile(P.path.experiment,'Data','LogCalibration',P.project.part,['sub' sprintf('%03d',P.protocol.subID)]);
 P.out.dirUtils = fullfile(P.path.experiment,'Code','peep_functions_fMRI','utils');

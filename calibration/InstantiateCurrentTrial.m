@@ -1,9 +1,9 @@
  function P=InstantiateCurrentTrial(P,O,stepId,trialTemp,varargin)
 
-        P.painCalibData.PeriThrN = P.painCalibData.PeriThrN+1;
+        P.pain.calibration.heat.PeriThrN =  P.pain.calibration.heat.PeriThrN+1;
 
         P.currentTrial = struct; % reset
-        P.currentTrial.N = P.painCalibData.PeriThrN;        
+        P.currentTrial.N = P.pain.calibration.heat.PeriThrN;        
         P.currentTrial.nRating = 1; % currently, CalibHeat contains only one rating scale; cf P11_WindUp for expanding this
         P.currentTrial.ratingId = 11; % 11 = heat/pain VAS
         if P.toggles.doPainOnly      

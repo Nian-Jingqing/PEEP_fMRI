@@ -1,8 +1,8 @@
-function P = InstantiateParameters(P)
+function P = InstantiateParameters_scanner
 
 %% General settings (should be changed)
 P.protocol.subID                = 99; % subject ID
-P.protocol.day                  = 2; % Test day 2 or 3
+P.protocol.day                  = 3; % Test day 2 or 3
 P.calibration.cuff_arm          = 1; %Arm for pressure CALIBRATION [1 = LEFT, 2 = RIGHT]
 P.experiment.cuff_arm           = P.calibration.cuff_arm; % Set calibration and experiment cuff to same arm
 P.protocol.session              = 1;
@@ -18,18 +18,18 @@ P.toggles.doConfirmAdaptive     = 1; % do adaptive VAS target regression with co
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Maybe move this part to main scripts 
-P.devices.arduino               = []; % if '' or [], will not try to use Arduino
-P.devices.thermoino             = []; % if '' or [], will not try to use Arduino
+P.devices.arduino               = 1; % if '' or [], will not try to use Arduino
+P.devices.thermoino             = 1; % if '' or [], will not try to use Arduino
 P.devices.SCR                   = 0; % SCR is used set to 1
-P.devices.bike                  = 1; % indicate whether bike is used
-P.devices.belt                  = 1; % HR belt
+P.devices.bike                  = []; % indicate whether bike is used
+P.devices.belt                  = []; % HR belt
 P.devices.trigger               = 0; % 1 single parallel port, arduino; rest undefined
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 %%
 P.display.white                 = [1 1 1];
-P.lineheight                    = 40;
+P.lineheight                    = 60;
 P.display.startY                = 0.5;
 P.display.Ytext                 = 0.25;
 P.display.textsize_rating       = 30;

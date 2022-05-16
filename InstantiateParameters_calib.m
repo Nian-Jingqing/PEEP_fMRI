@@ -2,7 +2,7 @@ function P = InstantiateParameters(P)
 
 %% General settings (should be changed)
 P.protocol.subID                = 99; % subject ID
-P.protocol.day                  = 2; % Test day 2 or 3
+P.protocol.day                  = 1; % Calib Day 1
 P.calibration.cuff_arm          = 1; %Arm for pressure CALIBRATION [1 = LEFT, 2 = RIGHT]
 P.experiment.cuff_arm           = P.calibration.cuff_arm; % Set calibration and experiment cuff to same arm
 P.protocol.session              = 1;
@@ -18,11 +18,11 @@ P.toggles.doConfirmAdaptive     = 1; % do adaptive VAS target regression with co
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Maybe move this part to main scripts 
-P.devices.arduino               = []; % if '' or [], will not try to use Arduino
-P.devices.thermoino             = []; % if '' or [], will not try to use Arduino
+P.devices.arduino               = 1; % if '' or [], will not try to use Arduino
+P.devices.thermoino             = 1; % if '' or [], will not try to use Arduino
 P.devices.SCR                   = 0; % SCR is used set to 1
-P.devices.bike                  = 1; % indicate whether bike is used
-P.devices.belt                  = 1; % HR belt
+P.devices.bike                  = []; % indicate whether bike is used
+P.devices.belt                  = []; % HR belt
 P.devices.trigger               = 0; % 1 single parallel port, arduino; rest undefined
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -80,6 +80,11 @@ if P.protocol.day == 2
 elseif P.protocol.day == 3
     string_day = 'Day3';
     P.out.dirExp = fullfile(P.path.experiment,'Data','LogExperiment',P.project.part,['sub' sprintf('%03d',P.protocol.subID)],string_day);
+    P.out.file.paramExp = fullfile(P.out.dirExp,['parameters_sub' sprintf('%03d',P.protocol.subID) '.mat']);
+
+elseif P.protocol.day == 1
+    disp('Calibration Day');
+    P.out.dirExp = fullfile(P.path.experiment,'Data','LogExperiment',P.project.part,['sub' sprintf('%03d',P.protocol.subID)]);
     P.out.file.paramExp = fullfile(P.out.dirExp,['parameters_sub' sprintf('%03d',P.protocol.subID) '.mat']);
 
 else

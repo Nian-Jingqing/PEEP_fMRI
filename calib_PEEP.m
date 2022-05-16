@@ -17,14 +17,8 @@ addpath('C:\Users\nold\PEEP\fMRI\Code\peep_functions_fMRI')
 
 %% ------------------ Experiment Preparations -------------------------
 
-% Activate needed modalities 
-P.devices.arduino               = []; % if '' or [], will not try to use Arduino
-P.devices.thermoino             = 1; % if '' or [], will not try to use Arduino
-P.devices.bike                  = []; % indicate whether bike is used
-P.devices.belt                  = []; % HR belt
-
 % Instantiate Parameters and Overrides
-P                       = InstantiateParameters(P);
+P                       = InstantiateParameters_calib;
 O                       = InstantiateOverrides;
 
 
@@ -51,26 +45,6 @@ addpath(fullfile(P.path.PTB,'PsychBasic','MatlabWindowsFilesR2007a'));
 % Clear global functions
 clear mex global functions;
 commandwindow;
-
-%% ----------------- Initialise Thermode ---------------------------------------
-
-if P.devices.thermoino
-
-    UseThermoino('Kill');
-    UseThermoino('Init',P.com.thermoino,P.com.thermoinoBaud,P.pain.thermoino.bT,P.pain.thermoino.rS); % returns handle of serial object
-
-    % if initSuccessThermoino
-    %    P.thermoino.init = initSuccessThermoino;
-    % else
-    %     warning('\nThermoino initialization not successful, aborting!');
-    %     abort = 1;
-    % end
-    % if abort
-    %    return;
-    % end
-
-
-end
 
 
 %% ----------------- Initial pressure cuff -----------------------------
@@ -156,9 +130,9 @@ P.time.scriptStart      = GetSecs;
 % 
 % %% Step 1: Pre Exposure and Awiszus Method + VAS Training
 % 
- if P.devices.thermoino
+%  if P.devices.thermoino
 % 
-%     %if P.startSection < 2
+%     if P.startSection < 2
 % 
 %         %   [abort]=ShowInstruction(P,1);
 %         if abort;QuickCleanup(P);return;end
@@ -167,9 +141,9 @@ P.time.scriptStart      = GetSecs;
 % 
 %         if abort;QuickCleanup(P);return;end
 % 
-%    %else
-%    %     preexPainful_heat = 1; % then we start with the conservative assumption that the top preexposure temp was experienced as painful
-%     %end
+%    else
+%         preexPainful_heat = 1; % then we start with the conservative assumption that the top preexposure temp was experienced as painful
+%    end
 % 
 % 
 %     %% Awiszus Method
@@ -184,20 +158,20 @@ P.time.scriptStart      = GetSecs;
 %     %         [abort]=ShowInstruction(P,O,2,1);
 %     if abort;QuickCleanup(P);return;end
 %     P = DoAwiszus_heat(P,O);
-% %else
-% %    P = GetAwiszus(P);
-% 
-% 
-%         %% VAS Training
-%         load(P.out.file.paramCalib,'P','O');
-%         
-%         
-%         %ShowIntroduction(P,2);
-% 
-%         %for i = 2:P.pain.VAStraining.nRatings
-%         %    [P,abort] = VASTraining(P,O,i,dev);
-%         %    i = i + 1;
-%         %end
+%else
+%    P = GetAwiszus(P);
+
+
+        %% VAS Training
+        %load(P.out.file.paramCalib,'P','O');
+        
+        
+        %ShowIntroduction(P,2);
+
+        %for i = 2:P.pain.VAStraining.nRatings
+        %    [P,abort] = VASTraining(P,O,i,dev);
+        %    i = i + 1;
+        %end
 
     %% Step 2: Calibration
 
@@ -241,13 +215,14 @@ P.time.scriptStart      = GetSecs;
     %     % END
     %     %%%%%%%%%%%%%%%%%%%%%%%
 
-end
+%end
 
 % =======================================================================
 %% Block 1b: Calibration Pressure Cuff
 % =======================================================================
 
 if P.devices.arduino
+    
     %% Step 3: Pre Exposure and Awiszus Method + VAS Training
 
     if P.startSection < 4

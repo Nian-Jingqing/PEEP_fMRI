@@ -474,8 +474,69 @@ elseif section == 5 % MR wait
     WaitSecs(0.4);
 
 
+elseif section == 6 % main intro
+                
+    Screen('DrawTexture', P.display.w, P.textrIndex.TextureIndex41, [], [], 0);        
+    Screen('Flip', P.display.w);
 
-elseif section == 6 %Goodbye
+    while 1
+        [keyIsDown, ~, keyCode] = KbCheck();
+        if keyIsDown
+            if find(keyCode) == P.keys.name.confirm
+                break;
+            end
+        end
+    end
+
+    WaitSecs(0.4);
+
+
+elseif section == 61 % main intro
+                
+    Screen('DrawTexture', P.display.w, P.textrIndex.TextureIndex42, [], [], 0);        
+    Screen('Flip', P.display.w);
+
+    while 1
+        [keyIsDown, ~, keyCode] = KbCheck();
+        if keyIsDown
+            if find(keyCode) == P.keys.name.right
+                break;
+            end
+        end
+    end
+
+    WaitSecs(0.4);
+
+    Screen('DrawTexture', P.display.w, P.textrIndex.TextureIndex43, [], [], 0);        
+    Screen('Flip', P.display.w);
+
+    while 1
+        [keyIsDown, ~, keyCode] = KbCheck();
+        if keyIsDown
+            if find(keyCode) == P.keys.name.right
+                break;
+            end
+        end
+    end
+
+    WaitSecs(0.4);
+
+
+    DrawFormattedText(P.display.w,strings.experiment7,'center','center',P.style.white2);
+    Screen('Flip',P.display.w);
+    while 1
+        [keyIsDown, ~, keyCode] = KbCheck();
+        if keyIsDown
+            if find(keyCode) == P.keys.name.confirm
+                break;
+            end
+        end
+    end
+
+    WaitSecs(0.4);
+
+
+elseif section == 7 %Goodbye
 
     Screen('TextSize',P.display.w, 70);
     DrawFormattedText(P.display.w,strings.goodbye1,'center','center',P.style.white2);

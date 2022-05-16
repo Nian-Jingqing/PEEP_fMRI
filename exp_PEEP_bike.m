@@ -17,15 +17,8 @@ addpath('C:\Users\nold\PEEP\fMRI\Code\peep_functions_fMRI')
 
 %% ------------------ Experiment Preparations -------------------------
 
-
-% Activate needed modalities 
-P.devices.arduino               = []; % if '' or [], will not try to use Arduino
-P.devices.thermoino             = []; % if '' or [], will not try to use Arduino
-P.devices.bike                  = 1; % indicate whether bike is used
-P.devices.belt                  = 1; % HR belt
-
 % Instantiate Parameters and Overrides
-P                       = InstantiateParameters(P);
+P                       = InstantiateParameters_bike;
 O                       = InstantiateOverrides;
 
 addpath(genpath(P.path.scriptBase));

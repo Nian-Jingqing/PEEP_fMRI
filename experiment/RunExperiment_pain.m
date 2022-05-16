@@ -1,23 +1,21 @@
-function [abort] = RunExperiment(P,O,dev) % add dev!!!
+function [abort] = RunExperiment_pain(P,O,dev) % add dev!!!
 % This function inititates the 5 minute cycling on screen with a fixation
 % cross and a countdown (300 - 0). It will not have any output apart from
 % the seconds the exercise lasted.
 %
 % Author: Janne Nold
-% based on the script by Björn Höring, Uli Bromberg, Lukas Neugebauer
+% based on the script by Björn Höring, Uli Bromberg Lukas Neugebauer
 % Last modified: 02.12.21
 
-% Retrieve text
-strings = GetText;
 abort = 0;
 fprintf('\n==========================\nRunning Experiment.\n==========================\n');
 
-    
+
 if exist(P.out.file.paramExp,'file')
     load(P.out.file.paramExp,'P');
 
 else
-    fprint('No parameters file loaded');
+    fprintf('No experimental parameters file loaded (BLOCK 1!)');
 end
 %% Retrieve predicted pressure intensity levels from calibration
 
@@ -146,6 +144,8 @@ for block = P.pain.PEEP.block
                 tCrossOn = GetSecs;
             end
 
+            ShowIntroduction(P,6);
+
             % Give two pre exposure stimuli Pressure
             fprintf('=========================================================\n');
             fprintf('\nPre Exposure: Pressure\n');
@@ -167,15 +167,18 @@ for block = P.pain.PEEP.block
             % Pain Block Start
             %--------------------------------------------------------------
 
+            ShowIntroduction(P,61);
+
             % Display Exercise Start at experimenter screen
             fprintf('=========================================================\n');
             fprintf('\nPain Start\n');
             fprintf('=========================================================\n');
 
- 
-             %Gleich geht es weiter (show to participant)
-             ShowIntroduction(P,5);
-%            fprintf('\nContinue [%s], or abort [%s].\n',upper(char(P.keys.keyList(P.keys.name.confirm))),upper(char(P.keys.keyList(P.keys.name.esc))));
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            %% Start SCANNER HERE
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+%             fprintf('\nContinue [%s], or abort [%s].\n',upper(char(P.keys.keyList(P.keys.name.confirm))),upper(char(P.keys.keyList(P.keys.name.esc))));
 % 
 %             while 1
 %                 [keyIsDown, ~, keyCode] = KbCheck();
@@ -189,21 +192,22 @@ for block = P.pain.PEEP.block
 %                 end
 %             end
 %             if abort; return; end
-% 
-%             WaitSecs(0.4);
 
+            %Gleich geht es weiter (show to participant)
+            ShowIntroduction(P,5);
+            WaitSecs(5);
 
             % ------------------------------------
             % WAIT DUMMY SCANS
             %--------------------------------------
 
-             if ~O.debug.toggleVisual
+            if ~O.debug.toggleVisual
                 Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix1);
                 Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix2);
                 tCrossOn = Screen('Flip',P.display.w);
             else
                 tCrossOn = GetSecs;
-             end
+            end
 
             % Wait for 5 scanner pulses
             [t0_scan,secs] = wait_dummy_scans(P);
@@ -277,9 +281,10 @@ for block = P.pain.PEEP.block
 
 
                 % Select which pain and apply
-                if mod == 1
+
+                if mod == 1 % Pressure Pain
                     [abort,P,expVAS] = ApplyStimulusPain(P,O,pressure,cuff,block,trial,expVAS,mod);
-                elseif mod == 2
+                elseif mod == 2 % Heat Pain
                     [abort,P,expVAS] = ApplyStimulusPain_heat(P,O,heat,block,trial,expVAS,mod);
                 end
 
@@ -327,8 +332,7 @@ for block = P.pain.PEEP.block
         P.pain.PEEP.block = P.pain.PEEP.block + 1;
         save(P.out.file.paramExp,'P','O');
 
-
-
+        % Update Block number for each run
         if P.pain.PEEP.block > 4
             abort = 1;
             break;

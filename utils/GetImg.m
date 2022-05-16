@@ -27,3 +27,8 @@ function textrIndex = GetImg(P)
 
 % MR Wait
 [textrIndex.TextureIndex31, textrIndex.imgsize31] = makeTxtrFromImg(fullfile([P.path.scriptBase,'\utils\img\wait_MR.jpg']),'JPG',P);
+
+%Main Experiment
+[textrIndex.TextureIndex41, textrIndex.imgsize41] = makeTxtrFromImg(fullfile([P.path.scriptBase,'\utils\img\main_exp_intro1.jpg']),'JPG',P);
+[textrIndex.TextureIndex42, textrIndex.imgsize42] = makeTxtrFromImg(fullfile([P.path.scriptBase,'\utils\img\main_exp_intro2.jpg']),'JPG',P);
+[textrIndex.TextureIndex43, textrIndex.imgsize43] = makeTxtrFromImg(fullfile([P.path.scriptBase,'\utils\img\main_exp_intro3.jpg']),'JPG',P);

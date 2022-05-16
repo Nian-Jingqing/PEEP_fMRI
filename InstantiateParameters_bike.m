@@ -1,4 +1,4 @@
-function P = InstantiateParameters(P)
+function P = InstantiateParameters_bike
 
 %% General settings (should be changed)
 P.protocol.subID                = 99; % subject ID

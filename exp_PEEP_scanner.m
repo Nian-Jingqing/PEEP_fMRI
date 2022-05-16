@@ -15,19 +15,12 @@ restoredefaultpath
 addpath('C:\Users\nold\PEEP\fMRI\Code\peep_functions_fMRI')
 
 
-%% ------------------ Experiment Preparations -------------------------
+%% ------------------ Experiment Preparations -----------------------------
 
-%load(P.out.file.paramCalib,'P','O');
 
 % Instantiate Parameters and Overrides
-P                       = InstantiateParameters; % rename to InstantiateParameters_scanner
+P                       = InstantiateParameters_scanner; % rename to InstantiateParameters_scanner
 O                       = InstantiateOverrides;
-
-% % Activate needed modalities 
-% P.devices.arduino               = []; % if '' or [], will not try to use Arduino
-% P.devices.thermoino             = []; % if '' or [], will not try to use Arduino
-% P.devices.bike                  = []; % indicate whether bike is used
-% P.devices.belt                  = []; % HR belt
 
 
 % Add paths
@@ -44,7 +37,7 @@ clear mex global functions;
 commandwindow;
 
 
-%% ----------------- Initial pressure cuff -----------------------------
+%% ----------------- Initial pressure cuff --------------------------------
 
 if P.devices.arduino
     [abort,initSuccess,dev] = InitCPAR; % initialize CPAR
@@ -81,20 +74,19 @@ P.time.scriptStart      = GetSecs;
 %%                              Experiment
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    %ShowIntroduction(P,4);
-    RunExperiment_pain(P,O,dev); 
+RunExperiment_pain(P,O,dev);
 
 
 %% Goodbye/End Experiment
 
-ShowIntroduction(P,5);
+ShowIntroduction(P,7);
 
 if abort
     QuickCleanup(P,dev);
     return;
 else
     ListenChar(0);
-    fprintf('\nE X P E R I M E N T    C O M P L E T E\n');
+    fprintf('\nR U N    C O M P L E T E\n');
     sca;
 
 end
