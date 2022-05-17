@@ -41,7 +41,7 @@ function P = make_logfiles(P)
 
     % -----------------  table behavioral data ----------------------------
     P.data(P.pain.PEEP.block).behav = createTable({ 'sub','day','block','trial','stim','intensity', ...
-        'kPa/temp','resp','resp_onset','rating','rating_rt'});
+        'kPa/temp','resp','resp_onset','rating','rating_rt', 'error'});
     
     %fprintf(path_file_id,'\r\n');
     

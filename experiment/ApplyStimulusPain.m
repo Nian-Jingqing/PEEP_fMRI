@@ -86,8 +86,7 @@ while ~abort
 
         if abort; return; end
 
-
-
+      
 
     else % If no Arduino is indicated
         % Count down for the duration of pressure

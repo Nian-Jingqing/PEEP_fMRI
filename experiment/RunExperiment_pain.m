@@ -1,7 +1,8 @@
 function [abort] = RunExperiment_pain(P,O,dev) % add dev!!!
-% This function inititates the 5 minute cycling on screen with a fixation
-% cross and a countdown (300 - 0). It will not have any output apart from
-% the seconds the exercise lasted.
+% This function inititates alternating heat and pressure pain at different
+% intensitiis (30,50,70 VAS).
+%
+% MRI pulses,events and button pressess will be logged.
 %
 % Author: Janne Nold
 % based on the script by Björn Höring, Uli Bromberg Lukas Neugebauer
@@ -10,7 +11,9 @@ function [abort] = RunExperiment_pain(P,O,dev) % add dev!!!
 abort = 0;
 fprintf('\n==========================\nRunning Experiment.\n==========================\n');
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Start Experiment. Send Trigger to SCR PC and logfile 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if exist(P.out.file.paramExp,'file')
     load(P.out.file.paramExp,'P');
 
@@ -95,13 +98,13 @@ for block = P.pain.PEEP.block
 
         for cuff = P.experiment.cuff_arm
 
-            if ~O.debug.toggleVisual
-                upperHalf = P.display.screenRes.height/2;
-                Screen('TextSize', P.display.w, 70);
-                introTextOn = Screen('Flip',P.display.w);
-            else
-                introTextOn = GetSecs;
-            end
+%             if ~O.debug.toggleVisual
+%                 upperHalf = P.display.screenRes.height/2;
+%                 Screen('TextSize', P.display.w, 70);
+%                 introTextOn = Screen('Flip',P.display.w);
+%             else
+%                 introTextOn = GetSecs;
+%             end
 
 
             % Abort Block if neccesary at start
@@ -114,7 +117,7 @@ for block = P.pain.PEEP.block
 
             %% ------------------ Pain ----------------------------
 
-            %Gleich geht es weiter (show to participant)
+            % Gleich geht es weiter (show to participant)
             ShowIntroduction(P,5);
 
             % Give experimenter chance to abort if neccesary
@@ -166,7 +169,6 @@ for block = P.pain.PEEP.block
             % -------------------------------------------------------------
             % Pain Block Start
             %--------------------------------------------------------------
-
             ShowIntroduction(P,61);
 
             % Display Exercise Start at experimenter screen
@@ -177,6 +179,7 @@ for block = P.pain.PEEP.block
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             %% Start SCANNER HERE
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % 
 %             fprintf('\nContinue [%s], or abort [%s].\n',upper(char(P.keys.keyList(P.keys.name.confirm))),upper(char(P.keys.keyList(P.keys.name.esc))));
 % 
@@ -201,22 +204,26 @@ for block = P.pain.PEEP.block
             % WAIT DUMMY SCANS
             %--------------------------------------
 
-            if ~O.debug.toggleVisual
-                Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix1);
-                Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix2);
-                tCrossOn = Screen('Flip',P.display.w);
-            else
-                tCrossOn = GetSecs;
-            end
-
             % Wait for 5 scanner pulses
             [t0_scan,secs] = wait_dummy_scans(P);
 
+            KbQueueRelease(); % to make sure
+            KbQueueCreate();
+            KbQueueStart();
+
+            % ------------------------------------
+            % Log Time in struct
+            % ------------------------------------
+            P.mri.mriExpStart = GetSecs;
+            P.mri.mriBlockStart(block) = GetSecs;
+         
             % Loop through the number of pain trials per block
             clear trial
 
             for trial = 1:P.pain.PEEP.trialsPerBlock
 
+                % Get timing for trial Start
+                P.mri.mriTrialStart(trial) = GetSecs;
 
                 fprintf('\n\n======= BLOCK %d, PAIN TRIAL %d =======\n',block,trial);
 
@@ -228,7 +235,6 @@ for block = P.pain.PEEP.block
                     pressure = med_low_pressure;
                     mod = 1;
                     fprintf(['\nPain: Medium-Low Intensity 30 VAS at ',num2str(pressure), ' kPa\n']);
-                    WaitSecs(2);
 
                 elseif strcmp(P.pain.PEEP.painconditions_mat(block,trial) , "5_1") % mid high intensity pressure
 
@@ -236,7 +242,6 @@ for block = P.pain.PEEP.block
                     pressure = med_high_pressure;
                     mod = 1;
                     fprintf(['\nPain: Medium-High Intensity 50 VAS at ',num2str(pressure), ' kPa\n']);
-                    WaitSecs(2);
 
                 elseif strcmp(P.pain.PEEP.painconditions_mat(block,trial) , "7_1") % high high intensity pressure
 
@@ -244,7 +249,6 @@ for block = P.pain.PEEP.block
                     pressure = high_high_pressure;
                     mod = 1;
                     fprintf(['\nPain: High-High Intensity 70 VAS at ',num2str(pressure), ' kPa\n']);
-                    WaitSecs(2);
 
                 elseif strcmp(P.pain.PEEP.painconditions_mat(block,trial) , "3_2") % mid high intensity pressure
 
@@ -252,7 +256,6 @@ for block = P.pain.PEEP.block
                     heat = med_low_heat;
                     mod = 2;
                     fprintf(['\nPain: Medium-High Intensity 30 VAS at ',num2str(heat), ' °C\n']);
-                    WaitSecs(2);
 
                 elseif strcmp(P.pain.PEEP.painconditions_mat(block,trial) , "5_2") % high high intensity pressure
 
@@ -260,7 +263,6 @@ for block = P.pain.PEEP.block
                     heat = med_high_heat;
                     mod = 2;
                     fprintf(['\nPain: Med-High Intensity 50 VAS at ',num2str(heat), ' °C\n']);
-                    WaitSecs(2);
 
                 elseif strcmp(P.pain.PEEP.painconditions_mat(block,trial) , "7_2") % high high intensity pressure
 
@@ -268,7 +270,6 @@ for block = P.pain.PEEP.block
                     heat = high_high_heat;
                     mod = 2;
                     fprintf(['\nPain: High-High Intensity 70 VAS at ',num2str(heat), ' °C\n']);
-                    WaitSecs(2);
 
                 end
 
@@ -276,19 +277,30 @@ for block = P.pain.PEEP.block
                 if ~O.debug.toggleVisual
                     Screen('FillRect', P.display.w, P.style.red, P.fixcross.Fix1);
                     Screen('FillRect', P.display.w, P.style.red, P.fixcross.Fix2);
-                    Screen('Flip',P.display.w);
+                    red_fix_on = Screen('Flip',P.display.w);
                 end
 
+                %P = log_all_event(P, red_fix_on, 'red_cross_on',trial);
 
+                % --------------------------------
                 % Select which pain and apply
-
+                % ---------------------------------
                 if mod == 1 % Pressure Pain
                     [abort,P,expVAS] = ApplyStimulusPain(P,O,pressure,cuff,block,trial,expVAS,mod);
+
+                   
                 elseif mod == 2 % Heat Pain
                     [abort,P,expVAS] = ApplyStimulusPain_heat(P,O,heat,block,trial,expVAS,mod);
                 end
 
                 if abort; break; end
+
+                % --------------------------------
+                % Log rating and event
+                % ---------------------------------
+                P = log_event(P,trial,expVAS(block).block(trial).trial(2).ratingsection.modality,intensity_VAS, ...
+                    expVAS(block).block(trial).trial(2).ratingsection.trialInt,expVAS(block).block(trial).trial(2).ratingsection.response,resp_onset, ...
+                    expVAS(block).block(trial).trial(2).ratingsection.finalRating,expVAS(block).block(trial).trial(2).ratingsection.reactionTime);
 
                 % White fixation cross
                 if ~O.debug.toggleVisual
@@ -301,6 +313,17 @@ for block = P.pain.PEEP.block
 
                 % Save instantiated parameters and overrides after each trial
                 save(P.out.file.paramExp,'P','O');
+
+                %------------------------------------------
+                % Log MRI triggers and button presses
+                % -------------------------------------
+                P = log_pulses_buttons(P,t0_scan,trial);
+               
+                % ------------------------------------------
+                % Log events and button presses
+                % -----------------------------------------
+                 KbQueueRelease(); % essential or KbTriggerWait below won't work
+
 
                 % Wait for xx ITI before continuing
                 iti = P.project.ITI_rand(P.project.ITI_start);
@@ -316,6 +339,7 @@ for block = P.pain.PEEP.block
                 P.project.ITI_start = P.project.ITI_start + 1;
                 trial = trial + 1;
 
+                
             end
 
 

@@ -36,6 +36,9 @@ addpath(fullfile(P.path.PTB,'PsychBasic','MatlabWindowsFilesR2007a'));
 clear mex global functions;
 commandwindow;
 
+%% ----------------- Create Logfiles --------------------------------------
+P = make_logfiles(P); 
+log_meta_data(P);
 
 %% ----------------- Initial pressure cuff --------------------------------
 

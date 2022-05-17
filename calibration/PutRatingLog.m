@@ -3,7 +3,7 @@
                 
         n = P.pain.calibration.heat.PeriThrN;
         P.pain.calibration.heat.PeriThrStimType(n) = P.currentTrial.stepId; % legacy plateauLog(:,8);
-        P.pain.calibration.heat.PeriThrStimOffs(n) = P.currentTrial.temp-P.painCalibData.AwThr; % legacy plateauLog(:,3);
+        P.pain.calibration.heat.PeriThrStimOffs(n) = P.currentTrial.temp-P.pain.calibration.heat.AwThr; % legacy plateauLog(:,3);
         P.pain.calibration.heat.PeriThrStimTemps(n) = P.currentTrial.temp; % legacy plateauLog(:,4);
         P.pain.calibration.heat.PeriThrStimRatings(n) = P.currentTrial.finalRating; % legacy plateauLog(:,5);
         P.pain.calibration.heat.PeriThrReactionTime(n) = P.currentTrial.reactionTime; % legacy plateauLog(:,7);
@@ -16,3 +16,5 @@
         save(P.out.file.paramCalib, 'P');                
         
     end
+
+
