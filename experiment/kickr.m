@@ -10,6 +10,13 @@ exerciseFile2 = fullfile(P.out.dirExp, [P.out.file.BIKE '_exercise_all_data.mat'
 %exerciseFile = fullfile(P.out.dirExp, [P.out.file.VAS '_exercise_power.mat']);
 %exerciseFile2 = fullfile(P.out.dirExp, [P.out.file.VAS '_exercise_all_data.mat']);
 
+% Load FTP_calib data (calibrated FTP values)
+FTPfile = fullfile(P.out.dirCalib, [P.out.file.FTP '_FTP.mat']);
+
+% add to existing VAS file
+if exist(FTPfile,'file')
+    load(FTPfile);
+end
 
 % add to existing VAS file
 if exist(exerciseFile,'file')
@@ -185,31 +192,31 @@ while GetSecs < tExerciseStart+P.exercise.duration
     if int == 1 % high
 
         % Draw our number to the screen
-        DrawFormattedText(P.display.w, ['Power: ',numberString,' Watt von [',num2str(round(P.FTP.results.zones.level4_threshold(1))),' ',num2str(round(P.FTP.results.zones.level4_threshold(2))),'] Watt'], 'center',P.display.screenYpixels * 0.8 , P.style.white2);
+        DrawFormattedText(P.display.w, ['Power: ',numberString,' Watt von [',num2str(round(FTP_calib.results.zones.level4_threshold(1))),' ',num2str(round(FTP_calib.results.zones.level4_threshold(2))),'] Watt'], 'center',P.display.screenYpixels * 0.8 , P.style.white2);
         
         % Show HR and desired HR Zone
-        DrawFormattedText(P.display.w, ['Herzfrequenz: ',numberString3,' bpm von ',num2str(round(mean(P.FTP.results.hr_zones.level4_threshold))),' bpm'], 'center',P.display.screenYpixels * 0.9 , P.style.white);
+        DrawFormattedText(P.display.w, ['Herzfrequenz: ',numberString3,' bpm von ',num2str(round(mean(FTP_calib.results.hr_zones.level4_threshold))),' bpm'], 'center',P.display.screenYpixels * 0.9 , P.style.white);
 
         % Make Watt number red when cycling is above and below 25 Watt
         % of required intensity
-        %if instantpower_smoothed < P.FTP.results.threshold_power - 25 || instantpower_smoothed > P.FTP.results.threshold_power + 25
-        %    DrawFormattedText(P.display.w, ['Power: ',numberString,' Watt von ',num2str(round(P.FTP.results.threshold_power))], 'center',P.display.screenYpixels * 0.8 , P.style.red);
+        %if instantpower_smoothed < FTP_calib.results.threshold_power - 25 || instantpower_smoothed > FTP_calib.results.threshold_power + 25
+        %    DrawFormattedText(P.display.w, ['Power: ',numberString,' Watt von ',num2str(round(FTP_calib.results.threshold_power))], 'center',P.display.screenYpixels * 0.8 , P.style.red);
 
             % Show HR and desired HR Zone
-        %   DrawFormattedText(P.display.w, ['Herzfrequenz: ',numberString3,' bpm von [',num2str(round(P.FTP.results.hr_zones.level4_threshold(1))),' ',num2str(round(P.FTP.results.hr_zones.level4_threshold(2))),'] bpm'], 'center',P.display.screenYpixels * 0.9 , P.style.white);
+        %   DrawFormattedText(P.display.w, ['Herzfrequenz: ',numberString3,' bpm von [',num2str(round(FTP_calib.results.hr_zones.level4_threshold(1))),' ',num2str(round(FTP_calib.results.hr_zones.level4_threshold(2))),'] bpm'], 'center',P.display.screenYpixels * 0.9 , P.style.white);
 
         %end
 
     elseif int == 0 %low intensity
 
-        DrawFormattedText(P.display.w, ['Power: ',numberString,' Watt von ',num2str(round(P.FTP.results.zones.level1_AR))], 'center',P.display.screenYpixels * 0.8 , P.style.white2);
+        DrawFormattedText(P.display.w, ['Power: ',numberString,' Watt von ',num2str(round(FTP_calib.results.zones.level1_AR))], 'center',P.display.screenYpixels * 0.8 , P.style.white2);
          
         % Show HR and desired HR Zone
         DrawFormattedText(P.display.w, ['Herzfrequenz: ',numberString3,' bpm'], 'center',P.display.screenYpixels * 0.9 , P.style.white);
 
 
-        %if instantpower_smoothed < P.FTP.results.zones.level1_AR - 25 || instantpower_smoothed > P.FTP.results.zones.level1_AR + 25
-        %    DrawFormattedText(P.display.w, ['Power: ',numberString,' Watt von ',num2str(round(P.FTP.results.zones.level1_AR))], 'center',P.display.screenYpixels * 0.8 , P.style.red);
+        %if instantpower_smoothed < FTP_calib.results.zones.level1_AR - 25 || instantpower_smoothed > FTP_calib.results.zones.level1_AR + 25
+        %    DrawFormattedText(P.display.w, ['Power: ',numberString,' Watt von ',num2str(round(FTP_calib.results.zones.level1_AR))], 'center',P.display.screenYpixels * 0.8 , P.style.red);
 
 
         %    % Show HR and desired HR Zone

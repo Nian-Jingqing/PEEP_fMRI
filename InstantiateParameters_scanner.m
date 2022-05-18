@@ -1,7 +1,7 @@
 function P = InstantiateParameters_scanner
 
 %% General settings (should be changed)
-P.protocol.subID                = 97; % subject ID
+P.protocol.subID                = 98; % subject ID
 P.protocol.day                  = 2; % Test day 2 or 3
 P.calibration.cuff_arm          = 1; %Arm for pressure CALIBRATION [1 = LEFT, 2 = RIGHT]
 P.experiment.thermode_arm       = 1; %Arm for thermode CALIBRATION [1 = LEFT, 2 = RIGHT]
@@ -44,8 +44,8 @@ P.env.hostIPaddress             = char(P.env.hostaddress.getHostAddress);
 %% Set Paths
 
 if strcmp(P.env.hostname,'stimpc1')
-    P.path.scriptBase           = 'C:\Users\user\Desktop\PEEP\fMRI\Code\';
-    P.path.experiment           = 'C:\Users\user\Desktop\PEEP\fMRI';
+    P.path.scriptBase           = cd;
+    P.path.experiment           = fullfile('D:\nold',P.project.name,'Code','peep_functions_MRI');
     P.path.PTB                  = 'C:\toolbox\Psychtoolbox';
 
 elseif strcmp(P.env.hostname,'isnb05cda5ba721')
@@ -124,8 +124,8 @@ end
 % Set the arduione device
 if P.devices.arduino
     if strcmp(P.env.hostname,'stimpc1')
-        P.com.arduino = 'COM12'; % Mario COM11, Luigi COM12
-        P.path.arduino = '';
+        P.com.arduino = 'COM14'; 
+        P.path.cpar = fullfile(cd,'..','LabBench.CPAR-0.1.0');
         disp('stimpc1');
     elseif strcmp(P.env.hostname,'DESKTOP-V2QJTRM')
         P.com.arduino = 'COM3';
@@ -151,7 +151,7 @@ end
 if P.devices.thermoino
     if strcmp(P.env.hostname,'stimpc1')
         P.com.thermoino = 'COM12'; % Mario COM11, Luigi COM12
-        P.path.thermoino = '';
+        P.path.thermoino = fullfile(P.path.experiment,'...','thermoino');
         disp('stimpc1');
     elseif strcmp(P.env.hostname,'LAPTOP-41MRBS8P')
         P.com.thermoino = 'COM6'; % CPAR: depends on PC - work laptop COM3 - experiment laptop COM5

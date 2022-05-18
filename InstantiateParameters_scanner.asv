@@ -1,7 +1,7 @@
 function P = InstantiateParameters_scanner
 
 %% General settings (should be changed)
-P.protocol.subID                = 100; % subject ID
+P.protocol.subID                = 98; % subject ID
 P.protocol.day                  = 2; % Test day 2 or 3
 P.calibration.cuff_arm          = 1; %Arm for pressure CALIBRATION [1 = LEFT, 2 = RIGHT]
 P.experiment.thermode_arm       = 1; %Arm for thermode CALIBRATION [1 = LEFT, 2 = RIGHT]
@@ -44,8 +44,8 @@ P.env.hostIPaddress             = char(P.env.hostaddress.getHostAddress);
 %% Set Paths
 
 if strcmp(P.env.hostname,'stimpc1')
-    P.path.scriptBase           = 'C:\Users\user\Desktop\PEEP\fMRI\Code\';
-    P.path.experiment           = 'C:\Users\user\Desktop\PEEP\fMRI';
+    P.path.scriptBase           = cd;
+    P.path.experiment           = fullfile('D:\nold',P.project.name,'Code','peep_functions_MRI');
     P.path.PTB                  = 'C:\toolbox\Psychtoolbox';
 
 elseif strcmp(P.env.hostname,'isnb05cda5ba721')
@@ -555,7 +555,7 @@ if P.protocol.day == 2
 
     P.pain.PEEP.painconditions_mat = painconditions_all_subjects_cpar_thermode(:,:,P.protocol.subID);
 
-    fprintf('Pain Conditions for Day 2 Loaded');
+    fprintf('Pain Conditions for Day 2 Loaded\n');
 
 elseif P.protocol.day == 3
 

@@ -872,6 +872,32 @@ while ~abort
     save(P.out.file.paramCalib, 'P', 'O');
 
 
+    % save in FTP_calib_file
+    % Calculate FTP: 95% of average power of 20 minutes all out
+    FTP_calib.results.threshold_power = (sum(cat(1,FTP_calib.step5.power))/length(FTP_calib.step5))*0.95;
+    FTP_calib.results.mean_power = (sum(cat(1,FTP_calib.step5.power))/length(FTP_calib.step5));
+    FTP = (sum(cat(1,FTP_calib.step5.power))/length(FTP_calib.step5))*0.95;
+    FTP_calib.results.target_HR =  [(sum(cat(1,FTP_calib.step5.HR))/length(FTP_calib.step5))*0.95,(sum(cat(1,FTP_calib.step5.HR))/length(FTP_calib.step5))*1.05];
+
+    %Calculate Zones for HR and FTP (based on https://www.bikeradar.com/advice/fitness-and-training/training-zones/)
+    FTP_calib.results.zones.level1_AR = (sum(cat(1,FTP_calib.step5.power))/length(FTP_calib.step5))*0.55;
+    FTP_calib.results.zones.level2_endurance = [(sum(cat(1,FTP_calib.step5.power))/length(FTP_calib.step5))*0.56,(sum(cat(1,FTP_calib.step5.power))/length(FTP_calib.step5))*0.75];
+    FTP_calib.results.zones.level3_tempo =  [(sum(cat(1,FTP_calib.step5.power))/length(FTP_calib.step5))*0.76,(sum(cat(1,FTP_calib.step5.power))/length(FTP_calib.step5))*0.90];
+    FTP_calib.results.zones.level4_threshold = [(sum(cat(1,FTP_calib.step5.power))/length(FTP_calib.step5))*0.91,(sum(cat(1,FTP_calib.step5.power))/length(FTP_calib.step5))*1.06];
+    FTP_calib.results.zones.level5_VO2max = [(sum(cat(1,FTP_calib.step5.power))/length(FTP_calib.step5))*1.06,(sum(cat(1,FTP_calib.step5.power))/length(FTP_calib.step5))*1.20];
+    FTP_calib.results.zones.level6_AnCap = [(sum(cat(1,FTP_calib.step5.power))/length(FTP_calib.step5))*1.21,(sum(cat(1,FTP_calib.step5.power))/length(FTP_calib.step5))*1.50];
+    FTP_calib.results.zones.level7 = (sum(cat(1,FTP_calib.step5.power))/length(FTP_calib.step5))*1.51;
+
+    % retrieve target HR for different power zones
+    FTP_calib.results.hr_zones.level1_AR = (sum(cat(1,FTP_calib.step5.HR))/length(FTP_calib.step5))*0.68;
+    FTP_calib.results.hr_zones.level2_endurance = [(sum(cat(1,FTP_calib.step5.HR))/length(FTP_calib.step5))*0.69,(sum(cat(1,FTP_calib.step5.HR))/length(FTP_calib.step5))*0.83];
+    FTP_calib.results.hr_zones.level3_tempo =  [(sum(cat(1,FTP_calib.step5.HR))/length(FTP_calib.step5))*0.84,(sum(cat(1,FTP_calib.step5.HR))/length(FTP_calib.step5))*0.94];
+    FTP_calib.results.hr_zones.level4_threshold =  [(sum(cat(1,FTP_calib.step5.HR))/length(FTP_calib.step5))*0.95,(sum(cat(1,FTP_calib.step5.HR))/length(FTP_calib.step5))*1.05];
+    FTP_calib.results.hr_zones.level5_VO2max = (sum(cat(1,FTP_calib.step5.HR))/length(FTP_calib.step5))*1.06;
+    
+    % save file as mat
+    save(FTPfile, 'FTP_calib');
+
     %% Cool Down
 
     % Display to participant what is happening
