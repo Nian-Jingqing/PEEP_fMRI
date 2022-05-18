@@ -44,8 +44,8 @@ P.env.hostIPaddress             = char(P.env.hostaddress.getHostAddress);
 %% Set Paths
 
 if strcmp(P.env.hostname,'stimpc1')
-    P.path.scriptBase           = cd;
-    P.path.experiment           = fullfile('D:\nold',P.project.name,'Code','peep_functions_MRI');
+    P.path.scriptBase           = fullfile('D:\nold',P.project.name,'fMRI','Code','peep_functions_MRI');
+    P.path.experiment           = fullfile('D:\nold',P.project.name,'fMRI');
     P.path.PTB                  = 'C:\toolbox\Psychtoolbox';
 
 elseif strcmp(P.env.hostname,'isnb05cda5ba721')
@@ -94,7 +94,7 @@ end
 %P.out.dirExp = fullfile(P.path.experiment,'Data','LogExperiment',P.project.part,['sub' sprintf('%03d',P.protocol.subID)]);
 P.out.dirCalib = fullfile(P.path.experiment,'Data','LogCalibration',P.project.part,['sub' sprintf('%03d',P.protocol.subID)]);
 P.out.dirUtils = fullfile(P.path.experiment,'Code','peep_functions_fMRI','utils');
-P.out.file.painConditions = fullfile(P.out.dirUtils,"pain_conditions.mat");
+P.out.file.painConditions = fullfile(P.out.dirUtils,'pain_conditions.mat');
 %P.out.file.paramExp = fullfile(P.out.dirExp,['parameters_sub' sprintf('%03d',P.protocol.subID) '.mat']);
 P.out.file.paramCalib = fullfile(P.out.dirCalib,['parameters_sub' sprintf('%03d',P.protocol.subID) '.mat']);
 P.out.file.painConditions = fullfile(P.out.dirExp,'pain_conditions.mat');
@@ -125,7 +125,7 @@ end
 if P.devices.arduino
     if strcmp(P.env.hostname,'stimpc1')
         P.com.arduino = 'COM14'; 
-        P.path.cpar = fullfile(cd,'..','LabBench.CPAR-0.1.0');
+        P.path.cpar = fullfile('D:\nold\PEEP\fMRI\Code\peep_functions_fMRI\CPAR\LabBench.CPAR-master\cpar');
         disp('stimpc1');
     elseif strcmp(P.env.hostname,'DESKTOP-V2QJTRM')
         P.com.arduino = 'COM3';
@@ -151,8 +151,9 @@ end
 if P.devices.thermoino
     if strcmp(P.env.hostname,'stimpc1')
         P.com.thermoino = 'COM12'; % Mario COM11, Luigi COM12
-        P.path.thermoino = fullfile(P.path.experiment,'...','thermoino');
+        P.path.thermoino = fullfile(P.path.experiment,'Code\peep_functions_fMRI','thermoino');
         disp('stimpc1');
+        P.com.thermoinoBaud= 115200;
     elseif strcmp(P.env.hostname,'LAPTOP-41MRBS8P')
         P.com.thermoino = 'COM6'; % CPAR: depends on PC - work laptop COM3 - experiment laptop COM5
         P.path.thermoino = fullfile('C:\Users\nold\PEEP\fMRI\Code\peep_functions_fMRI\thermoino');
@@ -455,7 +456,7 @@ P.pain.PEEP.ratings                              = [];
 goal_N                                  = 99;
 conditions                              = [zeros(1,4/2) ones(1,4/2)]; % randomise exercise condidition (1 = high intensitiy, 0 = low intensitiy)
 
-filespec2                                   = strcat("cycle_ints_", P.project.part, ".mat");
+filespec2                                   = strcat('cycle_ints_', P.project.part, '.mat');
 P.out.file.cycleIntensities                 = fullfile(P.out.dirUtils,filespec2);
 
 if exist(P.out.file.cycleIntensities,'file')
@@ -477,7 +478,7 @@ P.exercise.condition = exercise_conditions_all_subjects(P.protocol.subID,:);
 
 % %% Load correct pressure pains (matrix) for correct subject
 % %P.out.dirUtils = fullfile(P.path.experiment,'utils');
-% filespec = strcat("pain_conditions_cpar_", P.project.part, ".mat");
+% filespec = strcat('pain_conditions_cpar_', P.project.part, '.mat');
 % P.out.file.painConditions = fullfile(P.out.dirUtils,filespec);
 % load(P.out.file.painConditions,'painconditions_all_subjects_cpar');
 % P.pain.PEEP.painconditions_mat = painconditions_all_subjects_cpar(:,:,P.protocol.subID);
@@ -509,7 +510,7 @@ P.exercise.condition = exercise_conditions_all_subjects(P.protocol.subID,:);
 % 
 % %% Load correct thermode pains (matrix) for correct subject
 % %P.out.dirUtils = fullfile(P.path.experiment,'Code','utils');
-% filespec = strcat("pain_conditions_thermode_", P.project.part, ".mat");
+% filespec = strcat('pain_conditions_thermode_', P.project.part, '.mat');
 % P.out.file.painConditions_heat = fullfile(P.out.dirUtils,filespec);
 % load(P.out.file.painConditions_heat,'painconditions_all_subjects_thermode');
 % P.pain.PEEP.thermode.painconditions_mat = painconditions_all_subjects_thermode(:,:,P.protocol.subID);
@@ -543,7 +544,7 @@ P.exercise.condition = exercise_conditions_all_subjects(P.protocol.subID,:);
 
 if P.protocol.day == 2
     
-    filespec = strcat("pain_conditions_cpar_thermode_", P.project.part, "_day2.mat");
+    filespec = strcat('pain_conditions_cpar_thermode_', P.project.part, '_day2.mat');
     P.out.file.painConditions = fullfile(P.out.dirUtils,filespec);
 
     if exist(P.out.file.painConditions,'file')
@@ -559,7 +560,7 @@ if P.protocol.day == 2
 
 elseif P.protocol.day == 3
 
-    filespec = strcat("pain_conditions_cpar_thermode_", P.project.part, "_day3.mat");
+    filespec = strcat('pain_conditions_cpar_thermode_', P.project.part, '_day3.mat');
     P.out.file.painConditions = fullfile(P.out.dirUtils,filespec);
 
     if exist(P.out.file.painConditions,'file')
