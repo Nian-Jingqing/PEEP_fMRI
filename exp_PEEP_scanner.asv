@@ -12,19 +12,14 @@ clear all;
 restoredefaultpath
 
 % add script base path
-addpath('C:\Users\user\Desktop\PEEP\fMRI\Code\peep_functions_fMRI')
+%addpath('C:\Users\nold\PEEP\fMRI\Code\peep_functions_fMRI')
+addpath('D:\nold\PEEP\fMRI\Code\peep_functions_fMRI')% for stim pc
 
+%% ------------------ Experiment Preparations -----------------------------
 
-%% ------------------ Experiment Preparations -------------------------
-
-% Activate needed modalities 
-P.devices.arduino               = []; % if '' or [], will not try to use Arduino
-P.devices.thermoino             = []; % if '' or [], will not try to use Arduino
-P.devices.bike                  = []; % indicate whether bike is used
-P.devices.belt                  = []; % HR belt
 
 % Instantiate Parameters and Overrides
-P                       = InstantiateParameters(P);
+P                       = InstantiateParameters_scanner; % rename to InstantiateParameters_scanner
 O                       = InstantiateOverrides;
 
 
@@ -33,16 +28,15 @@ if P.devices.arduino
     addpath(genpath(P.path.cpar));
 end
 
-addpath(genpath(P.path.scriptBase));
-addpath(genpath(P.path.PTB));
-addpath(fullfile(P.path.PTB,'PsychBasic','MatlabWindowsFilesR2007a'));
-
 % Clear global functions
 clear mex global functions;
 commandwindow;
 
+%% ----------------- Create Logfiles --------------------------------------
+P = make_logfiles(P); 
+log_meta_data(P);
 
-%% ----------------- Initial pressure cuff -----------------------------
+%% ----------------- Initial pressure cuff --------------------------------
 
 if P.devices.arduino
     [abort,initSuccess,dev] = InitCPAR; % initialize CPAR
@@ -60,50 +54,11 @@ if P.devices.arduino
     end
 end
 
-%% -------------------- Initialise KICKR bike ----------------------------
-
-% set bike ble as global
-global bike
-
-% Connect to KICKR Bike
-if P.devices.bike
-
-    [abort,initSuccessBike,bike] = InitKICKR();
-
-    if abort
-        QuickCleanup(P,dev);
-        clear bike;
-        return;
-    end
-
-end
-
-%% ---------------- Initialise Heartrate Belt --------------------------
-% set bike ble as global
-global belt
-
-% Connect to KICKR Bike
-if P.devices.belt
-
-    [abort,initSuccessBelt,belt] = InitBelt();
-
-    if abort
-        QuickCleanup(P,dev);
-        clear belt;
-        return;
-    end
-
-end
-
 %% ---------------- Initialise Parameters and Screen -------------------
 
 % Load Parameters for experiment
 [P,O]                   = SetParams(P,O);
 [P,O]                   = SetKeys(P,O);
-
-% Query where to start experiment
-[abort, P] = StartExperimentAt(P);
-if abort; QuickCleanup(P,dev); return; end
 
 % Open Screen
 [P,O]                   = SetPTB(P,O);
@@ -118,23 +73,19 @@ P.time.scriptStart      = GetSecs;
 %%                              Experiment
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+RunExperiment_pain(P,O,dev);
 
-if P.startSection == 9
-    %load(P.out.file.paramCalib,'P','O');
-    %ShowIntroduction(P,4);
-    RunExperiment_pain(P,O); % add dev!!!
-end
 
 %% Goodbye/End Experiment
 
-ShowIntroduction(P,5);
+ShowIntroduction(P,7);
 
 if abort
     QuickCleanup(P,dev);
     return;
 else
     ListenChar(0);
-    fprintf('\nE X P E R I M E N T    C O M P L E T E\n');
+    fprintf('\nR U N    C O M P L E T E\n');
     sca;
 
 end

@@ -9,17 +9,17 @@ t_pulses       = secs(keycode == P.keys.pulse);
 keycode        = keycode(end:-1:1);
 secs           = secs(end:-1:1);
 
-% write to P struct
-for ix = 1:length(keycode)
-     if keycode(ix) == P.keys.pulse
-        P.data(P.pain.PEEP.block).pulses = [P.data(P.pain.PEEP.block).pulses;...
-             {block(ix), trial(ix),secs(ix)-t0_scan}];
-     else
-          % all non mr-pulse trigger
-         P.data(P.pain.PEEP.block).b_presses = [P.data(P.pain.PEEP.block).b_presses;...
-             {block(ix), trial(ix),KbName(keycode(ix)), secs(ix)-t0_scan}];
-     end
-end
+% % write to P struct
+% for ix = 1:length(keycode)
+%      if keycode(ix) == P.keys.pulse
+%         P.data(P.pain.PEEP.block).pulses = [P.data(P.pain.PEEP.block).pulses;...
+%              {block(ix), trial(ix),secs(ix)-t0_scan}];
+%      else
+%           % all non mr-pulse trigger
+%          P.data(P.pain.PEEP.block).b_presses = [P.data(P.pain.PEEP.block).b_presses;...
+%              {block(ix), trial(ix),KbName(keycode(ix)), secs(ix)-t0_scan}];
+%      end
+% end
 
 
 % write to txt file

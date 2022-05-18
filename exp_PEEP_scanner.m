@@ -1,4 +1,4 @@
-5%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Experimental Script PEEP Behavioural
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -12,8 +12,8 @@ clear all;
 restoredefaultpath
 
 % add script base path
-%addpath('C:\Users\nold\PEEP\fMRI\Code\peep_functions_fMRI')
-addpath('D:\nold\PEEP\fMRI\Code\peep_functions_fMRI')% for stim pc
+addpath('C:\Users\nold\PEEP\fMRI\Code\peep_functions_fMRI')
+%addpath('D:\nold\PEEP\fMRI\Code\peep_functions_fMRI')% for stim pc
 
 %% ------------------ Experiment Preparations -----------------------------
 
@@ -27,6 +27,12 @@ O                       = InstantiateOverrides;
 if P.devices.arduino
     addpath(genpath(P.path.cpar));
 end
+
+
+addpath(genpath(P.path.scriptBase));
+addpath(genpath(P.path.PTB));
+addpath(fullfile(P.path.PTB,'PsychBasic','MatlabWindowsFilesR2007a'));
+
 
 % Clear global functions
 clear mex global functions;

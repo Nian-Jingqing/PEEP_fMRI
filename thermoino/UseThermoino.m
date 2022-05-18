@@ -174,8 +174,6 @@ switch lower(action)
             error('Thermoino version %g. UseThermoino requires version 2.3 or higher.\n',v);
         end
 
-        initSuccessThermoino = 1;
-
 %-----------------------------------------------------------
     case { 'help', 'diag' }
         readOut = cell(numel(tarTh),1);

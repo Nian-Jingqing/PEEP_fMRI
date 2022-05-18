@@ -204,17 +204,17 @@ end
 %     ratings(end+1) = NaN;
 % end
 
-P.currentTrial.stepId; % legacy plateauLog(:,8);
-P.currentTrial.temp-P.pain.calibration.heat.AwThr; % legacy plateauLog(:,3);
-currentTrial.temp; % legacy plateauLog(:,4);
-currentTrial.finalRating; % legacy plateauLog(:,5);
-currentTrial.reactionTime; % legacy plateauLog(:,7);
-currentTrial.response; % legacy plateauLog(:,6);
-        P.pain.calibration.heat.PeriThrRatingTime(n) = GetSecs; % legacy plateauLog(:,11);
-        P.pain.calibration.heat.PeriThrStimTarVAS(n) = P.currentTrial.targetVAS; % legacy plateauLog(:,12);
-        P.pain.calibration.heat.PeriThrStimScaleInitVAS(n) = P.log.scaleInitVAS(P.currentTrial.N,1); % legacy plateauLog(:,13);
-
-P = PutRatingLog();
+% P.currentTrial.stepId; % legacy plateauLog(:,8);
+% P.currentTrial.temp-P.pain.calibration.heat.AwThr; % legacy plateauLog(:,3);
+% currentTrial.temp; % legacy plateauLog(:,4);
+% currentTrial.finalRating; % legacy plateauLog(:,5);
+% currentTrial.reactionTime; % legacy plateauLog(:,7);
+% currentTrial.response; % legacy plateauLog(:,6);
+% P.pain.calibration.heat.PeriThrRatingTime(n) = GetSecs; % legacy plateauLog(:,11);
+% P.pain.calibration.heat.PeriThrStimTarVAS(n) = P.currentTrial.targetVAS; % legacy plateauLog(:,12);
+% P.pain.calibration.heat.PeriThrStimScaleInitVAS(n) = P.log.scaleInitVAS(P.currentTrial.N,1); % legacy plateauLog(:,13);
+% 
+% P = PutRatingLog();
 
 end
 

@@ -1,7 +1,7 @@
 function P = InstantiateParameters_scanner
 
 %% General settings (should be changed)
-P.protocol.subID                = 98; % subject ID
+P.protocol.subID                = 96; % subject ID
 P.protocol.day                  = 2; % Test day 2 or 3
 P.calibration.cuff_arm          = 1; %Arm for pressure CALIBRATION [1 = LEFT, 2 = RIGHT]
 P.experiment.thermode_arm       = 1; %Arm for thermode CALIBRATION [1 = LEFT, 2 = RIGHT]
@@ -418,7 +418,7 @@ P.pain.PEEP.nStimuli                             = 3; % 3 different pain levels
 % ITI ranges between 6 and 10 seconds plus the 7 seconds of rating
 
 N                                       = P.pain.PEEP.nBlocks.*P.pain.PEEP.nTrials;
-P.project.ITI_rand                      = floor(4 + (11-4).*rand(N,1));
+P.project.ITI_rand                      = floor(6 + (10-6).*rand(N,1));
 P.project.ITI_start                     = 1;
 
 % VAS rating parameters

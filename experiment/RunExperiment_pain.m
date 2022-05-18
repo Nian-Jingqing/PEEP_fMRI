@@ -11,6 +11,8 @@ function [abort] = RunExperiment_pain(P,O,dev) % add dev!!!
 abort = 0;
 fprintf('\n==========================\nRunning Experiment.\n==========================\n');
 
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Start Experiment. Send Trigger to SCR PC and logfile 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -85,26 +87,26 @@ expVAS = [];
 for block = P.pain.PEEP.block
 
     while ~abort
-
-        % White Fixcross
-        if ~O.debug.toggleVisual
-            Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix1);
-            Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix2);
-            tCrossOn = Screen('Flip',P.display.w);
-        else
-            tCrossOn = GetSecs;
-        end
+% 
+%         % White Fixcross
+%         if ~O.debug.toggleVisual
+%             Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix1);
+%             Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix2);
+%             tCrossOn = Screen('Flip',P.display.w);
+%         else
+%             tCrossOn = GetSecs;
+%         end
 
 
         for cuff = P.experiment.cuff_arm
 
-%             if ~O.debug.toggleVisual
-%                 upperHalf = P.display.screenRes.height/2;
-%                 Screen('TextSize', P.display.w, 70);
-%                 introTextOn = Screen('Flip',P.display.w);
-%             else
-%                 introTextOn = GetSecs;
-%             end
+            if ~O.debug.toggleVisual
+                upperHalf = P.display.screenRes.height/2;
+                Screen('TextSize', P.display.w, 70);
+                introTextOn = Screen('Flip',P.display.w);
+            else
+                introTextOn = GetSecs;
+            end
 
 
             % Abort Block if neccesary at start
@@ -171,30 +173,17 @@ for block = P.pain.PEEP.block
             %--------------------------------------------------------------
             ShowIntroduction(P,61);
 
-            % Display Exercise Start at experimenter screen
-            fprintf('=========================================================\n');
-            fprintf('\nPain Start\n');
-            fprintf('=========================================================\n');
+
 
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             %% Start SCANNER HERE
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% 
-%             fprintf('\nContinue [%s], or abort [%s].\n',upper(char(P.keys.keyList(P.keys.name.confirm))),upper(char(P.keys.keyList(P.keys.name.esc))));
-% 
-%             while 1
-%                 [keyIsDown, ~, keyCode] = KbCheck();
-%                 if keyIsDown
-%                     if find(keyCode) == P.keys.name.confirm
-%                         break;
-%                     elseif find(keyCode) == P.keys.name.esc
-%                         abort = 1;
-%                         break;
-%                     end
-%                 end
-%             end
-%             if abort; return; end
+            % Display Exercise Start at experimenter screen
+            fprintf('=========================================================\n');
+            fprintf('\nASK MTA TO START SCANNER AND WAIT FOR DUMMY SCANS\n');
+            fprintf('=========================================================\n');
+
 
             %Gleich geht es weiter (show to participant)
             ShowIntroduction(P,5);
@@ -280,28 +269,20 @@ for block = P.pain.PEEP.block
                     red_fix_on = Screen('Flip',P.display.w);
                 end
 
-                %P = log_all_event(P, red_fix_on, 'red_cross_on',trial);
+                P = log_all_event(P, red_fix_on, 'red_cross_on',trial);
 
                 % --------------------------------
                 % Select which pain and apply
                 % ---------------------------------
                 if mod == 1 % Pressure Pain
-                    [abort,P,expVAS] = ApplyStimulusPain(P,O,pressure,cuff,block,trial,expVAS,mod);
-
-                   
+                    [abort,P,expVAS] = ApplyStimulusPain(P,O,pressure,cuff,block,trial,expVAS,mod,t0_scan);
                 elseif mod == 2 % Heat Pain
-                    [abort,P,expVAS] = ApplyStimulusPain_heat(P,O,heat,block,trial,expVAS,mod);
+                    [abort,P,expVAS] = ApplyStimulusPain_heat(P,O,heat,block,trial,expVAS,mod,t0_scan);
                 end
 
                 if abort; break; end
 
-                % --------------------------------
-                % Log rating and event
-                % ---------------------------------
-                P = log_event(P,trial,expVAS(block).block(trial).trial(2).ratingsection.modality,intensity_VAS, ...
-                    expVAS(block).block(trial).trial(2).ratingsection.trialInt,expVAS(block).block(trial).trial(2).ratingsection.response,resp_onset, ...
-                    expVAS(block).block(trial).trial(2).ratingsection.finalRating,expVAS(block).block(trial).trial(2).ratingsection.reactionTime);
-
+              
                 % White fixation cross
                 if ~O.debug.toggleVisual
                     Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix1);
@@ -311,35 +292,57 @@ for block = P.pain.PEEP.block
                     tCrossOn = GetSecs;
                 end
 
+                P = log_all_event(P, tCrossOn, 'white_cross_on',trial);
+
                 % Save instantiated parameters and overrides after each trial
                 save(P.out.file.paramExp,'P','O');
+
+                % --------------------------------
+                % Log rating and event
+                % ---------------------------------
+                if mod == 1
+                    intensity_VAS = num2str(pressure);
+                elseif mod == 2
+                    intensity_VAS = num2str(heat);
+                end
+
+                resp_onset = 3; % placeholder
+
+                P = log_event(P,trial,expVAS(block).block(trial).trial(2).ratingsection.modality,intensity_VAS, ...
+                    expVAS(block).block(trial).trial(2).ratingsection.trialInt,expVAS(block).block(trial).trial(2).ratingsection.response,resp_onset, ...
+                    expVAS(block).block(trial).trial(2).ratingsection.finalRating,expVAS(block).block(trial).trial(2).ratingsection.reactionTime);
 
                 %------------------------------------------
                 % Log MRI triggers and button presses
                 % -------------------------------------
                 P = log_pulses_buttons(P,t0_scan,trial);
                
-                % ------------------------------------------
-                % Log events and button presses
-                % -----------------------------------------
+     
                  KbQueueRelease(); % essential or KbTriggerWait below won't work
 
 
                 % Wait for xx ITI before continuing
                 iti = P.project.ITI_rand(P.project.ITI_start);
                 fprintf(['\nITI: ',num2str(iti), ' seconds'])
+                start_ITI = GetSecs;
+                tstartITIafterT0 = start_ITI - t0_scan;
                 WaitSecs(iti);
                 tITIafterRating = GetSecs;
+                tStopITIafterT0 = tITIafterRating - t0_scan;
 
                 % Calculate ITI after 7 sec rating:
                 tITI = tITIafterRating - tCrossOn;
                 P.experiment.tITI(block,trial) = tITI;
 
+
+                %log event
+                 P = log_all_event(P, tstartITIafterT0, 'start_ITI',trial);
+                 P = log_all_event(P, tStopITIafterT0, 'stop_ITI',trial);
+
                 % update trial counter
                 P.project.ITI_start = P.project.ITI_start + 1;
                 trial = trial + 1;
 
-                
             end
 
 
