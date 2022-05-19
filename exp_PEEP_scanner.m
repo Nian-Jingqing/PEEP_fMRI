@@ -12,8 +12,8 @@ clear all;
 restoredefaultpath
 
 % add script base path
-addpath('C:\Users\nold\PEEP\fMRI\Code\peep_functions_fMRI')
-%addpath('D:\nold\PEEP\fMRI\Code\peep_functions_fMRI')% for stim pc
+%addpath('C:\Users\nold\PEEP\fMRI\Code\peep_functions_fMRI')
+addpath(genpath('D:\nold\PEEP\fMRI\Code\peep_functions_fMRI'))% for stim pc
 
 %% ------------------ Experiment Preparations -----------------------------
 

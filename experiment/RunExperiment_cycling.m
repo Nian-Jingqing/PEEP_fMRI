@@ -1,6 +1,6 @@
 function [abort] = RunExperiment_cycling(P,O)
-% This function inititates the 5 minute cycling on screen with a fixation
-% cross a countdown (300 - 0). It will not have any output apart from
+% This function inititates the 10 minute cycling on screen with a fixation
+% cross a countdown (600 - 0). It will not have any output apart from
 % the seconds the exercise lasted.
 %
 % Author: Janne Nold
@@ -113,13 +113,13 @@ for block = 1:P.pain.PEEP.nBlocks
             DrawFormattedText(P.display.w, strings.exercise1, 'center', 'center',P.style.white2,[],[],[],2,[]);
             Screen('Flip',P.display.w);
 
-            tStartCycle = GetSecs;
-
+            tWaitCycle = GetSecs;
+            
             % Wait 5 Seconds before starting the cycling
             countedDown = 1;
-            while GetSecs < tStartCycle + P.exercise.wait
-                tmp=num2str(SecureRound(GetSecs-tStartCycle,0));
-                [abort,countedDown] = CountDown(P,GetSecs-tStartCycle,countedDown,[tmp ' ']);
+            while GetSecs < tWaitCycle + P.exercise.wait
+                tmp=num2str(SecureRound(GetSecs-tWaitCycle,0));
+                [abort,countedDown] = CountDown(P,GetSecs-tWaitCycle,countedDown,[tmp ' ']);
                 if abort; break; end
             end
 
@@ -137,6 +137,7 @@ for block = 1:P.pain.PEEP.nBlocks
 
             % Get Timing
             tStartCycle = GetSecs;
+            P.time.startCycle(block) = tStartCycle - P.time.scriptStart;
 
             % Apply Exercise Stimulus
             [abort,P,exerciseVAS] = ApplyStimulusExercise(P,O,P.exercise.constPressure,cuff,block,exerciseVAS,int); % run stimulus
@@ -144,10 +145,10 @@ for block = 1:P.pain.PEEP.nBlocks
             if abort; break; end
 
             % Get the end time of exercise block
-            P.time.exerciseBlockEnd(block,1) = GetSecs-P.time.scriptStart;
-            save(P.out.file.paramExp,'P','O');
-
-
+             tEndCycle = GetSecs;
+             P.time.tEndCycle(block) = tEndCycle - P.time.scriptStart;
+           
+             save(P.out.file.paramExp,'P','O');
 
 
             if abort; break; end
@@ -179,6 +180,9 @@ for block = 1:P.pain.PEEP.nBlocks
         Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix2);
         Screen('Flip',P.display.w);
         WaitSecs(1);
+
+       
+                
 
         block = block + 1;
 

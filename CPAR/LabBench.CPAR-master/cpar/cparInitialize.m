@@ -33,7 +33,7 @@ AddLibrary(config, 'LabBench.Instruments.CPAR.dll')
 try
     LabBench.Instruments.InstrumentDB.Create();    
 catch exception    
-    fprintf("Warning: %s\n", exception.ExceptionObject.Message)
+    fprintf('Warning: %s\n', exception.ExceptionObject.Message)
 end
 
 function AddLibrary(config, library)

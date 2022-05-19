@@ -1,8 +1,8 @@
 function P = InstantiateParameters_bike
 
 %% General settings (should be changed)
-P.protocol.subID                = 99; % subject ID
-P.protocol.day                  = 2; % Test day 2 or 3
+P.protocol.subID                = 98; % subject ID
+P.protocol.day                  = 3; % Test day 2 or 3
 P.calibration.cuff_arm          = 1; %Arm for pressure CALIBRATION [1 = LEFT, 2 = RIGHT]
 P.experiment.cuff_arm           = P.calibration.cuff_arm; % Set calibration and experiment cuff to same arm
 P.protocol.session              = 1;
@@ -74,11 +74,13 @@ end
 % Creat output paths based on day 2 or 3
 if P.protocol.day == 2
     string_day = 'Day2';
+    fprintf('Day 2\n');
     P.out.dirExp = fullfile(P.path.experiment,'Data','LogExperiment',P.project.part,['sub' sprintf('%03d',P.protocol.subID)],string_day);
     P.out.file.paramExp = fullfile(P.out.dirExp,['parameters_sub' sprintf('%03d',P.protocol.subID) '.mat']);
 
 elseif P.protocol.day == 3
     string_day = 'Day3';
+    fprintf('Day 3\n');
     P.out.dirExp = fullfile(P.path.experiment,'Data','LogExperiment',P.project.part,['sub' sprintf('%03d',P.protocol.subID)],string_day);
     P.out.file.paramExp = fullfile(P.out.dirExp,['parameters_sub' sprintf('%03d',P.protocol.subID) '.mat']);
 
@@ -457,19 +459,51 @@ conditions                              = [zeros(1,4/2) ones(1,4/2)]; % randomis
 filespec2                                   = strcat("cycle_ints_", P.project.part, ".mat");
 P.out.file.cycleIntensities                 = fullfile(P.out.dirUtils,filespec2);
 
-if exist(P.out.file.cycleIntensities,'file')
-    load(P.out.file.cycleIntensities,'exercise_conditions_all_subjects');
-else
-    unique_permutations = unique(perms(conditions),'rows');
-    numel_uperm = size(unique_permutations,1);
-    repetitions = ceil(goal_N/numel_uperm);
-    conditions_list = repmat(unique_permutations, [repetitions 1]);
-    exercise_conditions_all_subjects = conditions_list(randperm(goal_N),:);
-%    save(['C:\Users\nold\PEEP\fMRI\Code\peep_functions\utils\cycle_ints_',P.project.part],'exercise_conditions_all_subjects');
+if P.protocol.day == 2
+    
+    filespec2                               = strcat("cycle_ints_day2_", P.project.part, ".mat");
+    P.out.file.cycleIntensities                 = fullfile(P.out.dirUtils,filespec2);
+
+    if exist(P.out.file.cycleIntensities,'file')
+        load(P.out.file.cycleIntensities,'exercise_conditions_all_subjects');
+    else
+
+        warning('No Cycle Ints Loaded; Creating New Ones');
+        unique_permutations = unique(perms(conditions),'rows');
+        numel_uperm = size(unique_permutations,1);
+        repetitions = ceil(goal_N/numel_uperm);
+        conditions_list = repmat(unique_permutations, [repetitions 1]);
+        exercise_conditions_all_subjects = conditions_list(randperm(goal_N),:);
+
+    end
+
+    P.exercise.condition = exercise_conditions_all_subjects(P.protocol.subID,:);
+
+    fprintf('Exercise Conditions for Day 2 Loaded\n');
+
+ elseif P.protocol.day == 3
+    
+    filespec2                               = strcat("cycle_ints_day3_", P.project.part, ".mat");
+    P.out.file.cycleIntensities                 = fullfile(P.out.dirUtils,filespec2);
+
+    if exist(P.out.file.cycleIntensities,'file')
+        load(P.out.file.cycleIntensities,'exercise_conditions_all_subjects');
+    else
+
+        warning('No Cycle Ints Loaded; Creating New Ones');
+        unique_permutations = unique(perms(conditions),'rows');
+        numel_uperm = size(unique_permutations,1);
+        repetitions = ceil(goal_N/numel_uperm);
+        conditions_list = repmat(unique_permutations, [repetitions 1]);
+        exercise_conditions_all_subjects = conditions_list(randperm(goal_N),:);
+
+    end
+
+    P.exercise.condition = exercise_conditions_all_subjects(P.protocol.subID,:);
+
+    fprintf('Exercise Conditions for Day 3 Loaded\n');
+
 end
-
-P.exercise.condition = exercise_conditions_all_subjects(P.protocol.subID,:);
-
 
 % % Create matrix for random order of painconditions and each exercise block
 
@@ -538,40 +572,40 @@ P.exercise.condition = exercise_conditions_all_subjects(P.protocol.subID,:);
 % 
 % end
 
-% Load cpar and thermode matrix for pain intensities depending on Day!!! 
-
-if P.protocol.day == 2
-    
-    filespec = strcat("pain_conditions_cpar_thermode_", P.project.part, "_day2.mat");
-    P.out.file.painConditions = fullfile(P.out.dirUtils,filespec);
-
-    if exist(P.out.file.painConditions,'file')
-        load(P.out.file.painConditions,'painconditions_all_subjects_cpar_thermode');
-    else
-
-
-    end
-
-    P.pain.PEEP.painconditions_mat = painconditions_all_subjects_cpar_thermode(:,:,P.protocol.subID);
-
-    fprintf('Pain Conditions for Day 2 Loaded');
-
-elseif P.protocol.day == 3
-
-    filespec = strcat("pain_conditions_cpar_thermode_", P.project.part, "_day3.mat");
-    P.out.file.painConditions = fullfile(P.out.dirUtils,filespec);
-
-    if exist(P.out.file.painConditions,'file')
-        load(P.out.file.painConditions,'painconditions_all_subjects_cpar_thermode');
-    else
-
-
-    end
-
-    P.pain.PEEP.painconditions_mat = painconditions_all_subjects_cpar_thermode(:,:,P.protocol.subID);
-
-    fprintf('Pain Conditions for Day 3 Loaded');
-
-end
+% % Load cpar and thermode matrix for pain intensities depending on Day!!! 
+% 
+% if P.protocol.day == 2
+%     
+%     filespec = strcat("pain_conditions_cpar_thermode_", P.project.part, "_day2.mat");
+%     P.out.file.painConditions = fullfile(P.out.dirUtils,filespec);
+% 
+%     if exist(P.out.file.painConditions,'file')
+%         load(P.out.file.painConditions,'painconditions_all_subjects_cpar_thermode');
+%     else
+% 
+% 
+%     end
+% 
+%     P.pain.PEEP.painconditions_mat = painconditions_all_subjects_cpar_thermode(:,:,P.protocol.subID);
+% 
+%     fprintf('Pain Conditions for Day 2 Loaded');
+% 
+% elseif P.protocol.day == 3
+% 
+%     filespec = strcat("pain_conditions_cpar_thermode_", P.project.part, "_day3.mat");
+%     P.out.file.painConditions = fullfile(P.out.dirUtils,filespec);
+% 
+%     if exist(P.out.file.painConditions,'file')
+%         load(P.out.file.painConditions,'painconditions_all_subjects_cpar_thermode');
+%     else
+% 
+% 
+%     end
+% 
+%     P.pain.PEEP.painconditions_mat = painconditions_all_subjects_cpar_thermode(:,:,P.protocol.subID);
+% 
+%     fprintf('Pain Conditions for Day 3 Loaded');
+% 
+% end
 
 end

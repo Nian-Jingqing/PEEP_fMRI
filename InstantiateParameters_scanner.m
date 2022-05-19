@@ -124,7 +124,7 @@ end
 % Set the arduione device
 if P.devices.arduino
     if strcmp(P.env.hostname,'stimpc1')
-        P.com.arduino = 'COM14'; 
+        P.com.arduino = 'COM17'; 
         P.path.cpar = fullfile('D:\nold\PEEP\fMRI\Code\peep_functions_fMRI\CPAR\LabBench.CPAR-master\cpar');
         disp('stimpc1');
     elseif strcmp(P.env.hostname,'DESKTOP-V2QJTRM')
@@ -150,7 +150,7 @@ end
 % Set the Thermode device
 if P.devices.thermoino
     if strcmp(P.env.hostname,'stimpc1')
-        P.com.thermoino = 'COM12'; % Mario COM11, Luigi COM12
+        P.com.thermoino = 'COM16'; % Mario COM11, Luigi COM12
         P.path.thermoino = fullfile(P.path.experiment,'Code\peep_functions_fMRI','thermoino');
         disp('stimpc1');
         P.com.thermoinoBaud= 115200;

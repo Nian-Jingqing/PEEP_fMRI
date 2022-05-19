@@ -19,4 +19,4 @@ numel_uperm = size(unique_permutations,1);
 repetitions = ceil(goal_N/numel_uperm);
 conditions_list = repmat(unique_permutations, [repetitions 1]);
 exercise_conditions_all_subjects = conditions_list(randperm(goal_N),:);
-save('C:\Users\user\Desktop\PEEP\fMRI\Code\utils\cycle_ints_Pilot-01','exercise_conditions_all_subjects');
+save('C:\Users\nold\PEEP\fMRI\Code\peep_functions_fMRI\utils\cycle_ints_day3_Pilot-01','exercise_conditions_all_subjects');

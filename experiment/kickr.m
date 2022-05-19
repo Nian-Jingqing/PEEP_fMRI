@@ -15,7 +15,7 @@ FTPfile = fullfile(P.out.dirCalib, [P.out.file.FTP '_FTP.mat']);
 
 % add to existing VAS file
 if exist(FTPfile,'file')
-    load(FTPfile);
+   load(FTPfile);
 end
 
 % add to existing VAS file

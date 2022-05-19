@@ -71,6 +71,12 @@ end
 [P,O]                   = SetParams(P,O);
 [P,O]                   = SetKeys(P,O);
 
+% Use with pointer
+%P.keys.name.right               = KbName('PageDown');
+%P.keys.name.left                = KbName('PageUp');
+%P.keys.name.esc                 = KbName('delete');
+
+
 % Query where to start experiment
 [abort, P] = StartExperimentAt(P);
 if abort; QuickCleanup(P,dev); return; end
@@ -78,7 +84,7 @@ if abort; QuickCleanup(P,dev); return; end
 % Open Screen
 [P,O]                   = SetPTB(P,O);
 
-% Get timing at script start
+% Get timing at script start9
 P.time.stamp            = datestr(now,30);
 P.time.scriptStart      = GetSecs;
 
@@ -97,7 +103,7 @@ end
 %% Step 9: Cycling 
 
 if P.startSection == 9
-    load(P.out.file.paramCalib,'P','O');
+    %load(P.out.file.paramCalib,'P','O');
     ShowIntroduction(P,4);
     RunExperiment_cycling(P,O);
 end
