@@ -1,7 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<device assembly="LabBench.Instruments.CPAR" 
-        factory="LabBench.Instruments.CPAR.CPARDevice" 
-        baudrate="38400"
-        profiling="false"
-        number-of-trials="100" 
-        test-delay="10" />        

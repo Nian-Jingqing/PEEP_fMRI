@@ -44,7 +44,6 @@ while ~abort
         % Get Timing 
         P.time.painStimStart(block,trial) = GetSecs-P.time.scriptStart;
         tStimStart = GetSecs;
-        stim_start_after_t0 = tStimStart - t0_scan;
 
         % Count down for the duration of pressure
         countedDown = 1;
@@ -54,11 +53,10 @@ while ~abort
         end
 
         tStimStop = GetSecs;
-        stim_stop_after_t0 = tStimStop - t0_scan;
 
         % Log stimulus
-        P = log_all_event(P, stim_start_after_t0, 'start_pressure',trial); 
-        P = log_all_event(P, stim_stop_after_t0, 'stop_pressure',trial); 
+        P = log_all_event(P, tStimStart, 'start_pressure',trial,t0_scan); 
+        P = log_all_event(P, tStimStop, 'stop_pressure',trial,t0_scan); 
 
         % Possibility to abort while duration of pressure
         while GetSecs < tStimStart+sum(stimDuration)
@@ -69,7 +67,6 @@ while ~abort
         % VAS
         fprintf('\nVAS... ');
         tVASStart = GetSecs;
-        tVASStart_after_t0 = tVASStart - t0_scan;
         P.time.expStimVASStart(block,trial) = GetSecs-P.time.scriptStart;
         SendTrigger(P,P.com.lpt.CEDAddressSCR,P.com.lpt.VASOnset);
 
@@ -82,7 +79,7 @@ while ~abort
         
         % Get Timing
         P.time.expStimVASEnd(block,trial) = GetSecs-P.time.scriptStart;
-        tVASStop_after_t0 =  P.time.expStimVASEnd(block,trial) - t0_scan;
+        tVASStop = GetSecs;
 
         if abort; return; end
 
@@ -92,8 +89,8 @@ while ~abort
         end
 
         % Log VAS
-        P = log_all_event(P, tVASStart_after_t0, 'start_VAS',trial); 
-        P = log_all_event(P, tVASStop_after_t0, 'stop_VAS',trial); 
+        P = log_all_event(P, tVASStart, 'start_VAS',trial,t0_scan); 
+        P = log_all_event(P, tVASStop, 'stop_VAS',trial,t0_scan); 
 
         % Save CPAR Data
         data = cparGetData(dev, data);

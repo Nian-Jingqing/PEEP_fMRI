@@ -524,16 +524,25 @@ elseif section == 61 % main intro
 
     DrawFormattedText(P.display.w,strings.experiment7,'center','center',P.style.white2);
     Screen('Flip',P.display.w);
+    abort = 0;
+    % Give experimenter chance to abort if neccesary
+    fprintf('\nContinue [%s], or abort [%s].\n',upper(char(P.keys.keyList(P.keys.name.confirm))),upper(char(P.keys.keyList(P.keys.name.esc))));
+
     while 1
         [keyIsDown, ~, keyCode] = KbCheck();
         if keyIsDown
             if find(keyCode) == P.keys.name.confirm
                 break;
+            elseif find(keyCode) == P.keys.name.esc
+                abort = 1;
+                break;
             end
         end
     end
+    if abort; return; end
 
-    WaitSecs(0.4);
+    WaitSecs(0.2);
+
 
 
 elseif section == 7 %Goodbye

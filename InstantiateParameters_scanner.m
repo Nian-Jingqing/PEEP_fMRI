@@ -1,7 +1,7 @@
 function P = InstantiateParameters_scanner
 
 %% General settings (should be changed)
-P.protocol.subID                = 96; % subject ID
+P.protocol.subID                = 95; % subject ID
 P.protocol.day                  = 2; % Test day 2 or 3
 P.calibration.cuff_arm          = 1; %Arm for pressure CALIBRATION [1 = LEFT, 2 = RIGHT]
 P.experiment.thermode_arm       = 1; %Arm for thermode CALIBRATION [1 = LEFT, 2 = RIGHT]
@@ -210,7 +210,7 @@ P.pain.preExposure.riseSpeed            = 30; % kPa/s
 P.pain.preExposure.pressureRange        = 5.0:1:100.0; % possible pressure range (kPa)
 P.pain.preExposure.startSimuli          = [10 20];
 P.pain.preExposure.sStimPlateauPreExp   = 15; % duration of the constant pressure plateau after rise time for pre-exposure (part 1)
-P.pain.preExposure.sPreexpITI           = 15; % pre-exposure intertrial interval (ITI)
+P.pain.preExposure.sPreexpITI           = 5; % pre-exposure intertrial interval (ITI)
 P.pain.preExposure.totalDuration        = P.pain.preExposure.sStimPlateauPreExp/P.pain.preExposure.riseSpeed+P.pain.preExposure.sStimPlateauPreExp; % pre-exposure cue duration (stimulus duration with rise time included)
 P.pain.preExposure.sPreexpISI           = 15; %intervall between stimuli 15 seconds
 
@@ -335,7 +335,7 @@ addpath(genpath(P.path.scriptBase))
 P.presentation.firstThresholdITI = 5;
 P.presentation.firstThresholdCue = max(P.presentation.sMinMaxThreshCues);
 
-P.presentation.firstPlateauITI = 5; % override, no reason for this to be so long
+P.presentation.firstPlateauITI = 2; % override, no reason for this to be so long
 P.presentation.firstPlateauCue = max(P.presentation.sMinMaxPlateauCues);
 
 

@@ -22,10 +22,9 @@ function P = make_logfiles(P)
 
 
     % -----------------  table meta data ----------------------------
-    if P.pain.PEEP.block == 1 % Only create meta data in first block
-        P.data(P.pain.PEEP.block).meta = createTable({'sub','part','day','cuff_arm','thermode_arm',...
+   P.data(P.pain.PEEP.block).meta = createTable({'sub','part','day','cuff_arm','thermode_arm',...
             'age','gender','pharm_day2','pharm_day3'});
-    end
+
     
     P.path.filename_meta = sprintf('sub-%02d_block-%02d-peep_exp-day-%02d_meta.tsv',...
                               P.protocol.subID, P.pain.PEEP.block, P.protocol.day);
@@ -41,8 +40,8 @@ function P = make_logfiles(P)
 
 
     % -----------------  table behavioral data ----------------------------
-    %P.data(P.pain.PEEP.block).behav = createTable({ 'sub','day','block','trial','stim','intensity', ...
-    %    'kPa/temp','resp','resp_onset','rating','rating_rt'});
+    P.data(P.pain.PEEP.block).behav = createTable({ 'sub','day','block','trial','stim','intensity_VAS', ...
+        'intensity_kPA_temp','response','resp_onset','rating','rating_rt'});
     
     P.path.behav_fname = sprintf('sub-%02d_block-%02d-peep_exp-day-%02d_behav.tsv',...
                               P.protocol.subID, P.pain.PEEP.block, P.protocol.day);
@@ -71,13 +70,13 @@ function P = make_logfiles(P)
     end
 
     % events = physiopathy triggers, button presses
-    P.data(P.pain.PEEP.block).events = createTable({'run','trial','time',...
+    P.data(P.pain.PEEP.block).events = createTable({'block','trial','time_on',...
         'event_info'}); 
 
     % ---------- path table mri pulses & button presses -------------------
     % save in P struct
-    P.data(P.pain.PEEP.block).pulses     = createTable({'run','trial','time'});
-    P.data(P.pain.PEEP.block).b_presses  = createTable({'run','trial','key','time'});
+    P.data(P.pain.PEEP.block).pulses     = createTable({'block','trial','time'});
+    P.data(P.pain.PEEP.block).b_presses  = createTable({'block','trial','key','time'});
     
     P.path.pulse_bpress_fname = sprintf('sub-%02d_block-%02d-peep_exp-day-%02d_trigger.tsv',...
                               P.protocol.subID, P.pain.PEEP.block, P.protocol.day);
@@ -85,18 +84,19 @@ function P = make_logfiles(P)
 
     if ~exist(P.path.pulse_bpress_fname, 'file')
         f_id = fopen(P.path.pulse_bpress_fname,'a+');
-        fprintf(f_id,'%s\t%s\t%s\t%s', 'run','trial','key','time');
+        fprintf(f_id,'%s\t%s\t%s\t%s', 'block','trial','key','time');
         fprintf(f_id,'\r\n');
         fclose(f_id);
     end
     
+    % pulses mr
     P.path.pulses_fname =  sprintf('sub-%02d_block-%02d-peep_exp-day-%02d_pulses.tsv',...
                               P.protocol.subID, P.pain.PEEP.block, P.protocol.day);
     P.path.pulses_fname = fullfile(P.out.dirExp, P.path.pulses_fname);
     
     if ~exist(P.path.pulses_fname, 'file')
         f_id = fopen(P.path.pulses_fname,'a+');
-        fprintf(f_id,'%s\t%s\t%s\t%s', 'run','trial','time');
+        fprintf(f_id,'%s\t%s\t%s\t%s', 'block','trial','time');
         fprintf(f_id,'\r\n');
         fclose(f_id);
     end

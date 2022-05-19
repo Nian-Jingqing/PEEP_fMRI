@@ -24,7 +24,6 @@ countedDown=1;
 send_trigger(P,O,sprintf('stim_on'));
 
 tStimStart = GetSecs;
-stim_start_after_t0 = tStimStart - t0_scan;
 
 if P.devices.thermoino
     UseThermoino('Trigger'); % start next stimulus
@@ -60,17 +59,15 @@ end
 fprintf(' concluded.\n');
 
 tStimStop = GetSecs;
-stim_stop_after_t0 = tStimStop - t0_scan;
 
 % Log stimulus
-P = log_all_event(P, stim_start_after_t0, 'start_heat',trial);
-P = log_all_event(P, stim_stop_after_t0, 'stop_heat',trial);
+P = log_all_event(P, tStimStart, 'start_heat',trial,t0_scan);
+P = log_all_event(P, tStimStop, 'stop_heat',trial,t0_scan);
 
 
 % VAS Rating and Output
 
 tVASStart = GetSecs;
-tVASStart_after_t0 = tVASStart - t0_scan;
 
 if ~O.debug.toggleVisual
     cuff = 0;
@@ -78,12 +75,10 @@ if ~O.debug.toggleVisual
 end
 
 tVASstop = GetSecs;
-tVASStop_after_t0 =  tVASstop- t0_scan;
-
 
 % Log VAS
-P = log_all_event(P, tVASStart_after_t0, 'start_VAS',trial);
-P = log_all_event(P, tVASStop_after_t0, 'stop_VAS',trial);
+P = log_all_event(P, tVASStart, 'start_VAS',trial,t0_scan);
+P = log_all_event(P, tVASstop, 'stop_VAS',trial,t0_scan);
 
 % Save CPAR Data
 end

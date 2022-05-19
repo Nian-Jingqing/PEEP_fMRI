@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Experimental Script PEEP Behavioural
+%% Experimental Script PEEP Scanner
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% --------------------- General Preparations ----------------------------
@@ -12,16 +12,19 @@ clear all;
 restoredefaultpath
 
 % add script base path
-%addpath('C:\Users\nold\PEEP\fMRI\Code\peep_functions_fMRI')
-addpath(genpath('D:\nold\PEEP\fMRI\Code\peep_functions_fMRI'))% for stim pc
+addpath('C:\Users\nold\PEEP\fMRI\Code\peep_functions_fMRI')
+%addpath(genpath('D:\nold\PEEP\fMRI\Code\peep_functions_fMRI'))% for stim pc
 
 %% ------------------ Experiment Preparations -----------------------------
 
-
-% Instantiate Parameters and Overrides
+% Instantiate Parameters and Overrides if they do not already exist
 P                       = InstantiateParameters_scanner; % rename to InstantiateParameters_scanner
 O                       = InstantiateOverrides;
 
+% Load parameters if there
+if exist(P.out.file.paramExp,'file')
+    load(P.out.file.paramExp,'P');    
+end
 
 % Add paths
 if P.devices.arduino
@@ -39,10 +42,15 @@ clear mex global functions;
 commandwindow;
 
 %% ----------------- Create Logfiles --------------------------------------
-P = make_logfiles(P); 
-log_meta_data(P);
+P = make_logfiles(P);
+
+if P.pain.PEEP.block == 1
+   P = log_meta_data(P);
+end
+
 
 %% ----------------- Initial pressure cuff --------------------------------
+
 
 if P.devices.arduino
     [abort,initSuccess,dev] = InitCPAR; % initialize CPAR

@@ -10,7 +10,7 @@ catch
     CPARid = cparList;
 end
 
-dev = cparGetDevice(CPARid(2,1)); % attempt to establish connection to CPAR
+dev = cparGetDevice(CPARid(2,1:6)); % attempt to establish connection to CPAR
 
 % Wait until a connection has been established
 fprintf('Waiting to connect CPAR... ');
