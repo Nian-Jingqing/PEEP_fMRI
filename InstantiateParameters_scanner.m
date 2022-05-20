@@ -1,7 +1,7 @@
 function P = InstantiateParameters_scanner
 
 %% General settings (should be changed)
-P.protocol.subID                = 95; % subject ID
+P.protocol.subID                = 96; % subject ID
 P.protocol.day                  = 2; % Test day 2 or 3
 P.calibration.cuff_arm          = 1; %Arm for pressure CALIBRATION [1 = LEFT, 2 = RIGHT]
 P.experiment.thermode_arm       = 1; %Arm for thermode CALIBRATION [1 = LEFT, 2 = RIGHT]
@@ -324,7 +324,7 @@ P.presentation.sMinMaxThreshCues = [0.5 2]; % jittered time prior to the stimulu
 
 %% for Sections >2
 P.presentation.sMinMaxPlateauITIs = P.presentation.sCalibITI; % overrides the old values from thresholding [9 11]
-P.presentation.sMinMaxPlateauCues = [0.5 2]; % should correspond to overrides the old values from thresholding
+P.presentation.sMinMaxPlateauCues = [0 0]; % should correspond to overrides the old values from thresholding
 
 %% for Validation (Section 6)
 P.presentation.NValidationSessions = 0;
@@ -335,7 +335,7 @@ addpath(genpath(P.path.scriptBase))
 P.presentation.firstThresholdITI = 5;
 P.presentation.firstThresholdCue = max(P.presentation.sMinMaxThreshCues);
 
-P.presentation.firstPlateauITI = 2; % override, no reason for this to be so long
+P.presentation.firstPlateauITI = 0; % override, no reason for this to be so long
 P.presentation.firstPlateauCue = max(P.presentation.sMinMaxPlateauCues);
 
 

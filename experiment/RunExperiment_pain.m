@@ -172,7 +172,7 @@ for block = P.pain.PEEP.block
             ShowIntroduction(P,61);
             
             % start localiser und Shimming
-            fprintf('=========================================================\n');
+            fprintf('=========================================================');
             fprintf('\nASK MTA TO START LOCALISER AND AUTO ALIGN\n');
             fprintf('=========================================================\n');
             WaitSecs(0.5);
@@ -182,20 +182,29 @@ for block = P.pain.PEEP.block
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             
             % Display Exercise Start at experimenter screen
-            fprintf('=========================================================\n');
+            fprintf('=========================================================');
             fprintf('\nASK MTA TO START SCANNER AND WAIT FOR DUMMY SCANS\n');
             fprintf('=========================================================\n');
             
             
             %Gleich geht es weiter (show to participant)
             ShowIntroduction(P,5);
-            WaitSecs(5);
+            WaitSecs(2);
             
             % ------------------------------------
             % WAIT DUMMY SCANS
             %--------------------------------------
             KbQueueRelease(); % to make sure
             
+             % White Fixcross
+            if ~O.debug.toggleVisual
+                Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix1);
+                Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix2);
+                tCrossOn = Screen('Flip',P.display.w);
+            else
+                tCrossOn = GetSecs;
+            end
+
             % Wait for 5 scanner pulses
             [t0_scan,secs] = wait_dummy_scans(P);
             

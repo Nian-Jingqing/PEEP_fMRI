@@ -44,6 +44,7 @@ while ~abort
         % Get Timing 
         P.time.painStimStart(block,trial) = GetSecs-P.time.scriptStart;
         tStimStart = GetSecs;
+        tPlateauStart = tStimStart + stimDuration(1); % calculate the start of the plateau after rise time 
 
         % Count down for the duration of pressure
         countedDown = 1;
@@ -52,10 +53,13 @@ while ~abort
             if abort; break; end
         end
 
+        tPlateauStop = GetSecs;
         tStimStop = GetSecs;
 
         % Log stimulus
-        P = log_all_event(P, tStimStart, 'start_pressure',trial,t0_scan); 
+        P = log_all_event(P, tStimStart, 'start_pressure',trial,t0_scan);
+        P = log_all_event(P, tPlateauStart, 'start_plateau_pressure',trial,t0_scan); 
+        P = log_all_event(P, tPlateauStop, 'stop_plateau_pressure',trial,t0_scan); 
         P = log_all_event(P, tStimStop, 'stop_pressure',trial,t0_scan); 
 
         % Possibility to abort while duration of pressure
