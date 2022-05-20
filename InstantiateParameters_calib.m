@@ -1,4 +1,4 @@
-function P = InstantiateParameters(P)
+function P = InstantiateParameters_calib(P)
 
 %% General settings (should be changed)
 P.protocol.subID                = 99; % subject ID
@@ -101,9 +101,12 @@ P.out.dirUtils = fullfile(P.path.experiment,'Code','peep_functions_fMRI','utils'
 P.out.file.painConditions = fullfile(P.out.dirUtils,"pain_conditions.mat");
 %P.out.file.paramExp = fullfile(P.out.dirExp,['parameters_sub' sprintf('%03d',P.protocol.subID) '.mat']);
 P.out.file.paramCalib = fullfile(P.out.dirCalib,['parameters_sub' sprintf('%03d',P.protocol.subID) '.mat']);
+P.out.file.pressuresCalib = fullfile(P.out.dirCalib,['calib_pressures' sprintf('%03d',P.protocol.subID) '.mat']);
+P.out.file.heatsCalib = fullfile(P.out.dirCalib,['calib_heats' sprintf('%03d',P.protocol.subID) '.mat']);
 P.out.file.painConditions = fullfile(P.out.dirExp,'pain_conditions.mat');
 P.out.file.painConditions_heat = fullfile(P.out.dirExp,'pain_conditions_heat.mat');
 P.out.file.CPAR = ['sub' sprintf('%03d',P.protocol.subID) '_CPAR'];
+P.out.file.THERMODE = ['sub' sprintf('%03d',P.protocol.subID) '_THERMODE'];
 P.out.file.VAS = ['sub' sprintf('%03d',P.protocol.subID) '_VAS'];
 P.out.file.BIKE = ['sub' sprintf('%03d',P.protocol.subID) '_BIKE'];
 P.out.file.FTP = ['sub' sprintf('%03d',P.protocol.subID) '_FTP'];

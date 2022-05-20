@@ -123,43 +123,43 @@ P.time.scriptStart      = GetSecs;
 
 %% Step 0: General Welcome
 
-% if P.startSection < 1
-%     ShowIntroduction(P,0);
-% end
-% 
-% 
-% %% Step 1: Pre Exposure and Awiszus Method + VAS Training
-% 
-%  if P.devices.thermoino
-% 
-%     if P.startSection < 2
-% 
-%         %   [abort]=ShowInstruction(P,1);
-%         if abort;QuickCleanup(P);return;end
-% 
-%         [abort,preexPainful_heat]=Preexposure_heat(P,O); % sends four triggers, waits ITI seconds after each
-% 
-%         if abort;QuickCleanup(P);return;end
-% 
-%    else
-%         preexPainful_heat = 1; % then we start with the conservative assumption that the top preexposure temp was experienced as painful
-%    end
-% 
-% 
-%     %% Awiszus Method
-% 
-%     if preexPainful_heat==0
-%         P.awiszus.thermoino.mu = 44.0;
-%     else
-%         P.awiszus.thermoino.mu = 43.0;
-%     end
-%     fprintf('\nReady FIRST THRESHOLD at %1.1f°C.\n',P.awiszus.mu);
-% 
-%     %         [abort]=ShowInstruction(P,O,2,1);
-%     if abort;QuickCleanup(P);return;end
-%     P = DoAwiszus_heat(P,O);
+if P.startSection < 1
+    ShowIntroduction(P,0);
+end
+
+
+%% Step 1: Pre Exposure and Awiszus Method + VAS Training
+
+ if P.devices.thermoino
+
+    if P.startSection < 2
+
+        %   [abort]=ShowInstruction(P,1);
+        if abort;QuickCleanup(P);return;end
+
+        [abort,preexPainful_heat]=Preexposure_heat(P,O); % sends four triggers, waits ITI seconds after each
+
+        if abort;QuickCleanup(P);return;end
+
+   else
+        preexPainful_heat = 1; % then we start with the conservative assumption that the top preexposure temp was experienced as painful
+   end
+
+
+    %% Awiszus Method
+
+    if preexPainful_heat==0
+        P.awiszus.thermoino.mu = 44.0;
+    else
+        P.awiszus.thermoino.mu = 43.0;
+    end
+    fprintf('\nReady FIRST THRESHOLD at %1.1f°C.\n',P.awiszus.mu);
+
+    %         [abort]=ShowInstruction(P,O,2,1);
+    if abort;QuickCleanup(P);return;end
+    P = DoAwiszus_heat(P,O);
 %else
-%    P = GetAwiszus(P);
+%   P = GetAwiszus(P);
 
 
         %% VAS Training
@@ -215,7 +215,7 @@ P.time.scriptStart      = GetSecs;
     %     % END
     %     %%%%%%%%%%%%%%%%%%%%%%%
 
-%end
+end
 
 % =======================================================================
 %% Block 1b: Calibration Pressure Cuff

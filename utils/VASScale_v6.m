@@ -33,10 +33,11 @@ if ~nargin
         %keys.esc                = KbName('Escape'); % this may have to do with ListenChar
         keys.esc                = KbName('esc'); % this may have to do with ListenChar
     else
-        keys.left               = KbName('LeftArrow');
-        keys.right              = KbName('RightArrow');
-        keys.confirm            = KbName('Return');
-        keys.esc                = KbName('Escape'); % this may have to do with ListenChar
+        keys        = P.keys;
+        keys.left     = P.keys.name.left; % yellow button
+        keys.right     = P.keys.name.right; % red button
+        keys.confirm  = P.keys.name.confirm;
+        keys.esc   = P.keys.name.esc;
     end
     
     backgroundColor = [70 70 70];
@@ -103,22 +104,24 @@ if isempty(defaultRating); defaultRating = round(nRatingSteps/2); end
 if isempty(backgroundColor); backgroundColor = 0; end
 
 %% Calculate rects
-activeAddon_width = 1.5;
-activeAddon_height = 20;
-[xCenter, ~] = RectCenter(windowRect);
-yCenter = startY;
-axesRect = [xCenter - scaleWidth/2; yCenter - lineWidth/2; xCenter + scaleWidth/2; yCenter + lineWidth/2];
-lowLabelRect = [axesRect(1),yCenter-20,axesRect(1)+6,yCenter+20];
-highLabelRect = [axesRect(3)-6,yCenter-20,axesRect(3),yCenter+20];
-midLabelRect = [xCenter-3,yCenter-20,xCenter+3,yCenter+20];
-ticPositions = linspace(xCenter - scaleWidth/2,xCenter + scaleWidth/2-lineWidth,nRatingSteps);
-% ticRects = [ticPositions;ones(1,nRatingSteps)*yCenter;ticPositions + lineWidth;ones(1,nRatingSteps)*yCenter+tickHeight];
-activeTicRects = [ticPositions-activeAddon_width;ones(1,nRatingSteps)*yCenter-activeAddon_height;ticPositions + lineWidth+activeAddon_width;ones(1,nRatingSteps)*yCenter+activeAddon_height];
-% keyboard
+activeAddon_width           = 1.5;
+activeAddon_height          = 30;
+[xCenter, yCenter]          = RectCenter(windowRect);
+yCenter                     = startY;
+axesRect                    = [xCenter - scaleWidth/2; yCenter - lineWidth/2; xCenter + scaleWidth/2; yCenter + lineWidth/2];
+lowLabelRect                = [axesRect(1),yCenter-30,axesRect(1)+6,yCenter+30];
+highLabelRect               = [axesRect(3)-6,yCenter-30,axesRect(3),yCenter+30];
+midLabelRect                = [xCenter-3,yCenter-30,xCenter+3,yCenter+30];
+midlLabelRect               = [xCenter-3-scaleWidth/4,yCenter-30,xCenter+3-scaleWidth/4,yCenter+30];
+midhLabelRect               = [xCenter-3+ scaleWidth/4,yCenter-30,xCenter+3+scaleWidth/4,yCenter+30];
+ticPositions                = linspace(xCenter - scaleWidth/2,xCenter + scaleWidth/2-lineWidth,nRatingSteps);
+activeTicRects              = [ticPositions-activeAddon_width;ones(1,nRatingSteps)*yCenter-activeAddon_height;ticPositions + lineWidth+activeAddon_width;ones(1,nRatingSteps)*yCenter+activeAddon_height];
+
 
 Screen('TextSize',window,textSize);
 Screen('TextColor',window,[255 255 255]);
 Screen('TextFont', window, 'Arial');
+
 currentRating = defaultRating;
 finalRating = currentRating;
 reactionTime = 0;
@@ -261,12 +264,15 @@ while numberOfSecondsRemaining  > 0
     
     if strcmpi(scaleType,'single')
         Screen('FillRect',window,backgroundColor);
-        Screen('FillRect',window,scaleColor,axesRect);
         Screen('FillRect',window,scaleColor,lowLabelRect);
         Screen('FillRect',window,scaleColor,highLabelRect);
-        Screen('FillRect',window,activeColor,activeTicRects(:,currentRating));
-        DrawFormattedText(window, instructionStrings{1}, 'center',yCenter-100, scaleColor);
-        DrawFormattedText(window, instructionStrings{2}, 'center',yCenter-70, scaleColor);
+        Screen('FillRect',window,scaleColor,midLabelRect);
+        Screen('FillRect',window,scaleColor,midlLabelRect);
+        Screen('FillRect',window,scaleColor,midhLabelRect);
+        Screen('FillRect',window,activeColor,[activeTicRects(1,1)+3 activeTicRects(2,1)+ 5 activeTicRects(3,currentRating)-3 activeTicRects(4,1)-5]);
+        %Screen('FillRect',window,activeColor,activeTicRects(:,currentRating));
+        DrawFormattedText(window, instructionStrings{1}, 'center',yCenter-200, scaleColor);
+        DrawFormattedText(window, instructionStrings{2}, 'center',yCenter-100, scaleColor);
         Screen('DrawText',window,anchorStrings{1},axesRect(1)-textWidths(1),yCenter25,scaleColor);
         Screen('DrawText',window,anchorStrings{2},axesRect(1)-textWidths(2),yCenter25+textSize,scaleColor);
         Screen('DrawText',window,anchorStrings{3},axesRect(3)-textWidths(3),yCenter25,scaleColor);

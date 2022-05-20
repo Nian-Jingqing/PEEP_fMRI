@@ -15,7 +15,7 @@ fprintf('VAS... ');
 send_trigger(P,O,sprintf('vas_on'));
 
 if P.toggles.doPainOnly
-    P = VASScale_v6(P,O);
+   P = VASScale_v6(P,O);
     %[abort,finalRating,reactionTime,keyId,keyTime,response] = singleratingScale_bigger(P,2);
 else
    P = VASScale_v6(P,O);
