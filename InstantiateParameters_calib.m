@@ -101,8 +101,8 @@ P.out.dirUtils = fullfile(P.path.experiment,'Code','peep_functions_fMRI','utils'
 P.out.file.painConditions = fullfile(P.out.dirUtils,"pain_conditions.mat");
 %P.out.file.paramExp = fullfile(P.out.dirExp,['parameters_sub' sprintf('%03d',P.protocol.subID) '.mat']);
 P.out.file.paramCalib = fullfile(P.out.dirCalib,['parameters_sub' sprintf('%03d',P.protocol.subID) '.mat']);
-P.out.file.pressuresCalib = fullfile(P.out.dirCalib,['calib_pressures' sprintf('%03d',P.protocol.subID) '.mat']);
-P.out.file.heatsCalib = fullfile(P.out.dirCalib,['calib_heats' sprintf('%03d',P.protocol.subID) '.mat']);
+P.out.file.pressuresCalib = fullfile(P.out.dirCalib,['calib_pressures.mat']);
+P.out.file.heatsCalib = fullfile(P.out.dirCalib,['calib_heats.mat']);
 P.out.file.painConditions = fullfile(P.out.dirExp,'pain_conditions.mat');
 P.out.file.painConditions_heat = fullfile(P.out.dirExp,'pain_conditions_heat.mat');
 P.out.file.CPAR = ['sub' sprintf('%03d',P.protocol.subID) '_CPAR'];
@@ -272,7 +272,7 @@ P.pain.thermoino.sMaxRating           = 7; % Presentation duration of rating sca
 P.pain.thermoino.bT                           = 32; % baseline temp
 P.pain.thermoino.rS                           = 13; % rise speed
 P.pain.thermoino.fS                           = 13; % fall speed
-P.pain.thermoino.maxSaveTemp                  = 45; % max temp for calib
+P.pain.thermoino.maxSaveTemp                  = 48; % max temp for calib
 P.pain.thermoino.minTemp                      = 40; % min temp for calib
 
 %% Calibration Thermode
@@ -312,13 +312,13 @@ P.pain.calibration.defaultpredHeatLinear        = [42 42.5 43 43.5 44 44.5 45 45
 
 %% Awiszus heat pain threshold search
 P.awiszus.thermoino.N                             = 6; % number of trials
-P.awiszus.thermoino.X                             = P.pain.preExposure.pressureIntensity(1):1:P.pain.preExposure.pressureIntensity(end);  % kPa range to be covered
+P.awiszus.thermoino.X                             = 41.0:0.01:47.0;  % kPa range to be covered
 P.awiszus.thermoino.mu                            = 43.0;% assumed population mean (also become first stimulus to be tested),
 P.awiszus.thermoino.sd                            =  1.2; % assumed sd of threshold (population level) 
 P.awiszus.thermoino.sp                            = 0.4; % assumed spread of threshold (individual level); we started at 0.8
-
+P.awiszus.thermoino.nextX                         = P.awiszus.thermoino.mu; %starting point  
 %% for Preexposure (Section 1)
-P.pain.preExposure.vec_int                          = [42 43]; % vector of intensities used for preexposure, intended to lead to binary decision "were any of these painful y/n"
+P.pain.preExposure.vec_int                          = [41 42]; % vector of intensities used for preexposure, intended to lead to binary decision "were any of these painful y/n"
 P.presentation.sStimPlateauPreexp; % as per InstantiateParameters; modify if desired
 
 %% for Sections >1
@@ -331,7 +331,7 @@ P.presentation.sMinMaxThreshCues = [0.5 2]; % jittered time prior to the stimulu
 %% for Sections >2
 P.presentation.sMinMaxPlateauITIs = P.presentation.sCalibITI; % overrides the old values from thresholding [9 11]
 P.presentation.sMinMaxPlateauCues = [0.5 2]; % should correspond to overrides the old values from thresholding
-
+P.presentation.sMaxRating           = 7; % Presentation duration of rating scale
 %% for Validation (Section 6)
 P.presentation.NValidationSessions = 0;
 P.presentation.n_max_varTrial      = 6;
@@ -344,46 +344,39 @@ P.presentation.firstThresholdCue = max(P.presentation.sMinMaxThreshCues);
 P.presentation.firstPlateauITI = 5; % override, no reason for this to be so long
 P.presentation.firstPlateauCue = max(P.presentation.sMinMaxPlateauCues);
 
+P.presentation.sPreexpITI = 0;
+P.presentation.sPreexpCue = 0;
+P.presentation.scaleInitVASRange = [20 81];
 
-P.presentation.sPreexpITI = 5;
-P.presentation.sPreexpCue = 2;
+% HARDCODED STUFF THAT SHOULD NOT BE HARDCODED
+P.plateaus.step1Seq = [0.5 1.0 2.0 1.0]; % FOR USE WITH VARIABLE PROCEDURE
 
-        % Plateau vars      
-
-        P.presentation.scaleInitVASRange = [20 81];     
-
-        % HARDCODED STUFF THAT SHOULD NOT BE HARDCODED
-        P.plateaus.step1Seq = [0.5 1.0 2.0 1.0]; % FOR USE WITH VARIABLE PROCEDURE
-    %     if ~isempty(O.pain.step1Seq)
-    %         step1Seq = O.pain.step1Seq;
-    %     end 
-
-        if P.toggles.doFixedInts
+if P.toggles.doFixedInts
     %         P.plateaus.step2Seq = [0.1 0.9 -2.0 0.4 -0.6 -0.2 1.6 -1.2]; % Example sequence for fixed intensities; legacy: PMParam
     %         P.plateaus.step2Seq = [0.1 1.6 -1.2 0.9]; % Example sequence for fixed intensities
-            if ~isempty(O.pain.step2Range)
-               P.plateaus.step2Seq = O.pain.step2Range;
-           end
-        else
-            P.plateaus.step2Seq = []; % in this case, the entire section will be skipped
-        end
+    if ~isempty(O.pain.step2Range)
+        P.plateaus.step2Seq = O.pain.step2Range;
+    end
+else
+    P.plateaus.step2Seq = []; % in this case, the entire section will be skipped
+end
 
-        P.plateaus.step3TarVAS = [10 30 90]; % FOR USE WITH FIXED RATING TARGET PROCEDURE
-    %     if ~isempty(O.pain.step3TarVAS)
-    %         step3TarVAS = O.pain.step3TarVAS;
-    %     end   
+P.plateaus.step3TarVAS = [10 30 90]; % FOR USE WITH FIXED RATING TARGET PROCEDURE
+%     if ~isempty(O.pain.step3TarVAS)
+%         step3TarVAS = O.pain.step3TarVAS;
+%     end
 
-        % OPTION TO VALIDATE CALIBRATION RESULTS
-        % if P.presentation.NValidationSessions>0, n sessions will be performed using step5 info; THESE DATA WILL BE SAVED TO PLATEAULOG, AS WELL!
-        % (not to plateauResultsLog, however). This is for your convenience, until the time where it shall not be convenient any longer.
-        % This will include preexposure, because it only makes    
-        P.plateaus.step5SeqF = [20 80]; % these will not be shuffled (F=fixed), intended to be applied after preexposure
-        P.plateaus.step5SeqR = [10 30:10:70 90]; % these will be shuffled (R=random), and concatenated to step5SeqF
-        P.plateaus.step5Preexp = [-20 -10 0 0]; % note: negative values can lead to weird stimulus intensities using sigmoid fit
+% OPTION TO VALIDATE CALIBRATION RESULTS
+% if P.presentation.NValidationSessions>0, n sessions will be performed using step5 info; THESE DATA WILL BE SAVED TO PLATEAULOG, AS WELL!
+% (not to plateauResultsLog, however). This is for your convenience, until the time where it shall not be convenient any longer.
+% This will include preexposure, because it only makes
+P.plateaus.step5SeqF = [20 80]; % these will not be shuffled (F=fixed), intended to be applied after preexposure
+P.plateaus.step5SeqR = [10 30:10:70 90]; % these will be shuffled (R=random), and concatenated to step5SeqF
+P.plateaus.step5Preexp = [-20 -10 0 0]; % note: negative values can lead to weird stimulus intensities using sigmoid fit
 
-        P.plateaus.VASTargets = [30,50,70]; % this is mostly for export/display purposes
+P.plateaus.VASTargets = [30,50,70]; % this is mostly for export/display purposes
 
-        P.presentation.sBlank = 0.5; 
+P.presentation.sBlank = 0.5;
 
 %% parameters bike calibration: (time in minutes)
 P.FTP.parameters.step1.length = 20;

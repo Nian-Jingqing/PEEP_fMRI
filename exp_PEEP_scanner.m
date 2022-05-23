@@ -24,6 +24,8 @@ O                       = InstantiateOverrides;
 % Load parameters if there
 if exist(P.out.file.paramExp,'file')
     load(P.out.file.paramExp,'P');    
+else 
+    warning('No experimental parameters file P loaded');
 end
 
 % Add paths

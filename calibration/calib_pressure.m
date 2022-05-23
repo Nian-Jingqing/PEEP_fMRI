@@ -9,10 +9,16 @@ addpath('C:\Users\nold\PEEP\fMRI\Code\peep_functions_fMRI')
 
 %% ------------------ Experiment Preparations -------------------------
 
-% Instantiate Parameters and Overrides
-% if already exist, load pre exisiting
+% Instantiate Parameters and Overrides 
 P                       = InstantiateParameters_calib;
 O                       = InstantiateOverrides;
+
+% Load parameters if there
+if exist(P.out.file.paramCalib,'file')
+    load(P.out.file.paramCalib,'P','O');    
+else 
+    warning('No calibration parameters file P loaded');
+end
 
 
 % Add paths CPAR
@@ -66,9 +72,9 @@ P.time.stamp            = datestr(now,30);
 P.time.scriptStart      = GetSecs;
 
 
-%% Step 3: Pre Exposure and Awiszus Method + VAS Training
+%% Step 1: Pre Exposure and Awiszus Method + VAS Training
 
-    if P.startSection < 4
+   % if P.startSection < 4
         ShowIntroduction(P,1);
         [P,abort] = PreExposureAwiszus(P,O,dev);
 
@@ -80,25 +86,25 @@ P.time.scriptStart      = GetSecs;
             [P,abort] = VASTraining(P,O,i,dev);
             i = i + 1;
         end
-    end
+   % end
 
 
-    %% Step 4: Calibration: Psychometric Scaling
+    %% Step 2: Calibration: Psychometric Scaling
 
-    if P.startSection < 5
+    %if P.startSection < 5
         load(P.out.file.paramCalib,'P','O');
         ShowIntroduction(P,3);
         [P,abort] = PsychometricScaling(P,O);
 
-    end
+   % end
 
-    %% Step 5: Calibration: VAS Target Regresion
+    %% Step 3: Calibration: VAS Target Regresion
 
-    if  P.startSection < 6
+  %  if  P.startSection < 6
         load(P.out.file.paramCalib,'P','O');
         [P,abort] = TargetRegressionVAS(P,O);
 
-    end
+  %  end
 
 % Save Calibrated Pressures 
 calibrated_pressures = P.pain.calibration.results;

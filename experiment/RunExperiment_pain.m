@@ -1,4 +1,4 @@
-function [abort] = RunExperiment_pain(P,O,dev) % add dev!!!
+function [abort] = RunExperiment_pain(P,O,dev) 
 % This function inititates alternating heat and pressure pain at different
 % intensitiis (30,50,70 VAS).
 %
@@ -19,16 +19,19 @@ fprintf('\n==========================\nRunning Experiment.\n====================
 
 %% Retrieve predicted pressure intensity levels from calibration
 
-% retrieve predicted pressures (linear)
-% if isfield(P.pain.calibration.results.fitData,'predPressureLinear')
-%     predPressure = P.pain.calibration.results.fitData.predPressureLinear;
-%
-%     % Load externat scrutcute for pressure pain here
-% else
-warning('No predicted pressures found, using DEFAULT instead');
-predPressure = P.pain.calibration.defaultpredPressureLinear;
-%end
+% Load Calibrated Pressure Structure
+if exist(P.out.file.pressuresCalib,file)
+    load(P.out.file.pressuresCalib,"calibration");
 
+    % retrieve predicted pressures (linear)
+    if isfield(calibration.fitData.pressure,'predPressureLinear')
+        predPressure = calibration.fitData.pressure.predPressureLinear;
+    end
+
+else
+    warning('No predicted Pressure found, using DEFAULT instead');
+    predPressure = P.pain.calibration.defaultpredPressureLinear;
+end
 
 % Medium Low Pressure
 P.pain.PEEP.VASindex = P.pain.calibration.VASTargetsVisual == 30;
@@ -48,29 +51,32 @@ high_high_pressure = preVAS;
 
 %% Retrieve predicted heat intensity levels from calibration
 
-% retrieve predicted pressures (linear)
-% if isfield(P.pain.calibration.thermode.results.fitData,'predHeatLinear')
-%     predHeat = P.pain.calibration.thermode.results.fitData.predHeatLinear;
+% Load Calibrated Heat Struycture
+if exist(P.out.file.heatsCalib,'file')
+     load(P.out.file.heatsCalib,"calibration");
 
-% Load predicted heat externatl strucutre here
-%else
-warning('No predicted Heat found, using DEFAULT instead');
-predHeat = P.pain.calibration.defaultpredHeatLinear;
-%end
+    % retrieve predicted pressures (linear)
+    if isfield(calibration.fitData.heat,'predTempsLin')
+        predHeat = calibration.fitData.heat.predTempsLin;
+    end
 
+else
+    warning('No predicted Heat found, using DEFAULT instead');
+    predHeat = P.pain.calibration.defaultpredHeatLinear;
+end
 
 % Medium Low Heat
-P.pain.PEEP.thermode.VASindex = P.pain.calibration.VASTargetsVisual == 30;
+P.pain.PEEP.thermode.VASindex = P.plateaus.VASTargets == 30;
 preVAS = predHeat(P.pain.PEEP.thermode.VASindex);
 med_low_heat = preVAS;
 
 % Medium High Heat
-P.pain.PEEP.thermode.VASindex = P.pain.calibration.VASTargetsVisual == 50;
+P.pain.PEEP.thermode.VASindex =P.plateaus.VASTargets == 50;
 preVAS = predHeat(P.pain.PEEP.thermode.VASindex);
 med_high_heat = preVAS;
 
 % High High Heat
-P.pain.PEEP.thermode.VASindex = P.pain.calibration.VASTargetsVisual == 70;
+P.pain.PEEP.thermode.VASindex = P.plateaus.VASTargets == 70;
 preVAS = predHeat(P.pain.PEEP.thermode.VASindex);
 high_high_heat = preVAS;
 

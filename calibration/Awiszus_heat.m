@@ -25,7 +25,7 @@
 % 1.1 2020-07-16
 % - restructured to utilize P struct
 
-function varargout = Awiszus(action,varargin)
+function varargout = Awiszus_heat(action,varargin)
 
     if strcmpi(action,'init')
         
