@@ -1,7 +1,7 @@
 function P = InstantiateParameters_scanner
 
 %% General settings (should be changed)
-P.protocol.subID                = 96; % subject ID
+P.protocol.subID                = 92; % subject ID
 P.protocol.day                  = 2; % Test day 2 or 3
 P.calibration.cuff_arm          = 1; %Arm for pressure CALIBRATION [1 = LEFT, 2 = RIGHT]
 P.experiment.thermode_arm       = 1; %Arm for thermode CALIBRATION [1 = LEFT, 2 = RIGHT]
@@ -26,7 +26,6 @@ P.devices.bike                  = []; % indicate whether bike is used
 P.devices.belt                  = []; % HR belt
 P.devices.trigger               = 0; % 1 single parallel port, arduino; rest undefined
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 %%
 P.display.white                 = [1 1 1];
@@ -301,7 +300,7 @@ P.pain.calibration.VASTargetsFixedPresetSteps   = [5,10,20];
 P.pain.calibration.VASTargetsVisual             = [10,20,30,40,50,60,70,80];
 P.pain.calibration.painTresholdPreset           = 30;
 P.pain.calibration.sStimPlateauCalib            = P.pain.preExposure.sStimPlateauPreExp; % duration of stim plateau in seconds
-P.pain.calibration.defaultpredHeatLinear        = [42 42.5 43 43.5 44 44.5 45 45.5]; % default predicted pressures if calibration fails completely
+P.pain.calibration.defaultpredHeatLinear        = [43 45 47]; % default predicted pressures if calibration fails completely
 
 
 %% Awiszus heat pain threshold search
@@ -575,5 +574,14 @@ elseif P.protocol.day == 3
     fprintf('Pain Conditions for Day 3 Loaded');
 
 end
+
+% Display Current subject at first block
+if P.pain.PEEP.block == 1
+    disp('================================================');
+    disp(['Current Subject ',num2str(P.protocol.subID)]);
+    disp('================================================');
+
+end
+
 
 end

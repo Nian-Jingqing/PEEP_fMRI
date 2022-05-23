@@ -12,7 +12,7 @@ clear all;
 restoredefaultpath
 
 % add script base path
-addpath('C:\Users\nold\PEEP\fMRI\Code\peep_functions_fMRI')
+addpath(genpath('C:\Users\nold\PEEP\fMRI\Code\peep_functions_fMRI'));
 %addpath(genpath('D:\nold\PEEP\fMRI\Code\peep_functions_fMRI'))% for stim pc
 
 %% ------------------ Experiment Preparations -----------------------------
@@ -53,7 +53,6 @@ end
 
 %% ----------------- Initial pressure cuff --------------------------------
 
-
 if P.devices.arduino
     [abort,initSuccess,dev] = InitCPAR; % initialize CPAR
 
@@ -82,7 +81,6 @@ end
 % Get timing at script start
 P.time.stamp            = datestr(now,30);
 P.time.scriptStart      = GetSecs;
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
