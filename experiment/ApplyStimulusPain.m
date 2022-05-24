@@ -33,7 +33,8 @@ while ~abort
              
             [abort,data] = UseCPAR('Trigger',dev,P.cpar.stoprule,P.cpar.forcedstart); % start stimulus
 
-            SendTrigger(P,P.com.lpt.CEDAddressSCR,P.com.lpt.pressureOnset);
+            % Send Trigger to Spike PC
+            SendTrigger(P,P.com.lpt.CEDAddressSCR,P.com.lpt.painOn);
 
         else
             abort = 1;
@@ -55,6 +56,9 @@ while ~abort
 
         tPlateauStop = GetSecs;
         tStimStop = GetSecs;
+
+        % Send Trigger to Spike PC
+        SendTrigger(P,P.com.lpt.CEDAddressSCR,P.com.lpt.restOn);
 
         % Log stimulus
         P = log_all_event(P, tStimStart, 'start_pressure',trial,t0_scan);

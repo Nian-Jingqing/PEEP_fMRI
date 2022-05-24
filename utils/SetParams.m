@@ -19,23 +19,21 @@ else
 end
 P.com.lpt.CEDDuration           = 0.005; % wait time between triggers
 
+
 if strcmp(P.env.hostname,'stimpc1')
-    P.com.lpt.pressureOnsetTHE      = 36; % this covers both CHEPS trigger (4) and SCR/Spike (32)
-    if P.devices.arduino
-        P.com.lpt.pressureOnset      = 32;
-    else % note: without arduino, this is NOT necessary on stimpc setup because there is no separate SCR recording device, just spike; therefore, do it with pressureOnsetTHE
-        P.com.lpt.pressureOnset      = 0;
-    end
-    P.com.lpt.VASOnset          = 128; % we'll figure this out later
-    P.com.lpt.ITIOnset          = 128; % we'll figure this out later
-    P.com.lpt.cueOnset          = 128; % we'll figure this out later
+    %P.com.lpt.pressureOnset = 36; % this covers both CHEPS trigger (4) and SCR/Spike (32)
+    P.com.lpt.blockOn       = 32; %4; % bit 3; pressure trigger for SCR
+    P.com.lpt.painOn        = 64; %8; % bit 5;
+    P.com.lpt.restOn        = 128; %16; % bit 6; white fixation cross
+    %P.com.lpt.buttonPress   = 128; % button press
 else
     %     P.com.lpt.cueOnset      = 1; % bit 1; cue onset
-    P.com.lpt.pressureOnset = 1; %4; % bit 3; pressure trigger for SCR
-    P.com.lpt.VASOnset      = 2; %8; % bit 5;
-    P.com.lpt.ITIOnset      = 3; %16; % bit 6; white fixation cross
-    P.com.lpt.buttonPress   = 4; % button press
+    P.com.lpt.blockOn = 1; %4; % bit 3; pressure trigger for SCR
+    P.com.lpt.painOn      = 2; %8; % bit 5;
+    P.com.lpt.restOn      = 3; %16; % bit 6; white fixation cross
+  %  P.com.lpt.buttonPress   = 4; % button press
 end
+
 
 % Establish parallel port communication.
 if P.devices.trigger

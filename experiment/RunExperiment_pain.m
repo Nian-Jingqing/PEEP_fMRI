@@ -217,6 +217,9 @@ for block = P.pain.PEEP.block
             KbQueueCreate();
             KbQueueStart();
             
+            % Send Trigger to Spike PC
+            SendTrigger(P,P.com.lpt.CEDAddressSCR,P.com.lpt.blockOn);
+
             % ------------------------------------
             % Log Time in struct
             % ------------------------------------

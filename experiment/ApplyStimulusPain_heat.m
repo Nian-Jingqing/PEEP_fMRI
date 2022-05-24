@@ -21,7 +21,8 @@ fprintf('%1.1f°C stimulus initiated.',trialTemp);
 
 tHeatOn = GetSecs;
 countedDown=1;
-send_trigger(P,O,sprintf('stim_on'));
+
+
 
 tStimStart = GetSecs;
 tPlateauStart = tStimStart + stimDuration(1);
@@ -29,6 +30,9 @@ tPlateauStart = tStimStart + stimDuration(1);
 if P.devices.thermoino
     UseThermoino('Trigger'); % start next stimulus
     UseThermoino('Set',trialTemp); % open channel for arduino to ramp up
+
+    % Send Trigger to Spike PC
+    SendTrigger(P,P.com.lpt.CEDAddressSCR,P.com.lpt.painOn);
 
     while GetSecs < tHeatOn + sum(stimDuration(1:2))
         [countedDown]=CountDown(P,GetSecs-tHeatOn,countedDown,'.');
@@ -49,7 +53,7 @@ if P.devices.thermoino
         return;
     end
 else
-    send_trigger(P,O,sprintf('stim_on'));
+    
 
     while GetSecs < tHeatOn + sum(stimDuration)
         [countedDown]=CountDown(GetSecs-tHeatOn,countedDown,'.');
@@ -61,6 +65,9 @@ fprintf(' concluded.\n');
 
 tPlateauStop = GetSecs - stimDuration(3);
 tStimStop = GetSecs;
+
+% Send Trigger to Spike PC
+SendTrigger(P,P.com.lpt.CEDAddressSCR,P.com.lpt.restOn);
 
 % Log stimulus
 P = log_all_event(P, tStimStart, 'start_heat',trial,t0_scan);
