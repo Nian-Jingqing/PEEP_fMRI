@@ -71,7 +71,6 @@ for trial = 1:numel(P.pain.preExposure.startSimuli) % pre-exposure
     end
 
     fprintf('Displaying fixation cross... ');
-    SendTrigger(P,P.com.lpt.CEDAddressSCR,P.com.lpt.ITIOnset);
 
     while GetSecs < tCrossOn + P.pain.preExposure.sPreexpITI
         [abort]=LoopBreaker(P);
@@ -95,7 +94,7 @@ for trial = 1:numel(P.pain.preExposure.startSimuli) % pre-exposure
     stimDuration = CalcStimDuration(P,preExpInt,P.pain.preExposure.sStimPlateauPreExp);
     countedDown = 1;
     tStimStart = GetSecs;
-    SendTrigger(P,P.com.lpt.CEDAddressSCR,P.com.lpt.pressureOnset);
+    
 
     if P.devices.arduino && P.cpar.init
 
@@ -123,11 +122,7 @@ for trial = 1:numel(P.pain.preExposure.startSimuli) % pre-exposure
         Screen('Flip',P.display.w);
     end
 
-
-
-    SendTrigger(P,P.com.lpt.CEDAddressSCR,P.com.lpt.VASOnset);
     
-
 end
     fprintf('\nWARM-UP and Pre exposure finished. \n');
     return;

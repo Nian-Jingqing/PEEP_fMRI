@@ -76,7 +76,7 @@ while ~abort
         fprintf('\nVAS... ');
         tVASStart = GetSecs;
         P.time.expStimVASStart(block,trial) = GetSecs-P.time.scriptStart;
-        SendTrigger(P,P.com.lpt.CEDAddressSCR,P.com.lpt.VASOnset);
+       
 
 
         % VAS Rating and Output
@@ -129,7 +129,7 @@ while ~abort
         fprintf('\nVAS... ');
         tVASStart = GetSecs;
         P.time.calibStimVASStart(calibStep,trial) = GetSecs-P.time.scriptStart;
-        SendTrigger(P,P.com.lpt.CEDAddressSCR,P.com.lpt.VASOnset);
+        
         ratingsection = 1;
 
 

@@ -18,8 +18,7 @@ addpath(genpath('C:\Users\nold\PEEP\fMRI\Code\peep_functions_fMRI'));
 %% ------------------ Experiment Preparations -----------------------------
 
 % Instantiate Parameters and Overrides if they do not already exist
-P                       = InstantiateParameters_scanner; % rename to Inst
-% antiateParameters_scanner
+P                       = InstantiateParameters_scanner; 
 O                       = InstantiateOverrides;
 
 % Load parameters if there
