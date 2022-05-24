@@ -1,4 +1,3 @@
-
 function InitialTrial_heat(P,O)
 
 fprintf('[Initial trial, white fixation cross for %1.1f seconds, red cross for %1.1f seconds]\n',P.presentation.firstPlateauITI-P.presentation.firstPlateauCue,P.presentation.firstPlateauCue);

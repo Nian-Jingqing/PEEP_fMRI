@@ -2,7 +2,7 @@
 %% Block 1a: Calibration Heat Thermode
 % =======================================================================
 
-function [abort,P,O,calibrated_heats] = calib_heat(P,O)
+function [abort,P,O] = calib_heat(P,O)
 
 
 % restore the default path to delete other saved paths
@@ -68,8 +68,8 @@ P.time.stamp            = datestr(now,30);
 P.time.scriptStart      = GetSecs;
 
 %% Pre Exposure
-
-%   [abort]=ShowInstruction(P,1);
+ 
+ShowIntroduction(P,1);
 if abort;QuickCleanup(P);return;end
 
 [abort,preexPainful_heat]=Preexposure_heat(P,O); % sends four triggers, waits ITI seconds after each
@@ -85,13 +85,12 @@ else
 end
 fprintf('\nReady FIRST THRESHOLD at %1.1f°C.\n',P.awiszus.mu);
 
-%         [abort]=ShowInstruction(P,O,2,1);
 if abort;QuickCleanup(P);return;end
 P = DoAwiszus_heat(P,O);
 
 
 
-%% Psychometric Scaling and VAS Target Regression
+%% Rating Training Psychometric Scaling and VAS Target Regression
 
 P=DetermineSteps(P);
 
@@ -102,11 +101,12 @@ end
 
 P.time.plateauStart=GetSecs;
 
+ShowIntroduction(P,2);
+
 [abort,P]=TrialControl(P,O);
 if abort;QuickCleanup(P);return;end
 
 % Save Calibrated Heats
-calibrated_heats = calibration;
 save(P.out.file.paramCalib,'P','O');
 
 
@@ -470,62 +470,66 @@ function [abort,P]=TrialControl(P,O)
 abort=0;
 plateauLog = [];
 
-fprintf('\nSCALE TRANSLATION\n');
-fprintf('\nContinue [%s], or abort [%s].\n',upper(char(P.keys.keyList(P.keys.name.confirm))),upper(char(P.keys.keyList(P.keys.name.esc))));
-
-while 1
-    [keyIsDown, ~, keyCode] = KbCheck();
-    if keyIsDown
-        if find(keyCode) == P.keys.name.confirm
-            break;
-        elseif find(keyCode) == P.keys.name.esc
-            abort = 1;
-            break;
-        end
-    end
-end
-if abort; return; end
-
-WaitSecs(0.2);
-
-%SEGMENT -1 (yeah yeah): SCALE TRANSLATION; data NOT saved
-%if P.startSection<4
-if P.toggles.doScaleTransl && P.toggles.doPainOnly
-    P.toggles.doPainOnly = 0; % this is the whole point here, to translate the y/n binary via the two-dimensional VAS to the unidimensional
-
-    %                [abort]=ShowInstruction(P,O,7,1);
-    if abort;QuickCleanup(P);return;end
-
-    step0Order = [P.pain.calibration.heat.AwThr P.pain.calibration.heat.AwThr+0.2 P.pain.calibration.heat.AwThr-0.2]; % provide some perithreshold intensities
-    fprintf('\n=================================');
-    fprintf('\n========SCALE TRANSLATION========\n');
-    for nStep0Trial = 1:numel(step0Order)
-        fprintf('\n=======TRIAL %d of %d=======\n',nStep0Trial,numel(step0Order));
-        [abort]=ApplyStimulus_heat(P,O,step0Order(nStep0Trial));
-        if abort; return; end
-        P=InstantiateCurrentTrial(P,O,-1,step0Order(nStep0Trial),-1);
-        P=PlateauRating(P,O);
-        [abort]=ITI(P,O,P.currentTrial.reactionTime);
-        if abort; return; end
-    end
-
-    P.toggles.doPainOnly = 1; % RESET
-
-    %                [abort]=ShowInstruction(P,O,8,1);
-    if abort;QuickCleanup(P);return;end
-    WaitSecs(0.5);
-
-end
-%end
-
-%if P.startSection<6
-%            [abort]=ShowInstruction(P,O,3,1);
-if abort;QuickCleanup(P);return;end
-%end
+% fprintf('\nSCALE TRANSLATION\n');
+% fprintf('\nContinue [%s], or abort [%s].\n',upper(char(P.keys.keyList(P.keys.name.confirm))),upper(char(P.keys.keyList(P.keys.name.esc))));
+% 
+% while 1
+%     [keyIsDown, ~, keyCode] = KbCheck();
+%     if keyIsDown
+%         if find(keyCode) == P.keys.name.confirm
+%             break;
+%         elseif find(keyCode) == P.keys.name.esc
+%             abort = 1;
+%             break;
+%         end
+%     end
+% end
+% if abort; return; end
+% 
+% WaitSecs(0.2);
+% 
+% %SEGMENT -1 (yeah yeah): SCALE TRANSLATION; data NOT saved
+% %if P.startSection<4
+% if P.toggles.doScaleTransl && P.toggles.doPainOnly
+%     P.toggles.doPainOnly = 0; % this is the whole point here, to translate the y/n binary via the two-dimensional VAS to the unidimensional
+% 
+%     %                [abort]=ShowInstruction(P,O,7,1);
+%     if abort;QuickCleanup(P);return;end
+% 
+%     step0Order = [P.pain.calibration.heat.AwThr P.pain.calibration.heat.AwThr+0.2 P.pain.calibration.heat.AwThr-0.2]; % provide some perithreshold intensities
+%     fprintf('\n=================================');
+%     fprintf('\n========SCALE TRANSLATION========\n');
+%     for nStep0Trial = 1:numel(step0Order)
+%         fprintf('\n=======TRIAL %d of %d=======\n',nStep0Trial,numel(step0Order));
+%         [abort]=ApplyStimulus_heat(P,O,step0Order(nStep0Trial));
+%         if abort; return; end
+%         P=InstantiateCurrentTrial(P,O,-1,step0Order(nStep0Trial),-1);
+%         P=PlateauRating(P,O);
+%         [abort]=ITI(P,O,P.currentTrial.reactionTime);
+%         if abort; return; end
+%     end
+% 
+%     P.toggles.doPainOnly = 1; % RESET
+% 
+%     %                [abort]=ShowInstruction(P,O,8,1);
+%     if abort;QuickCleanup(P);return;end
+%     WaitSecs(0.5);
+% 
+% end
+% %end
+% 
+% %if P.startSection<6
+% %            [abort]=ShowInstruction(P,O,3,1);
+% if abort;QuickCleanup(P);return;end
+% %end
 
 
 %        SEGMENT 0: RATING TRAINING; data NOT saved
-
+if ~O.debug.toggleVisual
+    Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix1);
+    Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix2);
+    Screen('Flip',P.display.w);
+end
 
 fprintf('\nRATING TRAINING\n');
 fprintf('\nContinue [%s], or abort [%s].\n',upper(char(P.keys.keyList(P.keys.name.confirm))),upper(char(P.keys.keyList(P.keys.name.esc))));
@@ -545,6 +549,7 @@ if abort; return; end
 
 WaitSecs(0.2);
 %if P.startSection<5
+
 WaitSecs(0.5);
 step0Order = repmat(P.pain.calibration.heat.AwThr,1,2);
 fprintf('\n=================================');
@@ -591,6 +596,12 @@ end
 
 %if P.startSection<6 % from this point on, data will be saved and integrated into regression analyses
 % SEGMENT 1: PSYCHOMETRIC-PERCEPTUAL SCALING
+if ~O.debug.toggleVisual
+    Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix1);
+    Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix2);
+    Screen('Flip',P.display.w);
+end
+
 
 fprintf('\nPSYCHOMETRIC-PERCEPTUAL SCALING\n');
 fprintf('\nContinue [%s], or abort [%s].\n',upper(char(P.keys.keyList(P.keys.name.confirm))),upper(char(P.keys.keyList(P.keys.name.esc))));
@@ -609,6 +620,9 @@ end
 if abort; return; end
 
 WaitSecs(0.2);
+
+ShowIntroduction(P,3);
+Screen('Flip',P.display.w);
 
 if P.toggles.doPsyPrcScale
     fprintf('\n=================================');
@@ -897,7 +911,8 @@ end
 save(P.out.file.paramCalib, 'P');
 
 % Save as individual structure
-save(P.out.file.heatsCalib,"calibration");
+calibrated_heats = calibration;
+save(P.out.file.heatsCalib,"calibrated_heats");
 
 end
 
@@ -1032,7 +1047,6 @@ while numberOfSecondsRemaining  > 0
     if ratingsection == 1
         % Draw text for Exercise Rating (BORG Scale, Convert Scale)
         DrawFormattedText(window, 'Bitte bewerten Sie, wie anstrengend das Fahrradfahren war!', 'center',yCenter-200, scaleColor);
-        DrawFormattedText(window, '(maximal 7 Sekunden Zeit)', 'center',yCenter-100, scaleColor);
 
         Screen('DrawText',window,'überhaupt nicht',axesRect(1)-150,yCenter+40,scaleColor);
         Screen('DrawText',window,'anstrengend (6)',axesRect(1)-100,yCenter+80,scaleColor);
@@ -1049,7 +1063,6 @@ while numberOfSecondsRemaining  > 0
 
         % Draw text for Painfulness
         DrawFormattedText(window, 'Wie SCHMERZHAFT war der letzte Reiz?', 'center',yCenter-200, scaleColor);
-        DrawFormattedText(window, '(maximal 7 Sekunden Zeit)', 'center',yCenter-100, scaleColor);
 
         Screen('DrawText',window,'minimaler',axesRect(1)-150,yCenter+40,scaleColor);
         Screen('DrawText',window,'Schmerz',axesRect(1)-100,yCenter+80,scaleColor);

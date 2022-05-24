@@ -22,8 +22,8 @@ P.textrIndex = GetImg(P);
 
 %if strcmp(P.env.hostname,'stimpc1')
 if strcmp(P.language,'de')
-    keyNotPainful = 'den [linken Knopf]';
-    keyPainful = 'den [rechten Knopf]';
+    keyNotPainful = 'den [rechten Knopf]';
+    keyPainful = 'den [linken Knopf]';
 end
 %else
 
@@ -53,7 +53,7 @@ Screen('TextSize', P.display.w, P.display.textsize_ratingBIG);
 
 Screen('DrawTexture', P.display.w, P.textrIndex.TextureIndex7, [], [], 0);
 
-fprintf('Was this stimulus painful [%s], or not painful [%s]?\n',upper(char(P.keys.keyList(P.keys.name.left))),upper(char(P.keys.keyList(P.keys.name.right))));
+fprintf('Was this stimulus painful [%s], or not painful [%s]?\n',upper(char(P.keys.keyList(P.keys.name.right))),upper(char(P.keys.keyList(P.keys.name.left))));
 Screen('Flip',P.display.w);
 
 
@@ -68,12 +68,12 @@ while 1
         fprintf('%s\n',char(P.keys.keyList(pressed)));
 
         % if left key pressed
-        if find(keyCode) == P.keys.name.left
+        if find(keyCode) == P.keys.name.right
             preexPainful=1;
             break;
 
         % if right key pressed
-        elseif find(keyCode) == P.keys.name.right
+        elseif find(keyCode) == P.keys.name.left
             preexPainful=0;
             break;
         end

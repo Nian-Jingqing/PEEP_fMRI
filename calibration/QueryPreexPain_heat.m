@@ -1,5 +1,7 @@
  function preexPainful = QueryPreexPain_heat(P,O,preExpInts)
 
+ Screen('Textsize',P.display.w,50);
+
         if strcmp(P.env.hostname,'stimpc1') 
             if strcmp(P.language,'de')
                 keyNotPainful = 'den [linken Knopf]';

@@ -78,7 +78,6 @@ while numberOfSecondsRemaining  > 0
     if ratingsection == 1
         % Draw text for Exercise Rating (BORG Scale, Convert Scale)
         DrawFormattedText(window, 'Bitte bewerten Sie, wie anstrengend das Fahrradfahren war!', 'center',yCenter-200, scaleColor);
-        DrawFormattedText(window, '(maximal 7 Sekunden Zeit)', 'center',yCenter-100, scaleColor);
 
         Screen('DrawText',window,'überhaupt nicht',axesRect(1)-150,yCenter+40,scaleColor);
         Screen('DrawText',window,'anstrengend (6)',axesRect(1)-100,yCenter+80,scaleColor);
@@ -95,7 +94,6 @@ while numberOfSecondsRemaining  > 0
 
         % Draw text for Painfulness
         DrawFormattedText(window, 'Wie SCHMERZHAFT war der letzte Reiz?', 'center',yCenter-200, scaleColor);
-        DrawFormattedText(window, '(maximal 7 Sekunden Zeit)', 'center',yCenter-100, scaleColor);
 
         Screen('DrawText',window,'minimaler',axesRect(1)-150,yCenter+40,scaleColor);
         Screen('DrawText',window,'Schmerz',axesRect(1)-100,yCenter+80,scaleColor);

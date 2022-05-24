@@ -219,18 +219,18 @@ elseif section == 2
     WaitSecs(0.4);
 
 
-    Screen('DrawTexture', P.display.w, P.textrIndex.TextureIndex22, [], [], 0);
-    Screen('Flip', P.display.w);
-    while 1
-        [keyIsDown, ~, keyCode] = KbCheck();
-        if keyIsDown
-            if find(keyCode) == P.keys.name.right
-                break;
-            end
-        end
-    end
-
-    WaitSecs(0.4);
+%     Screen('DrawTexture', P.display.w, P.textrIndex.TextureIndex22, [], [], 0);
+%     Screen('Flip', P.display.w);
+%     while 1
+%         [keyIsDown, ~, keyCode] = KbCheck();
+%         if keyIsDown
+%             if find(keyCode) == P.keys.name.right
+%                 break;
+%             end
+%         end
+%     end
+% 
+%     WaitSecs(0.4);
 
 %     Screen('DrawTexture', P.display.w, P.textrIndex.TextureIndex23, [], [], 0);
 %     Screen('Flip', P.display.w);
@@ -356,18 +356,18 @@ elseif section == 3
     WaitSecs(0.4);
 
      
-    Screen('DrawTexture', P.display.w, P.textrIndex.TextureIndex26, [], [], 0);
-    Screen('Flip', P.display.w);
-    while 1
-        [keyIsDown, ~, keyCode] = KbCheck();
-        if keyIsDown
-            if find(keyCode) == P.keys.name.right
-                break;
-            end
-        end
-    end
-
-    WaitSecs(0.4);
+%     Screen('DrawTexture', P.display.w, P.textrIndex.TextureIndex26, [], [], 0);
+%     Screen('Flip', P.display.w);
+%     while 1
+%         [keyIsDown, ~, keyCode] = KbCheck();
+%         if keyIsDown
+%             if find(keyCode) == P.keys.name.right
+%                 break;
+%             end
+%         end
+%     end
+% 
+%     WaitSecs(0.4);
 
 
     DrawFormattedText(P.display.w,strings.calibration4,'center','center',P.style.white2);

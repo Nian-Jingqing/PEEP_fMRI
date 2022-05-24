@@ -12,18 +12,37 @@ clear all;
 restoredefaultpath
 
 % add script base path
-addpath('C:\Users\nold\PEEP\fMRI\Code\peep_functions_fMRI')
+addpath(genpath('C:\Users\nold\PEEP\fMRI\Code\peep_functions_fMRI'));
 
-% Query where to start experiment
-[abort, startSection] = StartCalibrationAt;
+P = InstantiateParameters_calib;
+O = InstantiateOverrides;
+
+addpath(genpath(P.path.scriptBase));
+addpath(genpath(P.path.PTB));
+addpath(fullfile(P.path.PTB,'PsychBasic','MatlabWindowsFilesR2007a'));
+
+% Clear global functions
+clear mex global functions;
+commandwindow;
+
+
+%% ---------------- Initialise Parameters and Keys -------------------
+
+% Load Parameters for experiment
+[P,O]                   = SetParams(P,O);
+[P,O]                   = SetKeys(P,O);
 
 abort  = 0;
 
+% Query where to start experiment
+[abort, startSection] = StartCalibrationAt(P);
+
 while ~abort
+
     %% ----------------- Thermode Calibration .--------------------------------
 
     if startSection == 1
-    [abort,P,O,calibrated_heats] = calib_heat(P,O);
+    [abort,P,O] = calib_heat(P,O);
     sca;
     end 
 
@@ -43,7 +62,7 @@ while ~abort
     end 
 
     if abort
-        QuickCleanup(P,dev);
+        QuickCleanup(P);
         return;
     else
         ListenChar(0);

@@ -81,11 +81,8 @@ P.time.scriptStart      = GetSecs;
         % VAS Training
         load(P.out.file.paramCalib,'P','O');
         ShowIntroduction(P,2);
-
-        for i = 2:P.pain.VAStraining.nRatings
-            [P,abort] = VASTraining(P,O,i,dev);
-            i = i + 1;
-        end
+        [P,abort] = VASTraining(P,O,2,dev);
+   
    % end
 
 

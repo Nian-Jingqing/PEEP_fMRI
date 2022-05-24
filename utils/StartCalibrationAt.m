@@ -1,5 +1,6 @@
-function [abort,startSection] = StartCalibrationAt
+function [abort,startSection] = StartCalibrationAt(P)
 
+abort = 0;
 
 P.keys.n0                 = KbName('0)'); % | Welcome (Day1)
 P.keys.n1                 = KbName('1!'); % | Thermode Calib
@@ -49,6 +50,7 @@ while 1
         end
     end
 end
+
 
 WaitSecs(0.2); % wait in case of a second query immediately after this
 
