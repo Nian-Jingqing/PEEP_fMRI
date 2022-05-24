@@ -20,18 +20,18 @@ fprintf('\n==========================\nRunning Experiment.\n====================
 %% Retrieve predicted pressure intensity levels from calibration
 
 % Load Calibrated Pressure Structure
-% if exist(P.out.file.pressuresCalib,file)
-%     load(P.out.file.pressuresCalib,"calibration");
-% 
-%     % retrieve predicted pressures (linear)
-%     if isfield(calibration.fitData.pressure,'predPressureLinear')
-%         predPressure = calibration.fitData.pressure.predPressureLinear;
-%     end
-% 
-% else
+if exist(P.out.file.pressuresCalib,'file')
+    load(P.out.file.pressuresCalib,"calibrated_pressures");
+
+    % retrieve predicted pressures (linear)
+    if isfield(calibrated_pressures.fitData,'predPressureLinear')
+        predPressure = calibrated_pressures.fitData.predPressureLinear;
+    end
+
+else
     warning('No predicted Pressure found, using DEFAULT instead');
     predPressure = P.pain.calibration.defaultpredPressureLinear;
-%end
+end
 
 % Medium Low Pressure
 P.pain.PEEP.VASindex = P.pain.calibration.VASTargetsVisual == 30;
@@ -51,19 +51,19 @@ high_high_pressure = preVAS;
 
 %% Retrieve predicted heat intensity levels from calibration
 
-% % Load Calibrated Heat Struycture
-% if exist(P.out.file.heatsCalib,'file')
-%      load(P.out.file.heatsCalib,"calibration");
-% 
-%     % retrieve predicted pressures (linear)
-%     if isfield(calibration.fitData.heat,'predTempsLin')
-%         predHeat = calibration.fitData.heat.predTempsLin;
-%     end
+% Load Calibrated Heat Struycture
+if exist(P.out.file.heatsCalib,'file')
+     load(P.out.file.heatsCalib,"calibrated_heats");
 
-%else
+    % retrieve predicted heats (linear)
+    if isfield(calibrated_heats.fitData.heat,'predTempsLin')
+        predHeat = calibrated_heats.fitData.heat.predTempsLin;
+    end
+
+else
     warning('No predicted Heat found, using DEFAULT instead');
     predHeat = P.pain.calibration.defaultpredHeatLinear;
-%end
+end
 
 % Medium Low Heat
 P.pain.PEEP.thermode.VASindex = P.plateaus.VASTargets == 30;

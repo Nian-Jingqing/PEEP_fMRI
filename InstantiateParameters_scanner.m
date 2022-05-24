@@ -1,7 +1,7 @@
 function P = InstantiateParameters_scanner
 
 %% General settings (should be changed)
-P.protocol.subID                = 92; % subject ID
+P.protocol.subID                = 90; % subject ID
 P.protocol.day                  = 2; % Test day 2 or 3
 P.calibration.cuff_arm          = 1; %Arm for pressure CALIBRATION [1 = LEFT, 2 = RIGHT]
 P.experiment.thermode_arm       = 1; %Arm for thermode CALIBRATION [1 = LEFT, 2 = RIGHT]
@@ -103,6 +103,14 @@ P.out.file.VAS = ['sub' sprintf('%03d',P.protocol.subID) '_VAS'];
 P.out.file.BIKE = ['sub' sprintf('%03d',P.protocol.subID) '_BIKE'];
 P.out.file.FTP = ['sub' sprintf('%03d',P.protocol.subID) '_FTP'];
 
+% Define path where calibration files can be found
+if strcmp(P.env.hostname,'stimpc1')
+    P.out.file.pressuresCalib = fullfile(P.out.dirCalib,['calib_pressures.mat']);
+    P.out.file.heatsCalib = fullfile(P.out.dirCalib,['calib_heats.mat']);
+elseif strcmp(P.env.hostname,'LAPTOP-41MRBS8P')
+    P.out.file.pressuresCalib = fullfile(P.out.dirCalib,['calib_pressures.mat']);
+    P.out.file.heatsCalib = fullfile(P.out.dirCalib,['calib_heats.mat']);
+end
 
 % Create directory for experimental log
 if ~exist(P.out.dirExp,'dir')
@@ -265,7 +273,7 @@ P.pain.thermoino.sMaxRating           = 7; % Presentation duration of rating sca
 P.pain.thermoino.bT                           = 32; % baseline temp
 P.pain.thermoino.rS                           = 13; % rise speed
 P.pain.thermoino.fS                           = 13; % fall speed
-P.pain.thermoino.maxSaveTemp                  = 45; % max temp for calib
+P.pain.thermoino.maxSaveTemp                  = 48; % max temp for calib
 P.pain.thermoino.minTemp                      = 40; % min temp for calib
 
 %% Calibration Thermode
