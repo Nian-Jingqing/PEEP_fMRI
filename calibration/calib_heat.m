@@ -68,44 +68,47 @@ P.time.stamp            = datestr(now,30);
 P.time.scriptStart      = GetSecs;
 
 %% Pre Exposure
- 
-ShowIntroduction(P,1);
-if abort;QuickCleanup(P);return;end
 
-[abort,preexPainful_heat]=Preexposure_heat(P,O); % sends four triggers, waits ITI seconds after each
+if P.startSection < 2
+    ShowIntroduction(P,1);
+    if abort;QuickCleanup(P);return;end
 
-if abort;QuickCleanup(P);return;end
+    [abort,preexPainful_heat]=Preexposure_heat(P,O); % sends four triggers, waits ITI seconds after each
+
+    if abort;QuickCleanup(P);return;end
 
 %% Awiszus
 
-if preexPainful_heat==0
-    P.awiszus.thermoino.mu = 44.0;
-else
-    P.awiszus.thermoino.mu = 43.0;
+    if preexPainful_heat==0
+        P.awiszus.thermoino.mu = 44.0;
+    else
+        P.awiszus.thermoino.mu = 43.0;
+    end
+    fprintf('\nReady FIRST THRESHOLD at %1.1f°C.\n',P.awiszus.mu);
+
+    if abort;QuickCleanup(P);return;end
+    P = DoAwiszus_heat(P,O);
+
 end
-fprintf('\nReady FIRST THRESHOLD at %1.1f°C.\n',P.awiszus.mu);
-
-if abort;QuickCleanup(P);return;end
-P = DoAwiszus_heat(P,O);
-
-
 
 %% Rating Training Psychometric Scaling and VAS Target Regression
 
-P=DetermineSteps(P);
+if P.startSection < 3
+    P=DetermineSteps(P);
 
-WaitSecs(0.2);
-if ~O.debug.toggleVisual
-    Screen('Flip',P.display.w);
+    WaitSecs(0.2);
+    if ~O.debug.toggleVisual
+        Screen('Flip',P.display.w);
+    end
+
+    P.time.plateauStart=GetSecs;
+
+    ShowIntroduction(P,2);
+
+    [abort,P]=TrialControl(P,O);
+    if abort;QuickCleanup(P);return;end
+
 end
-
-P.time.plateauStart=GetSecs;
-
-ShowIntroduction(P,2);
-
-[abort,P]=TrialControl(P,O);
-if abort;QuickCleanup(P);return;end
-
 % Save Calibrated Heats
 save(P.out.file.paramCalib,'P','O');
 
@@ -170,7 +173,7 @@ if ~O.debug.toggleVisual
 else
     tCueOn = GetSecs;
 end
-send_trigger(P,O,sprintf('cue_on'));
+
 
 while GetSecs < tCueOn + P.presentation.sPreexpCue
     [abort]=LoopBreaker(P);
@@ -186,7 +189,7 @@ for i = 1:length(preExpInts)
         else
             tCrossOn = GetSecs;
         end
-        send_trigger(P,O,sprintf('ITI_on'));
+        
 
         while GetSecs < tCrossOn + P.presentation.sPreexpITI
             [abort]=LoopBreaker(P);
@@ -200,7 +203,7 @@ for i = 1:length(preExpInts)
         else
             tCueOn = GetSecs;
         end
-        send_trigger(P,O,sprintf('cue_on'));
+        
 
         while GetSecs < tCueOn + P.presentation.sPreexpCue
             [abort]=LoopBreaker(P);
@@ -212,7 +215,7 @@ for i = 1:length(preExpInts)
     stimDuration=CalcStimDuration(P,preExpInts(i),P.presentation.sStimPlateauPreexp);
 
     countedDown=1;
-    send_trigger(P,O,sprintf('stim_on'));
+    
 
     if P.devices.thermoino
         UseThermoino('Trigger'); % start next stimulus
@@ -237,7 +240,7 @@ for i = 1:length(preExpInts)
             return;
         end
     else
-        send_trigger(P,O,sprintf('stim_on'));
+        
         tStimStart=GetSecs;
 
         while GetSecs < tStimStart+sum(stimDuration)
@@ -256,7 +259,7 @@ end
 if ~O.debug.toggleVisual
     Screen('Flip',P.display.w);
 end
-send_trigger(P,O,sprintf('vas_on'));
+
 
 preexPainful_heat = QueryPreexPain_heat(P,O,preExpInts);
 
@@ -357,7 +360,7 @@ if ~O.debug.toggleVisual
     Screen('Flip',P.display.w);
 end
 
-send_trigger(P,O,sprintf('vas_on'));
+
 
 WaitSecs(P.presentation.sBlank);
 %KbQueueRelease;
@@ -419,7 +422,6 @@ if ~O.debug.toggleVisual
     Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix2);
     Screen('Flip',P.display.w);  % gets timing of event for PutLog
 end
-send_trigger(P,O,sprintf('ITI_on'));
 
 sITIRemaining=P.presentation.thresholdITIs(nTrial)-tThresholdRating;
 
@@ -438,7 +440,7 @@ while GetSecs < tITIStart+sITIRemaining
                         Screen('FillRect', P.display.w, P.style.red,P.fixcross.Fix1);
                         Screen('FillRect', P.display.w, P.style.red, P.fixcross.Fix2);
                         Screen('Flip',P.display.w);
-                        send_trigger(P,O,sprintf('cue_on'));
+                     
                         WaitSecs(P.presentation.sBlank);
                     end
                 end
@@ -801,7 +803,6 @@ while GetSecs < tBlankOn + 0.5 end
 % VAS
 fprintf('VAS... ');
 
-send_trigger(P,O,sprintf('vas_on'));
 
 if P.toggles.doPainOnly
     P = VASScale_v6_new(P,O,2);
@@ -841,7 +842,6 @@ fprintf('ITI (%1.1fs)',sITIRemaining);
 tITIOn = GetSecs;
 
 countedDown=1;
-send_trigger(P,O,sprintf('ITI_on'));
 
 while GetSecs < tITIOn + sITIRemaining
     [countedDown]=CountDown(P,GetSecs-tITIOn,countedDown,'.');
@@ -857,7 +857,7 @@ while GetSecs < tITIOn + sITIRemaining
                 Screen('FillRect', P.display.w, P.style.red, P.fixcross.Fix2);
                 Screen('Flip',P.display.w);
             end
-            send_trigger(P,O,sprintf('cue_on'));
+           
             WaitSecs(P.presentation.sBlank);
         end
     end
@@ -1110,7 +1110,7 @@ while numberOfSecondsRemaining  > 0
     [keyIsDown,secs,keyCode] = KbCheck; % this checks the keyboard very, very briefly.
 
     if keyIsDown % only if a key was pressed we check which key it was
-        SendTrigger(P,P.com.lpt.CEDAddressSCR,P.com.lpt.buttonPress); % log key/button press as a marker
+
         if keyCode(moreKey) % if it was the key we named key1 at the top then...
             currentRating = currentRating + 1; %original: currentRating = currentRating + 1;
             if currentRating > nRatingSteps
@@ -1181,7 +1181,7 @@ fprintf('%1.1f°C stimulus initiated.',trialTemp);
 
 tHeatOn = GetSecs;
 countedDown=1;
-send_trigger(P,O,sprintf('stim_on'));
+
 
 if P.devices.thermoino
     UseThermoino('Trigger'); % start next stimulus
@@ -1206,7 +1206,7 @@ if P.devices.thermoino
         return;
     end
 else
-    send_trigger(P,O,sprintf('stim_on'));
+    
 
     while GetSecs < tHeatOn + sum(stimDuration)
         [countedDown]=CountDown(P,GetSecs-tHeatOn,countedDown,'.');
@@ -1248,19 +1248,7 @@ P.log.scaleInitVAS(P.currentTrial.N,1) = randi(P.presentation.scaleInitVASRange)
 
 end
 
-%% Set Marker for CED and BrainVision Recorder
-function SendTrigger(P,address,port)
-% Send pulse to CED for SCR, thermode, digitimer
-% [handle, errmsg] = IOPort('OpenSerialport',num2str(port)); % gives error
-% msg on grahl laptop
-if P.devices.trigger
-    outp(address,port);
-    WaitSecs(P.com.lpt.CEDDuration);
-    outp(address,0);
-    WaitSecs(P.com.lpt.CEDDuration);
-end
 
-end
 %%
 function P = BetterGuess(P)
 

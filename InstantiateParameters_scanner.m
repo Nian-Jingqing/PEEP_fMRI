@@ -1,13 +1,13 @@
 function P = InstantiateParameters_scanner
 
 %% General settings (should be changed)
-P.protocol.subID                = 90; % subject ID
+P.protocol.subID                = 89; % subject ID
 P.protocol.day                  = 2; % Test day 2 or 3
 P.calibration.cuff_arm          = 1; %Arm for pressure CALIBRATION [1 = LEFT, 2 = RIGHT]
 P.experiment.thermode_arm       = 1; %Arm for thermode CALIBRATION [1 = LEFT, 2 = RIGHT]
 P.experiment.cuff_arm           = P.calibration.cuff_arm; % Set calibration and experiment cuff to same arm
 P.protocol.session              = 1;
-P.subject.age                   = 25; % indicate subjects age
+P.subject.age                   = 26; % indicate subjects age
 P.subject.gender                = 'f'; % indicate gender f = female, m = male
 P.language                      = 'de'; % de or en
 P.project.name                  = 'PEEP';

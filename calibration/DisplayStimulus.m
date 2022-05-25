@@ -38,8 +38,7 @@
         
         tStimStart=GetSecs;
         countedDown=1;
-        send_trigger(P,O,sprintf('stim_on'));
-        
+                
         if P.devices.thermoino        
             UseThermoino('Trigger'); % start next stimulus
             UseThermoino('Set',temp); % open channel for arduino to ramp up      
@@ -63,7 +62,7 @@
                 return;
             end
         else
-            send_trigger(P,O,sprintf('stim_on'));
+           
             
             while GetSecs < tStimStart+sum(stimDuration)
                 [countedDown]=CountDown(GetSecs-tStimStart,countedDown,'.');

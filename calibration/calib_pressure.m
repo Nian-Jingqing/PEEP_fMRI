@@ -9,14 +9,14 @@ addpath('C:\Users\nold\PEEP\fMRI\Code\peep_functions_fMRI')
 
 %% ------------------ Experiment Preparations -------------------------
 
-% Instantiate Parameters and Overrides 
+% Instantiate Parameters and Overrides
 P                       = InstantiateParameters_calib;
 O                       = InstantiateOverrides;
 
 % Load parameters if there
 if exist(P.out.file.paramCalib,'file')
-    load(P.out.file.paramCalib,'P','O');    
-else 
+    load(P.out.file.paramCalib,'P','O');
+else
     warning('No calibration parameters file P loaded');
 end
 
@@ -74,36 +74,37 @@ P.time.scriptStart      = GetSecs;
 
 %% Step 1: Pre Exposure and Awiszus Method + VAS Training
 
-   % if P.startSection < 4
-        ShowIntroduction(P,1);
-        [P,abort] = PreExposureAwiszus(P,O,dev);
+if P.startSection < 4
 
-        % VAS Training
-        load(P.out.file.paramCalib,'P','O');
-        ShowIntroduction(P,2);
-        [P,abort] = VASTraining(P,O,2,dev);
-   
-   % end
+    ShowIntroduction(P,1);
+    [P,abort] = PreExposureAwiszus(P,O,dev);
+
+    % VAS Training
+    load(P.out.file.paramCalib,'P','O');
+    ShowIntroduction(P,2);
+    [P,abort] = VASTraining(P,O,2,dev);
+
+end
 
 
-    %% Step 2: Calibration: Psychometric Scaling
+%% Step 2: Calibration: Psychometric Scaling
 
-    %if P.startSection < 5
-        load(P.out.file.paramCalib,'P','O');
-        ShowIntroduction(P,3);
-        [P,abort] = PsychometricScaling(P,O);
 
-   % end
+if P.startSection < 5
+    load(P.out.file.paramCalib,'P','O');
+    ShowIntroduction(P,3);
+    [P,abort] = PsychometricScaling(P,O);
 
-    %% Step 3: Calibration: VAS Target Regresion
 
-  %  if  P.startSection < 6
-        load(P.out.file.paramCalib,'P','O');
-        [P,abort] = TargetRegressionVAS(P,O);
+%% Step 3: Calibration: VAS Target Regresion
 
-  %  end
 
-% Save Calibrated Pressures 
+    load(P.out.file.paramCalib,'P','O');
+    [P,abort] = TargetRegressionVAS(P,O);
+
+end
+
+% Save Calibrated Pressures
 calibrated_pressures = P.pain.calibration.results;
 save(P.out.file.paramCalib,'P','O');
 save(P.out.file.pressuresCalib,"calibrated_pressures");
@@ -199,7 +200,6 @@ while ~abort
         end
 
         fprintf('Displaying fixation cross... ');
-        SendTrigger(P,P.com.lpt.CEDAddressSCR,P.com.lpt.ITIOnset);
 
         while GetSecs < tCrossOn + P.pain.preExposure.sPreexpITI
             [abort]=LoopBreaker(P);
@@ -230,7 +230,7 @@ while ~abort
 
         countedDown = 1;
         tStimStart = GetSecs;
-        SendTrigger(P,P.com.lpt.CEDAddressSCR,P.com.lpt.pressureOnset);
+
 
         if P.devices.arduino && P.cpar.init
 
@@ -256,7 +256,7 @@ while ~abort
         if ~O.debug.toggleVisual
             Screen('Flip',P.display.w);
         end
-        SendTrigger(P,P.com.lpt.CEDAddressSCR,P.com.lpt.VASOnset);
+
 
         % Next pressure (nextX) updated based on ratings
         if trial <= numel(P.pain.preExposure.startSimuli) % pre-exposure trials no ratings, only to get subject used to the feeling
@@ -371,7 +371,7 @@ while ~abort
 
         countedDown = 1;
         tStimStart = GetSecs;
-        SendTrigger(P,P.com.lpt.CEDAddressSCR,P.com.lpt.pressureOnset);
+
 
         if P.devices.arduino && P.cpar.init
 
@@ -385,7 +385,7 @@ while ~abort
             [countedDown] = CountDown(P,GetSecs-tStimStart,countedDown,'.');
             if abort; return; end
         end
-        
+
         fprintf(['\nVAS pressure threshold ' num2str(pressure)]);
 
         fprintf(' concluded.\n');
@@ -444,7 +444,7 @@ while ~abort
             % Draw scale
             [abort,finalRating,~,~,~,~] = singleratingScale_bigger(P,3);
             fprintf(['\nFinal rating was ' num2str(finalRating)]);
-            
+
 
             if ~O.debug.toggleVisual
                 Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix1);
@@ -457,32 +457,32 @@ while ~abort
             ratingsection = 2;
         end
 
+    end
+
+
+    % Intertrial interval if not the last stimulus in the block,
+    % if last trial then end trial immediately
+    if trial ~= P.pain.VAStraining.trials
+
+        fprintf('\nIntertrial interval... ');
+        countedDown = 1;
+        while GetSecs < tCrossOn + P.pain.VAStraining.durationITI
+            tmp=num2str(SecureRound(GetSecs-tCrossOn,0));
+            [abort,countedDown] = CountDown(P,GetSecs-tCrossOn,countedDown,[tmp ' ']);
+            if abort; break; end
         end
 
+        if abort; return; end
 
-        % Intertrial interval if not the last stimulus in the block,
-        % if last trial then end trial immediately
-        if trial ~= P.pain.VAStraining.trials
-
-            fprintf('\nIntertrial interval... ');
-            countedDown = 1;
-            while GetSecs < tCrossOn + P.pain.VAStraining.durationITI
-                tmp=num2str(SecureRound(GetSecs-tCrossOn,0));
-                [abort,countedDown] = CountDown(P,GetSecs-tCrossOn,countedDown,[tmp ' ']);
-                if abort; break; end
-            end
-
-            if abort; return; end
-
-        end
+    end
 
 
-       paintrial = paintrial + 1;
+    paintrial = paintrial + 1;
 
-        if paintrial >2
-            abort = 1;
-            break;
-        end
+    if paintrial >2
+        abort = 1;
+        break;
+    end
 end
 
 
@@ -518,7 +518,7 @@ fprintf('\n========================================\nRunning psychometric percep
 
 while ~abort
 
-     for cuff = P.calibration.cuff_arm
+    for cuff = P.calibration.cuff_arm
 
         fprintf(['\n' P.pain.cuffSide{cuff} ' ARM - ' ]);
 
@@ -991,7 +991,7 @@ while ~abort
 end
 
 if ~abort
-    % Print to experimenter and participant 
+    % Print to experimenter and participant
     fprintf('C A L I B R A T I O N   F I N I S H E D. \n');
     commandwindow;
     abort = 1;

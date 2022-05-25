@@ -73,7 +73,7 @@ end
 
 % Load Parameters for experiment
 [P,O]                   = SetParams(P,O);
-[P,O]                   = SetKeys(P,O);
+[P,O]                   = SetKeys_scanner(P,O);
 
 % Open Screen
 [P,O]                   = SetPTB(P,O);

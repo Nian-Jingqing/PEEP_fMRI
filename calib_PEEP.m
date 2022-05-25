@@ -67,6 +67,7 @@ while ~abort
     else
         ListenChar(0);
         fprintf('\nC A L I B R A T I O N    C O M P L E T E\n');
+        abort = 1;
         sca;
     end
 

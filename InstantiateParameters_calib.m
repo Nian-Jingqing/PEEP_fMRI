@@ -1,12 +1,12 @@
 function P = InstantiateParameters_calib(P)
 
 %% General settings (should be changed)
-P.protocol.subID                = 90; % subject ID
+P.protocol.subID                = 89; % subject ID
 P.protocol.day                  = 1; % Calib Day 1
 P.calibration.cuff_arm          = 1; %Arm for pressure CALIBRATION [1 = LEFT, 2 = RIGHT]
 P.experiment.cuff_arm           = P.calibration.cuff_arm; % Set calibration and experiment cuff to same arm
 P.protocol.session              = 1;
-P.subject.age                   = 25; % indicate subjects age
+P.subject.age                   = 26; % indicate subjects age
 P.subject.gender                = 'f'; % indicate gender f = female, m = male
 P.language                      = 'de'; % de or en
 P.project.name                  = 'PEEP';
@@ -161,12 +161,12 @@ if P.devices.thermoino
         P.path.thermoino = '';
         disp('stimpc1');
     elseif strcmp(P.env.hostname,'LAPTOP-41MRBS8P')
-        P.com.thermoino = 'COM6'; % CPAR: depends on PC - work laptop COM3 - experiment laptop COM5
+        P.com.thermoino = 'COM6'; %
         P.path.thermoino = fullfile('C:\Users\nold\PEEP\fMRI\Code\peep_functions_fMRI\thermoino');
         P.com.thermoinoBaud= 115200;
         disp('experimentlaptop');
     elseif strcmp(P.env.hostname,'isna0291933759f')
-        P.com.thermoino = 'COM6'; % CPAR: depends on PC - work laptop COM6 - experiment laptop COM5
+        P.com.thermoino = 'COM6'; %
         P.com.thermoinoBaud = 115200; % ask Björn about the baud rate
         P.path.thermoino = fullfile('C:\Users\user\Desktop\PEEP\fMRI\Code\');
         disp('my_laptop');
@@ -318,7 +318,7 @@ P.awiszus.thermoino.sd                            =  1.2; % assumed sd of thresh
 P.awiszus.thermoino.sp                            = 0.4; % assumed spread of threshold (individual level); we started at 0.8
 P.awiszus.thermoino.nextX                         = P.awiszus.thermoino.mu; %starting point  
 %% for Preexposure (Section 1)
-P.pain.preExposure.vec_int                          = [41 42]; % vector of intensities used for preexposure, intended to lead to binary decision "were any of these painful y/n"
+P.pain.preExposure.vec_int                          = [42 43]; % vector of intensities used for preexposure, intended to lead to binary decision "were any of these painful y/n"
 P.presentation.sStimPlateauPreexp; % as per InstantiateParameters; modify if desired
 
 %% for Sections >1
@@ -326,7 +326,7 @@ P.presentation.sStimPlateau; % as per InstantiateParameters; modify if desired
 
 %% for Thresholding (Section 2)
 P.presentation.sMinMaxThreshITIs = [8 12]; % seconds between stimuli; will be randomized between two values - to use constant ITI, use two identical values
-P.presentation.sMinMaxThreshCues = [0.5 1]; % jittered time prior to the stimulus that the white cross turns red; can be [0 0] (to turn off red cross altogether), but else MUST NOT BE LOWER THAN 0.5
+P.presentation.sMinMaxThreshCues = [0.5 2]; % jittered time prior to the stimulus that the white cross turns red; can be [0 0] (to turn off red cross altogether), but else MUST NOT BE LOWER THAN 0.5
 
 %% for Sections >2
 P.presentation.sMinMaxPlateauITIs = P.presentation.sCalibITI; % overrides the old values from thresholding [9 11]

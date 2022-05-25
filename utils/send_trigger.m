@@ -53,28 +53,28 @@ else
 end
 
 
-if strcmp(P.env.hostname,'stimpc1')
-    % Send pulse for spike program
-    if send
-        if ~isempty(regexp(computer('arch'),'64','ONCE'))
-            outp(address,code);
-            WaitSecs(P.com.duration);
-            outp(address,0);
-            WaitSecs(P.com.duration);
-
-        elseif ~isempty(regexp(computer('arch'),'32','ONCE'))
-            outp32(address,code);
-            WaitSecs(P.com.duration);            
-            outp32(address,0);
-            WaitSecs(P.com.duration);
-        end  
-    else
-        fprintf('\n no trigger send\n');
-    end
-    
-elseif strcmp(P.env.hostname,'isn3822e2ce3372')
-    %fprintf('\nphysiology trigger test:%s\nport address:%d\ntrigger nr: %d\n',...
-        %event_type,address,code);
-end
+% if strcmp(P.env.hostname,'stimpc1')
+%     % Send pulse for spike program
+%     if send
+%         if ~isempty(regexp(computer('arch'),'64','ONCE'))
+%             outp(address,code);
+%             WaitSecs(P.com.duration);
+%             outp(address,0);
+%             WaitSecs(P.com.duration);
+% 
+%         elseif ~isempty(regexp(computer('arch'),'32','ONCE'))
+%             outp32(address,code);
+%             WaitSecs(P.com.duration);            
+%             outp32(address,0);
+%             WaitSecs(P.com.duration);
+%         end  
+%     else
+%         fprintf('\n no trigger send\n');
+%     end
+%     
+% elseif strcmp(P.env.hostname,'isn3822e2ce3372')
+%     %fprintf('\nphysiology trigger test:%s\nport address:%d\ntrigger nr: %d\n',...
+%         %event_type,address,code);
+% end
 
 end

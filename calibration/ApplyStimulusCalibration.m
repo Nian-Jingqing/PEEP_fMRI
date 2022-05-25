@@ -28,7 +28,7 @@ while ~abort
             abort = UseCPAR('Set',dev,'Calibration',P,stimDuration,trialPressure); % set stimulus
             [abort,data] = UseCPAR('Trigger',dev,P.cpar.stoprule,P.cpar.forcedstart); % start stimulus
 
-            SendTrigger(P,P.com.lpt.CEDAddressSCR,P.com.lpt.pressureOnset);
+           
 
         else
             abort = 1;
@@ -58,7 +58,7 @@ while ~abort
         fprintf('\nVAS... ');
         tVASStart = GetSecs;
         P.time.calibStimVASStart(calibStep,trial) = GetSecs-P.time.scriptStart;
-        SendTrigger(P,P.com.lpt.CEDAddressSCR,P.com.lpt.VASOnset);
+        
         if ~O.debug.toggleVisual; [abort,P] = calibStimVASRating(P,O,calibStep,cuff,trial,trialPressure); end
         P.time.calibStimVASEnd(calibStep,trial) = GetSecs-P.time.scriptStart;
         if abort; return; end
@@ -94,7 +94,7 @@ while ~abort
         fprintf(' VAS... ');
         tVASStart = GetSecs;
         P.time.calibStimVASStart(calibStep,trial) = GetSecs-P.time.scriptStart;
-        SendTrigger(P,P.com.lpt.CEDAddressSCR,P.com.lpt.VASOnset);
+
         if ~O.debug.toggleVisual; [abort,P] = calibStimVASRating(P,O,calibStep,cuff,trial,trialPressure); end
         P.time.calibStimVASEnd(calibStep,trial) = GetSecs-P.time.scriptStart;
         if abort; return; end
