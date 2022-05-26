@@ -1,4 +1,4 @@
-function [abort] = RunExperiment_pain(P,O,dev) 
+function [abort] = RunExperiment_pain(P,O,dev) % add dev!!!
 % This function inititates alternating heat and pressure pain at different
 % intensitiis (30,50,70 VAS).
 %
@@ -16,22 +16,24 @@ fprintf('\n==========================\nRunning Experiment.\n====================
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Start Experiment. Send Trigger to SCR PC and logfile
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+if exist(P.out.file.paramExp,'file')
+    load(P.out.file.paramExp,'P');
+    
+else
+    fprintf('No experimental parameters file loaded (BLOCK 1!)');
+end
 %% Retrieve predicted pressure intensity levels from calibration
 
-% Load Calibrated Pressure Structure
-if exist(P.out.file.pressuresCalib,'file')
-    load(P.out.file.pressuresCalib,'calibrated_pressures');
+% retrieve predicted pressures (linear)
+% if isfield(P.pain.calibration.results.fitData,'predPressureLinear')
+%     predPressure = P.pain.calibration.results.fitData.predPressureLinear;
+%
+%     % Load externat scrutcute for pressure pain here
+% else
+warning('No predicted pressures found, using DEFAULT instead');
+predPressure = P.pain.calibration.defaultpredPressureLinear;
+%end
 
-    % retrieve predicted pressures (linear)
-    if isfield(calibrated_pressures.fitData,'predPressureLinear')
-        predPressure = calibrated_pressures.fitData.predPressureLinear;
-    end
-
-else
-    warning('No predicted Pressure found, using DEFAULT instead');
-    predPressure = P.pain.calibration.defaultpredPressureLinear;
-end
 
 % Medium Low Pressure
 P.pain.PEEP.VASindex = P.pain.calibration.VASTargetsVisual == 30;
@@ -51,32 +53,29 @@ high_high_pressure = preVAS;
 
 %% Retrieve predicted heat intensity levels from calibration
 
-% Load Calibrated Heat Struycture
-if exist(P.out.file.heatsCalib,'file')
-     load(P.out.file.heatsCalib,'calibrated_heats');
+% retrieve predicted pressures (linear)
+% if isfield(P.pain.calibration.thermode.results.fitData,'predHeatLinear')
+%     predHeat = P.pain.calibration.thermode.results.fitData.predHeatLinear;
 
-    % retrieve predicted heats (linear)
-    if isfield(calibrated_heats.fitData.heat,'predTempsLin')
-        predHeat = calibrated_heats.fitData.heat.predTempsLin;
-    end
+% Load predicted heat externatl strucutre here
+%else
+warning('No predicted Heat found, using DEFAULT instead');
+predHeat = P.pain.calibration.defaultpredHeatLinear;
+%end
 
-else
-    warning('No predicted Heat found, using DEFAULT instead');
-    predHeat = P.pain.calibration.defaultpredHeatLinear;
-end
 
 % Medium Low Heat
-P.pain.PEEP.thermode.VASindex = P.plateaus.VASTargets == 30;
+P.pain.PEEP.thermode.VASindex = P.pain.calibration.VASTargetsVisual == 30;
 preVAS = predHeat(P.pain.PEEP.thermode.VASindex);
 med_low_heat = preVAS;
 
 % Medium High Heat
-P.pain.PEEP.thermode.VASindex =P.plateaus.VASTargets == 50;
+P.pain.PEEP.thermode.VASindex = P.pain.calibration.VASTargetsVisual == 50;
 preVAS = predHeat(P.pain.PEEP.thermode.VASindex);
 med_high_heat = preVAS;
 
 % High High Heat
-P.pain.PEEP.thermode.VASindex = P.plateaus.VASTargets == 70;
+P.pain.PEEP.thermode.VASindex = P.pain.calibration.VASTargetsVisual == 70;
 preVAS = predHeat(P.pain.PEEP.thermode.VASindex);
 high_high_heat = preVAS;
 
@@ -174,11 +173,10 @@ for block = P.pain.PEEP.block
             % -------------------------------------------------------------
             % Pain Block Start
             %--------------------------------------------------------------
-            fprintf('\nShowing Introduction\n');
             ShowIntroduction(P,61);
             
             % start localiser und Shimming
-            fprintf('=========================================================');
+            fprintf('=========================================================\n');
             fprintf('\nASK MTA TO START LOCALISER AND AUTO ALIGN\n');
             fprintf('=========================================================\n');
             WaitSecs(0.5);
@@ -188,38 +186,26 @@ for block = P.pain.PEEP.block
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             
             % Display Exercise Start at experimenter screen
-            fprintf('=========================================================');
+            fprintf('=========================================================\n');
             fprintf('\nASK MTA TO START SCANNER AND WAIT FOR DUMMY SCANS\n');
             fprintf('=========================================================\n');
             
             
             %Gleich geht es weiter (show to participant)
             ShowIntroduction(P,5);
-            WaitSecs(2);
+            WaitSecs(5);
             
             % ------------------------------------
             % WAIT DUMMY SCANS
             %--------------------------------------
             KbQueueRelease(); % to make sure
             
-             % White Fixcross
-            if ~O.debug.toggleVisual
-                Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix1);
-                Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix2);
-                tCrossOn = Screen('Flip',P.display.w);
-            else
-                tCrossOn = GetSecs;
-            end
-
             % Wait for 5 scanner pulses
             [t0_scan,secs] = wait_dummy_scans(P);
             
             KbQueueCreate();
             KbQueueStart();
             
-            % Send Trigger to Spike PC
-            SendTrigger(P,P.com.lpt.CEDAddressSCR,P.com.lpt.blockOn);
-
             % ------------------------------------
             % Log Time in struct
             % ------------------------------------
@@ -232,6 +218,8 @@ for block = P.pain.PEEP.block
                     
             % Loop through the number of pain trials per block
             clear trial
+            
+            WaitSecs(P.pain.calibration.firstTrialWait);
           
             for trial = 1:P.pain.PEEP.trialsPerBlock
                 
@@ -242,53 +230,47 @@ for block = P.pain.PEEP.block
                 
                 % retrieve pressure intensitiy from matrix according to level (3,5,7)
                 
-                if strcmp(P.pain.PEEP.painconditions_mat(block,trial) , '3_1') % mid low intensity pressure
+                if strcmp(P.pain.PEEP.painconditions_mat(block,trial) , "3_1") % mid low intensity pressure
                     
                     %retrieve pressure calibrated for 30 VAS
                     pressure = med_low_pressure;
                     mod = 1;
-                    vas = 30;
                     fprintf(['\nPain: Medium-Low Intensity 30 VAS at ',num2str(pressure), ' kPa\n']);
                     
-                elseif strcmp(P.pain.PEEP.painconditions_mat(block,trial) , '5_1') % mid high intensity pressure
+                elseif strcmp(P.pain.PEEP.painconditions_mat(block,trial) , "5_1") % mid high intensity pressure
                     
                     %retrieve pressure calibrated for 50 VAS
                     pressure = med_high_pressure;
                     mod = 1;
-                    vas = 50;
                     fprintf(['\nPain: Medium-High Intensity 50 VAS at ',num2str(pressure), ' kPa\n']);
                     
-                elseif strcmp(P.pain.PEEP.painconditions_mat(block,trial) , '7_1') % high high intensity pressure
+                elseif strcmp(P.pain.PEEP.painconditions_mat(block,trial) , "7_1") % high high intensity pressure
                     
                     %retrieve pressure calibrated for 70 VAS
                     pressure = high_high_pressure;
                     mod = 1;
-                    vas = 70;
                     fprintf(['\nPain: High-High Intensity 70 VAS at ',num2str(pressure), ' kPa\n']);
                     
-                elseif strcmp(P.pain.PEEP.painconditions_mat(block,trial) , '3_2') % mid high intensity pressure
+                elseif strcmp(P.pain.PEEP.painconditions_mat(block,trial) , "3_2") % mid high intensity pressure
                     
                     %retrieve heat calibrated for 30 VAS
                     heat = med_low_heat;
                     mod = 2;
-                    vas = 30;
-                    fprintf(['\nPain: Medium-High Intensity 30 VAS at ',num2str(heat), ' °C\n']);
+                    fprintf(['\nPain: Medium-High Intensity 30 VAS at ',num2str(heat), ' Â°C\n']);
                     
-                elseif strcmp(P.pain.PEEP.painconditions_mat(block,trial) , '5_2') % high high intensity pressure
+                elseif strcmp(P.pain.PEEP.painconditions_mat(block,trial) , "5_2") % high high intensity pressure
                     
                     %retrieve heat calibrated for 50 VAS
                     heat = med_high_heat;
                     mod = 2;
-                    vas = 50;
-                    fprintf(['\nPain: Med-High Intensity 50 VAS at ',num2str(heat), ' °C\n']);
+                    fprintf(['\nPain: Med-High Intensity 50 VAS at ',num2str(heat), ' Â°C\n']);
                     
-                elseif strcmp(P.pain.PEEP.painconditions_mat(block,trial) , '7_2') % high high intensity pressure
+                elseif strcmp(P.pain.PEEP.painconditions_mat(block,trial) , "7_2") % high high intensity pressure
                     
                     %retrieve heat calibrated for 70 VAS
                     heat = high_high_heat;
                     mod = 2;
-                    vas = 70;
-                    fprintf(['\nPain: High-High Intensity 70 VAS at ',num2str(heat), ' °C\n']);
+                    fprintf(['\nPain: High-High Intensity 70 VAS at ',num2str(heat), ' Â°C\n']);
                     
                 end
                 
@@ -329,10 +311,15 @@ for block = P.pain.PEEP.block
                 % --------------------------------
                 % Log rating and event
                 % ---------------------------------
-               
+                if mod == 1
+                    intensity_VAS = num2str(pressure);
+                elseif mod == 2
+                    intensity_VAS = num2str(heat);
+                end
+                
                 resp_onset = 3; % placeholder
                 
-                P = log_event_behav(P,trial,expVAS(block).block(trial).trial(2).ratingsection.modality,vas, ...
+                P = log_event_behav(P,trial,expVAS(block).block(trial).trial(2).ratingsection.modality,intensity_VAS, ...
                     expVAS(block).block(trial).trial(2).ratingsection.trialInt,expVAS(block).block(trial).trial(2).ratingsection.response,resp_onset, ...
                     expVAS(block).block(trial).trial(2).ratingsection.finalRating,expVAS(block).block(trial).trial(2).ratingsection.reactionTime);
                 

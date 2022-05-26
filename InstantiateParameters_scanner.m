@@ -1,7 +1,7 @@
 function P = InstantiateParameters_scanner
 
 %% General settings (should be changed)
-P.protocol.subID                = 89; % subject ID
+P.protocol.subID                = 88; % subject ID
 P.protocol.day                  = 2; % Test day 2 or 3
 P.calibration.cuff_arm          = 1; %Arm for pressure CALIBRATION [1 = LEFT, 2 = RIGHT]
 P.experiment.thermode_arm       = 1; %Arm for thermode CALIBRATION [1 = LEFT, 2 = RIGHT]
@@ -43,7 +43,7 @@ P.env.hostIPaddress             = char(P.env.hostaddress.getHostAddress);
 %% Set Paths
 
 if strcmp(P.env.hostname,'stimpc1')
-    P.path.scriptBase           = fullfile('D:\nold',P.project.name,'fMRI','Code','peep_functions_MRI');
+    P.path.scriptBase           = fullfile('D:\nold',P.project.name,'fMRI','Code','peep_functions_fMRI');
     P.path.experiment           = fullfile('D:\nold',P.project.name,'fMRI');
     P.path.PTB                  = 'C:\toolbox\Psychtoolbox';
 
@@ -131,7 +131,7 @@ end
 % Set the arduione device
 if P.devices.arduino
     if strcmp(P.env.hostname,'stimpc1')
-        P.com.arduino = 'COM17'; 
+        P.com.arduino = 'COM14'; 
         P.path.cpar = fullfile('D:\nold\PEEP\fMRI\Code\peep_functions_fMRI\CPAR\LabBench.CPAR-master\cpar');
         disp('stimpc1');
     elseif strcmp(P.env.hostname,'DESKTOP-V2QJTRM')

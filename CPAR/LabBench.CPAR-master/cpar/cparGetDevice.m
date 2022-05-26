@@ -42,6 +42,6 @@ if LabBench.Instruments.InstrumentDB.Exists(id)
     dev = record.Instrument;
     dev.PingEnabled = 1;
 else
-   fprintf("Instrument with ID = %s does not exists!\n", id);
+   fprintf('Instrument with ID = %s does not exists!\n', id);
    dev = 0;
 end

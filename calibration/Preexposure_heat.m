@@ -88,7 +88,7 @@ function [abort,preexPainful_heat]=Preexposure_heat(P,O,varargin)
                 end            
             end
             
-            fprintf('%1.1fÂ°C stimulus initiated.',preExpInts(i));
+            fprintf('%1.1°C stimulus initiated.',preExpInts(i));
             stimDuration=CalcStimDuration(P,preExpInts(i),P.presentation.sStimPlateauPreexp);  
                         
             countedDown=1;
