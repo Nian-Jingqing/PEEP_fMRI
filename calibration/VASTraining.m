@@ -126,7 +126,7 @@ while ~abort
             else
                 tCrossOn = GetSecs;
             end
-            ratingsection = ratingsection +1;
+            %ratingsection = ratingsection +1;
         end
 
 %         if ratingsection == 3 % unpleasentness
