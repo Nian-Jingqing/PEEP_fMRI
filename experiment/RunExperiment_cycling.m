@@ -17,6 +17,8 @@ fprintf('\n==========================\nRunning Experiment.\n====================
 expVAS = [];
 exerciseVAS = [];
 
+ShowIntroduction(P,4);
+
 for block = 1:P.pain.PEEP.nBlocks
 
     while ~abort

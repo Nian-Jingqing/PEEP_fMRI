@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Experimental Script PEEP Behavioural
+%% Experimental Script PEEP Cycling
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% --------------------- General Preparations ----------------------------
@@ -78,7 +78,7 @@ end
 
 
 % Query where to start experiment
-[abort, P] = StartExperimentAt(P);
+%[abort, P] = StartExperimentAt(P);
 if abort; QuickCleanup(P,dev); return; end
 
 % Open Screen
@@ -92,21 +92,19 @@ P.time.scriptStart      = GetSecs;
 % ========================================================================
 %%                              Cycling Experiment
 % ========================================================================
+ 
 
-%% Step 8: Warm up 
-
-if P.startSection == 8
-    load(P.out.file.paramCalib,'P','O');
+%if P.startSection == 0
+%    load(P.out.file.paramCalib,'P','O');
     [P,O] = WarmUp(P,O);
-end
+%end
 
-%% Step 9: Cycling 
+%% Cycling 
 
-if P.startSection == 9
+%if P.startSection == 1
     %load(P.out.file.paramCalib,'P','O');
-    ShowIntroduction(P,4);
     RunExperiment_cycling(P,O);
-end
+%end
 
 %% Goodbye/End Experiment
 

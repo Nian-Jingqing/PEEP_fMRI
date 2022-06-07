@@ -26,7 +26,7 @@ while ~abort
     fprintf('\nVAS... ');
     tVASStart = GetSecs;
     P.time.exerciseStimVASStart(block,1) = GetSecs-P.time.scriptStart;
-    SendTrigger(P,P.com.lpt.CEDAddressSCR,P.com.lpt.VASOnset);
+ %   SendTrigger(P,P.com.lpt.CEDAddressSCR,P.com.lpt.VASOnset);
 
     % Continue after 1 seconds
     WaitSecs(1);

@@ -1,7 +1,7 @@
 function P = InstantiateParameters_bike
 
 %% General settings (should be changed)
-P.protocol.subID                = 2; % subject ID
+P.protocol.subID                = 1; % subject ID
 P.protocol.day                  = 2; % Test day 2 or 3
 P.calibration.cuff_arm          = 1; %Arm for pressure CALIBRATION [1 = LEFT, 2 = RIGHT]
 P.experiment.cuff_arm           = P.calibration.cuff_arm; % Set calibration and experiment cuff to same arm
