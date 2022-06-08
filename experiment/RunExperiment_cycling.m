@@ -19,7 +19,7 @@ exerciseVAS = [];
 
 ShowIntroduction(P,4);
 
-for block = 1:P.pain.PEEP.nBlocks
+for block = P.pain.PEEP.cyclingBlock
 
     while ~abort
 
@@ -116,7 +116,7 @@ for block = 1:P.pain.PEEP.nBlocks
             Screen('Flip',P.display.w);
 
             tWaitCycle = GetSecs;
-            
+
             % Wait 5 Seconds before starting the cycling
             countedDown = 1;
             while GetSecs < tWaitCycle + P.exercise.wait
@@ -147,10 +147,12 @@ for block = 1:P.pain.PEEP.nBlocks
             if abort; break; end
 
             % Get the end time of exercise block
-             tEndCycle = GetSecs;
-             P.time.tEndCycle(block) = tEndCycle - P.time.scriptStart;
-           
-             save(P.out.file.paramExp,'P','O');
+            tEndCycle = GetSecs;
+            P.time.tEndCycle(block) = tEndCycle - P.time.scriptStart;
+            %
+            %              % Update Block Number
+            %              P.pain.PEEP.cyclingBlock = P.pain.PEEP.cyclingBlock + 1;
+            %              save(P.out.file.paramExp,'P','O');
 
 
             if abort; break; end
@@ -158,45 +160,24 @@ for block = 1:P.pain.PEEP.nBlocks
 
             %% Pause/Interval
 
-            % White fixation cross
-            if ~O.debug.toggleVisual
-                Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix1);
-                Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix2);
-                tCrossOn = Screen('Flip',P.display.w);
-            else
-                tCrossOn = GetSecs;
+
+
+            %display fixation cross
+            Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix1);
+            Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix2);
+            Screen('Flip',P.display.w);
+            WaitSecs(1);
+
+
+            if block > 4
+                abort = 1;
+                break;
             end
-
-            % RunCountdown for experimenter for elapsed time
-            durationPause = 420;
-            countedDown = 1;
-
-            while GetSecs < tCrossOn + durationPause
-                tmp=num2str(SecureRound(GetSecs-tCrossOn,0));
-                [countedDown] = CountDown(P,GetSecs-tCrossOn,countedDown,[tmp ' ']);
-                if keyIsDown; break; end
-            end
-
-        %display fixation cross
-        Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix1);
-        Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix2);
-        Screen('Flip',P.display.w);
-        WaitSecs(1);
-
-       
-                
-
-        block = block + 1;
-
-        if block > 4
-            abort = 1;
-            break;
-        end
 
 
         end
 
-        
+
     end
 end
 

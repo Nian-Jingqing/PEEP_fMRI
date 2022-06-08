@@ -440,18 +440,18 @@ elseif section == 4
     WaitSecs(0.4);
 
 
-    DrawFormattedText(P.display.w,strings.experiment3,'center','center',P.style.white2);
-    Screen('Flip',P.display.w);
-    while 1
-        [keyIsDown, ~, keyCode] = KbCheck();
-        if keyIsDown
-            if find(keyCode) == P.keys.name.right
-                break;
-            end
-        end
-    end
-
-    WaitSecs(0.4);
+%     DrawFormattedText(P.display.w,strings.experiment3,'center','center',P.style.white2);
+%     Screen('Flip',P.display.w);
+%     while 1
+%         [keyIsDown, ~, keyCode] = KbCheck();
+%         if keyIsDown
+%             if find(keyCode) == P.keys.name.right
+%                 break;
+%             end
+%         end
+%     end
+% 
+%     WaitSecs(0.4);
 
     DrawFormattedText(P.display.w,strings.experiment7,'center','center',P.style.white2);
     Screen('Flip',P.display.w);

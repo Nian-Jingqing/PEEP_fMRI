@@ -85,12 +85,19 @@ while ~abort
 
     trial = [];
 
+   
+
     break;
 
 end
 
     if ~abort
-        fprintf(' Exercise Block concluded. \n');
+        fprintf('\nExercise Block concluded. \n');
+
+             % Update Block Number
+             P.pain.PEEP.cyclingBlock = P.pain.PEEP.cyclingBlock + 1;
+             save(P.out.file.paramExp,'P','O');
+
 
     else
         return;

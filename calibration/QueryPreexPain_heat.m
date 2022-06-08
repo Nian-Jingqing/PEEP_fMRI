@@ -12,8 +12,8 @@
             end
         else 
             if strcmp(P.language,'de')
-                keyNotPainful = ['die Taste [' upper(char(P.keys.keyList(P.keys.notPainful))) ']'];
-                keyPainful =  ['die Taste [' upper(char(P.keys.keyList(P.keys.painful))) ']'];                
+                keyNotPainful = ['die linke Taste [' upper(char(P.keys.keyList(P.keys.notPainful))) ']'];
+                keyPainful =  ['die rechte Taste [' upper(char(P.keys.keyList(P.keys.painful))) ']'];                
             elseif strcmp(P.language,'en')
                 keyNotPainful = ['the key [' upper(char(P.keys.keyList(P.keys.notPainful))) ']'];
                 keyPainful =  ['the key [' upper(char(P.keys.keyList(P.keys.painful))) ']'];                            

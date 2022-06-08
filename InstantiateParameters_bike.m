@@ -408,6 +408,7 @@ P.FTP.parameters.coolDown = 1;
 P.pain.PEEP.nBlocks                              = 4; % number of experimental blocks and exercises
 P.pain.PEEP.block                                = 1; % Counter for block wll be updated after each block
 P.pain.PEEP.blocks                              = [1,2,3,4];
+P.pain.PEEP.cyclingBlock                        = 1;
 P.pain.PEEP.nTrials                              = 18; %number of pains per block (4 pains 3 times)
 P.pain.PEEP.nStimuli                             = 3; % 3 different pain levels
 

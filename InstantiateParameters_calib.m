@@ -1,12 +1,12 @@
 function P = InstantiateParameters_calib(P)
 
 %% General settings (should be changed)
-P.protocol.subID                = 2; % subject ID
+P.protocol.subID                = 1; % subject ID
 P.protocol.day                  = 1; % Calib Day 1
 P.calibration.cuff_arm          = 1; %Arm for pressure CALIBRATION [1 = LEFT, 2 = RIGHT]
 P.experiment.cuff_arm           = P.calibration.cuff_arm; % Set calibration and experiment cuff to same arm
 P.protocol.session              = 1;
-P.subject.age                   = 27; % indicate subjects age
+P.subject.age                   = 26; % indicate subjects age
 P.subject.gender                = 'f'; % indicate gender f = female, m = male
 P.language                      = 'de'; % de or en
 P.project.name                  = 'PEEP';
@@ -21,8 +21,8 @@ P.toggles.doConfirmAdaptive     = 1; % do adaptive VAS target regression with co
 P.devices.arduino               = 1; % if '' or [], will not try to use Arduino
 P.devices.thermoino             = 1; % if '' or [], will not try to use Arduino
 P.devices.SCR                   = 0; % SCR is used set to 1
-P.devices.bike                  = []; % indicate whether bike is used
-P.devices.belt                  = []; % HR belt
+P.devices.bike                  = 1; % indicate whether bike is used
+P.devices.belt                  = 1; % HR belt
 P.devices.trigger               = 0; % 1 single parallel port, arduino; rest undefined
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

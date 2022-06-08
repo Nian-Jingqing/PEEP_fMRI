@@ -56,7 +56,7 @@ while 1
 %             break;
       
         elseif find(keyCode) == P.keys.name.esc
-            % P.startSection=10;
+            P.startSection=10;
             fprintf('Abort');
             abort=1;
             break;

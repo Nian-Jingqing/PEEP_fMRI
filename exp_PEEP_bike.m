@@ -104,6 +104,7 @@ P.time.scriptStart      = GetSecs;
 %if P.startSection == 1
     %load(P.out.file.paramCalib,'P','O');
     RunExperiment_cycling(P,O);
+    
 %end
 
 %% Goodbye/End Experiment

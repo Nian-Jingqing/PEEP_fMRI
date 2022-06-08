@@ -61,7 +61,7 @@ end
 [P,O]                   = SetKeys(P,O);
 
 % Query where to start experiment
-[abort, P] = StartExperimentAt(P);
+%[abort, P] = StartExperimentAt(P);
 if abort; QuickCleanup(P,dev); return; end
 
 % Open Screen
@@ -74,7 +74,7 @@ P.time.scriptStart      = GetSecs;
 
 %% Step 1: Pre Exposure and Awiszus Method + VAS Training
 
-if P.startSection < 4
+%if P.startSection < 4
 
     ShowIntroduction(P,1);
     [P,abort] = PreExposureAwiszus(P,O,dev);
@@ -84,13 +84,13 @@ if P.startSection < 4
     ShowIntroduction(P,2);
     [P,abort] = VASTraining(P,O,2,dev);
 
-end
+%end
 
 
 %% Step 2: Calibration: Psychometric Scaling
 
 
-if P.startSection < 5
+%if P.startSection < 5
     load(P.out.file.paramCalib,'P','O');
     ShowIntroduction(P,3);
     [P,abort] = PsychometricScaling(P,O);
@@ -102,7 +102,7 @@ if P.startSection < 5
     load(P.out.file.paramCalib,'P','O');
     [P,abort] = TargetRegressionVAS(P,O);
 
-end
+%end
 
 % Save Calibrated Pressures
 calibrated_pressures = P.pain.calibration.results;

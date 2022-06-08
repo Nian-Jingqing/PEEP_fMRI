@@ -57,7 +57,8 @@ commandwindow;
 [P,O]                   = SetKeys(P,O);
 
 % Query where to start experiment
-[abort, P] = StartExperimentAt(P);
+%[abort, P] = StartExperimentAt(P);
+abort = 0;
 if abort; QuickCleanup(P); return; end
 
 % Open Screen
@@ -68,6 +69,7 @@ P.time.stamp            = datestr(now,30);
 P.time.scriptStart      = GetSecs;
 
 %% Pre Exposure
+P.startSection = 0;
 
 if P.startSection < 2
     ShowIntroduction(P,1);

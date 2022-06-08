@@ -6,7 +6,7 @@ restoredefaultpath
 % add script base path
 addpath('C:\Users\nold\PEEP\fMRI\Code\peep_functions_fMRI')
 
-
+abort = 0;
 %% ------------------ Experiment Preparations -------------------------
 
 % Instantiate Parameters and Overrides 
@@ -15,9 +15,9 @@ O                       = InstantiateOverrides;
 
 % Load parameters if there
 if exist(P.out.file.paramCalib,'file')
-    load(P.out.file.paramCalib,'P','O');    
+   load(P.out.file.paramCalib,'P','O');    
 else 
-    warning('No calibration parameters file P loaded');
+   warning('No calibration parameters file P loaded');
 end
 
 
@@ -79,7 +79,7 @@ end
 [P,O]                   = SetKeys(P,O);
 
 % Query where to start experiment
-[abort, P] = StartExperimentAt(P);
+%[abort, P] = StartExperimentAt(P);
 if abort; QuickCleanup(P,dev); return; end
 
 % Open Screen
@@ -88,7 +88,7 @@ if abort; QuickCleanup(P,dev); return; end
 % Get timing at script start
 P.time.stamp            = datestr(now,30);
 P.time.scriptStart      = GetSecs;
-[FTP,P] = calibBike_FTP(P,O,bike,belt);
+
 
 
 %% ------------------- Run Calibration ----------------------------------
