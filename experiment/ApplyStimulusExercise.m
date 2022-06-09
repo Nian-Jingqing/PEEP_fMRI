@@ -19,7 +19,7 @@ while ~abort
 
 
     if abort; return; end
-    P.time.exerStimStart(block,1) = GetSecs-P.time.scriptStart;
+    P.time.exerciseEnd(block,1) = GetSecs-P.time.scriptStart;
 
 
     % Rating for exercise intensity
