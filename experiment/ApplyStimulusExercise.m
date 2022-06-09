@@ -97,6 +97,8 @@ end
              % Update Block Number
              P.pain.PEEP.cyclingBlock = P.pain.PEEP.cyclingBlock + 1;
              save(P.out.file.paramExp,'P','O');
+             
+             return;
 
 
     else

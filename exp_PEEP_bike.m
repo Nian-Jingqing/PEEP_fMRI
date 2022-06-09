@@ -71,14 +71,14 @@ end
 [P,O]                   = SetParams(P,O);
 [P,O]                   = SetKeys(P,O);
 
-% Use with pointer
-%P.keys.name.right               = KbName('PageDown');
-%P.keys.name.left                = KbName('PageUp');
-%P.keys.name.esc                 = KbName('delete');
+% Load parameters if there
+if exist(P.out.file.paramExp,'file')
+    load(P.out.file.paramExp,'P');
+else
+    warning('No cycling parameters file P loaded (Block 1)');
+end
 
 
-% Query where to start experiment
-%[abort, P] = StartExperimentAt(P);
 if abort; QuickCleanup(P,dev); return; end
 
 % Open Screen
@@ -92,20 +92,17 @@ P.time.scriptStart      = GetSecs;
 % ========================================================================
 %%                              Cycling Experiment
 % ========================================================================
- 
 
-%if P.startSection == 0
-%    load(P.out.file.paramCalib,'P','O');
+if P.pain.PEEP.cyclingBlock == 1
     [P,O] = WarmUp(P,O);
-%end
+end
 
-%% Cycling 
 
-%if P.startSection == 1
-    %load(P.out.file.paramCalib,'P','O');
-    RunExperiment_cycling(P,O);
-    
-%end
+%% Cycling
+
+
+RunExperiment_cycling(P,O);
+
 
 %% Goodbye/End Experiment
 

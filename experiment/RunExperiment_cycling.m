@@ -17,7 +17,9 @@ fprintf('\n==========================\nRunning Experiment.\n====================
 expVAS = [];
 exerciseVAS = [];
 
-ShowIntroduction(P,4);
+if P.pain.PEEP.cyclingBlock == 1
+    ShowIntroduction(P,4);
+end
 
 for block = P.pain.PEEP.cyclingBlock
 
@@ -149,34 +151,25 @@ for block = P.pain.PEEP.cyclingBlock
             % Get the end time of exercise block
             tEndCycle = GetSecs;
             P.time.tEndCycle(block) = tEndCycle - P.time.scriptStart;
-            %
-            %              % Update Block Number
-            %              P.pain.PEEP.cyclingBlock = P.pain.PEEP.cyclingBlock + 1;
-            %              save(P.out.file.paramExp,'P','O');
-
+           
 
             if abort; break; end
 
 
-            %% Pause/Interval
-
-
-
+            
             %display fixation cross
             Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix1);
             Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix2);
             Screen('Flip',P.display.w);
             WaitSecs(1);
 
+            break;
 
-            if block > 4
-                abort = 1;
-                break;
-            end
 
 
         end
 
+        break;
 
     end
 end
