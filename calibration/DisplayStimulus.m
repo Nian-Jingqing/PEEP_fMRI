@@ -6,7 +6,7 @@
         [stimDuration]=CalcStimDuration_heat(P,temp,P.presentation.sStimPlateau);
         fprintf('\n=======TRIAL %d of %d=======\n',nTrial,P.awiszus.N);
                    
-        if nTrial == 1 % Turn on the fixation cross for the first trial (no ITI to cover this)
+        %if nTrial == 1 % Turn on the fixation cross for the first trial (no ITI to cover this)
             fprintf('[Initial trial, showing white cross for %1.1f seconds, red cross for %1.1f seconds]\n',P.presentation.firstThresholdITI-P.presentation.firstThresholdCue,P.presentation.firstThresholdCue);
             
             if ~O.debug.toggleVisual
@@ -32,10 +32,10 @@
                     if abort; return; end
                 end
             end
-        end
+        %end
 
         fprintf('%1.1f°C stimulus initiated',temp);
-        
+     
         tStimStart=GetSecs;
         countedDown=1;
                 

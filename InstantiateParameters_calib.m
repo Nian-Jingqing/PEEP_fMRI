@@ -1,7 +1,7 @@
 function P = InstantiateParameters_calib(P)
 
 %% General settings (should be changed)
-P.protocol.subID                = 1; % subject ID
+P.protocol.subID                = 3; % subject ID
 P.protocol.day                  = 1; % Calib Day 1
 P.calibration.cuff_arm          = 1; %Arm for pressure CALIBRATION [1 = LEFT, 2 = RIGHT]
 P.experiment.cuff_arm           = P.calibration.cuff_arm; % Set calibration and experiment cuff to same arm
@@ -15,7 +15,7 @@ P.pharmacological.day2          = 'NaCl'; % Set wheteher receive Naloxone or NAC
 P.pharmacological.day3          = 'Naloxone';
 P.toggles.doPainOnly            = 1; % VAS rating painful from 0 (not 50)
 P.toggles.doConfirmAdaptive     = 1; % do adaptive VAS target regression with confirmation
-
+P.debug                         = 0;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Maybe move this part to main scripts 
 P.devices.arduino               = 1; % if '' or [], will not try to use Arduino
@@ -326,7 +326,7 @@ P.presentation.sStimPlateau; % as per InstantiateParameters; modify if desired
 
 %% for Thresholding (Section 2)
 P.presentation.sMinMaxThreshITIs = [8 12]; % seconds between stimuli; will be randomized between two values - to use constant ITI, use two identical values
-P.presentation.sMinMaxThreshCues = [0.5 2]; % jittered time prior to the stimulus that the white cross turns red; can be [0 0] (to turn off red cross altogether), but else MUST NOT BE LOWER THAN 0.5
+P.presentation.sMinMaxThreshCues = [0.5 1]; % jittered time prior to the stimulus that the white cross turns red; can be [0 0] (to turn off red cross altogether), but else MUST NOT BE LOWER THAN 0.5
 
 %% for Sections >2
 P.presentation.sMinMaxPlateauITIs = P.presentation.sCalibITI; % overrides the old values from thresholding [9 11]
@@ -338,7 +338,7 @@ P.presentation.n_max_varTrial      = 6;
         
 addpath(genpath(P.path.scriptBase))
 [P.presentation.thresholdITIs,P.presentation.thresholdCues]=DetermineITIsAndCues(P.awiszus.thermoino.N,P.presentation.sMinMaxThreshITIs,P.presentation.sMinMaxThreshCues);
-P.presentation.firstThresholdITI = 1;
+P.presentation.firstThresholdITI = 5;
 P.presentation.firstThresholdCue = max(P.presentation.sMinMaxThreshCues);
 
 P.presentation.firstPlateauITI = 1; % override, no reason for this to be so long

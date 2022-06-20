@@ -78,6 +78,7 @@ if P.startSection < 2
     [abort,preexPainful_heat]=Preexposure_heat(P,O); % sends four triggers, waits ITI seconds after each
 
     if abort;QuickCleanup(P);return;end
+    WaitSecs(3);
 
 %% Awiszus
 
@@ -686,7 +687,7 @@ if P.toggles.doPredetInts
 
     x = P.pain.calibration.heat.PeriThrStimTemps(P.pain.calibration.heat.PeriThrStimType>0); % could restrict to ==1, but the more info the better
     y = P.pain.calibration.heat.PeriThrStimRatings(P.pain.calibration.heat.PeriThrStimType>0);
-    [P.plateaus.step3Order,~] = FitData(x,y,P.plateaus.step3TarVAS,2);
+    [P.plateaus.step3Order,~] = FitData_heat(x,y,P.plateaus.step3TarVAS,2);
 
     if any(P.plateaus.step3Order > 49 | P.plateaus.step3Order < 41)
         % find too high stimuli
@@ -878,7 +879,7 @@ else
 end
 x = P.pain.calibration.heat.PeriThrStimTemps(P.pain.calibration.heat.PeriThrStimType>1 & P.pain.calibration.heat.PeriThrStimType<5);
 y = P.pain.calibration.heat.PeriThrStimRatings(P.pain.calibration.heat.PeriThrStimType>1 & P.pain.calibration.heat.PeriThrStimType<5);
-[predTempsLin,predTempsSig,predTempsRob,betaLin,betaSig,betaRob] = FitData(x,y,[thresholdVAS P.plateaus.VASTargets],0);
+[predTempsLin,predTempsSig,predTempsRob,betaLin,betaSig,betaRob] = FitData_heat(x,y,[thresholdVAS P.plateaus.VASTargets],0);
 
 painThresholdLin = predTempsLin(1);
 painThresholdSig = predTempsSig(1);
@@ -899,6 +900,9 @@ calibration.fitData.heat.painThresholdAwiszus = P.pain.calibration.heat.AwThr; %
 calibration.fitData.heat.predHeatLinear = painThresholdLin; % as per linear regression for VAS 50 (pain threshold)
 calibration.fitData.heat.predHeatSigmoid = painThresholdSig; % as per nonlinear regression for VAS 50 (pain threshold)
 calibration.fitData.heat.predTempsLin = predTempsLin;
+
+% round temperatures to 1 decimal
+calibration.fitData.heat.predTempsLin = round(calibrated_heats.fitData.heat.predTempsLin,1);
 
 fprintf('\n\n==========REGRESSION RESULTS==========\n');
 fprintf('>>> Linear intercept %1.1f, slope %1.1f. <<<\n',betaLin);
@@ -1173,11 +1177,11 @@ end
 abort=0;
 [stimDuration]=CalcStimDuration(P,trialTemp,P.presentation.sStimPlateau);
 
-if P.pain.calibration.heat.PeriThrN==1 % Turn on the fixation cross for the first trial (no ITI to cover this)
+% if P.pain.calibration.heat.PeriThrN==1 % Turn on the fixation cross for the first trial (no ITI to cover this)
+%     InitialTrial_heat(P,O);
+%elseif P.pain.calibration.heat.PeriThrN == 4
     InitialTrial_heat(P,O);
-elseif P.pain.calibration.heat.PeriThrN == 4
-    InitialTrial_heat(P,O);
-end
+%end
 
 fprintf('%1.1f°C stimulus initiated.',trialTemp);
 

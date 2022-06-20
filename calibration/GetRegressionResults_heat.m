@@ -7,7 +7,7 @@ function [P,calibration] = GetRegressionResults_heat(P)
         end
         x = P.pain.calibration.heat.PeriThrStimTemps(P.pain.calibration.heat.PeriThrStimType>1 & P.pain.calibration.heat.PeriThrStimType<5);
         y = P.pain.calibration.heat.PeriThrStimRatings(P.pain.calibration.heat.PeriThrStimType>1 & P.pain.calibration.heat.PeriThrStimType<5);
-        [predTempsLin,predTempsSig,predTempsRob,betaLin,betaSig,betaRob] = FitData(x,y,[thresholdVAS P.plateaus.VASTargets],0); 
+        [predTempsLin,predTempsSig,predTempsRob,betaLin,betaSig,betaRob] = FitData_heat(x,y,[thresholdVAS P.plateaus.VASTargets],0); 
 
         painThresholdLin = predTempsLin(1);
         painThresholdSig = predTempsSig(1);
