@@ -25,7 +25,7 @@ tITIStart =  Screen('Flip',P.display.w);
 
 
 %% Run Introduction based on block provided in function call
-Screen('Textsize',P.display.w,70);
+Screen('Textsize',P.display.w,40);
 
 if section == 0 % general welcome
 

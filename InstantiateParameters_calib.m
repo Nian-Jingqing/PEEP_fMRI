@@ -6,8 +6,8 @@ P.protocol.day                  = 1; % Calib Day 1
 P.calibration.cuff_arm          = 1; %Arm for pressure CALIBRATION [1 = LEFT, 2 = RIGHT]
 P.experiment.cuff_arm           = P.calibration.cuff_arm; % Set calibration and experiment cuff to same arm
 P.protocol.session              = 1;
-P.subject.age                   = 26; % indicate subjects age
-P.subject.gender                = 'f'; % indicate gender f = female, m = male
+P.subject.age                   = 21; % indicate subjects age
+P.subject.gender                = 'm'; % indicate gender f = female, m = male
 P.language                      = 'de'; % de or en
 P.project.name                  = 'PEEP';
 P.project.part                  = 'Pilot-01';

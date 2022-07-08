@@ -45,7 +45,7 @@ if exist(FTPfile,'file')
 end
 
 % set textsize for screen
-Screen('Textsize',P.display.w,100);
+Screen('Textsize',P.display.w,60);
 
 % set the bike to be a global variable
 global bike belt
@@ -71,6 +71,7 @@ while ~abort
     % do. HR calculation based on Tanaka et al. 2001 HRmax = 208- 0.7 * age
 
     % Get user input for HR rest
+    commandwindow;
     P.exercise.HRrest = input("\nHR rest: ");
     P.exercise.HRmax = 208 - (0.7*P.subject.age);
 

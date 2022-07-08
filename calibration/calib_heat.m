@@ -902,7 +902,7 @@ calibration.fitData.heat.predHeatSigmoid = painThresholdSig; % as per nonlinear 
 calibration.fitData.heat.predTempsLin = predTempsLin;
 
 % round temperatures to 1 decimal
-calibration.fitData.heat.predTempsLin = round(calibrated_heats.fitData.heat.predTempsLin,1);
+calibration.fitData.heat.predTempsLin = round(calibration.fitData.heat.predTempsLin,1);
 
 fprintf('\n\n==========REGRESSION RESULTS==========\n');
 fprintf('>>> Linear intercept %1.1f, slope %1.1f. <<<\n',betaLin);
