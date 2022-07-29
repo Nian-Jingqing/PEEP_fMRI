@@ -431,31 +431,32 @@ while ~abort
             else
                 tCrossOn = GetSecs;
             end
-            ratingsection = ratingsection +1;
+           
+            WaitSecs(5);
         end
-
-        if ratingsection == 3 % unpleasentness
-            Screen('TextSize',P.display.w,30);
-
-            % Continue after 2 seconds
-            WaitSecs(1);
-            Screen('Flip',P.display.w);
-
-            % Draw scale
-            [abort,finalRating,~,~,~,~] = singleratingScale_bigger(P,3);
-            fprintf(['\nFinal rating was ' num2str(finalRating)]);
-
-
-            if ~O.debug.toggleVisual
-                Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix1);
-                Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix2);
-                tCrossOn = Screen('Flip',P.display.w);
-            else
-                tCrossOn = GetSecs;
-            end
-
-            ratingsection = 2;
-        end
+% 
+%         if ratingsection == 3 % unpleasentness
+%             Screen('TextSize',P.display.w,30);
+% 
+%             % Continue after 2 seconds
+%             WaitSecs(1);
+%             Screen('Flip',P.display.w);
+% 
+%             % Draw scale
+%             [abort,finalRating,~,~,~,~] = singleratingScale_bigger(P,3);
+%             fprintf(['\nFinal rating was ' num2str(finalRating)]);
+% 
+% 
+%             if ~O.debug.toggleVisual
+%                 Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix1);
+%                 Screen('FillRect', P.display.w, P.style.white, P.fixcross.Fix2);
+%                 tCrossOn = Screen('Flip',P.display.w);
+%             else
+%                 tCrossOn = GetSecs;
+%             end
+% 
+%             ratingsection = 2;
+%         end
 
     end
 

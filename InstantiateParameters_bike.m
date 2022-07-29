@@ -1,16 +1,16 @@
 function P = InstantiateParameters_bike
 
 %% General settings (should be changed)
-P.protocol.subID                = 3; % subject ID
-P.protocol.day                  = 2; % Test day 2 or 3
+P.protocol.subID                = 1; % subject ID
+P.protocol.day                  = 3; % Test day 2 or 3
 P.calibration.cuff_arm          = 1; %Arm for pressure CALIBRATION [1 = LEFT, 2 = RIGHT]
 P.experiment.cuff_arm           = P.calibration.cuff_arm; % Set calibration and experiment cuff to same arm
 P.protocol.session              = 1;
-P.subject.age                   = 21; % indicate subjects age
+P.subject.age                   = 26; % indicate subjects age
 P.subject.gender                = 'm'; % indicate gender f = female, m = male
 P.language                      = 'de'; % de or en
 P.project.name                  = 'PEEP';
-P.project.part                  = 'Pilot-01';
+P.project.part                  = 'MAIN';
 P.pharmacological.day2          = 'NaCl'; % Set wheteher receive Naloxone or NACL on day 2/day3
 P.pharmacological.day3          = 'Naloxone';
 P.toggles.doPainOnly            = 1; % VAS rating painful from 0 (not 50)

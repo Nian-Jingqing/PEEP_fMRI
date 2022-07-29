@@ -1,20 +1,21 @@
 function P = InstantiateParameters_bike
 
 %% General settings (should be changed)
-P.protocol.subID                = 98; % subject ID
+P.protocol.subID                = 6; % subject ID
 P.protocol.day                  = 2; % Test day 2 or 3
 P.calibration.cuff_arm          = 1; %Arm for pressure CALIBRATION [1 = LEFT, 2 = RIGHT]
 P.experiment.cuff_arm           = P.calibration.cuff_arm; % Set calibration and experiment cuff to same arm
 P.protocol.session              = 1;
-P.subject.age                   = 25; % indicate subjects age
-P.subject.gender                = 'f'; % indicate gender f = female, m = male
+P.subject.age                   = 26; % indicate subjects age
+P.subject.gender                = 'm'; % indicate gender f = female, m = male
 P.language                      = 'de'; % de or en
 P.project.name                  = 'PEEP';
-P.project.part                  = 'Pilot-01';
+P.project.part                  = 'MAIN';
 P.pharmacological.day2          = 'NaCl'; % Set wheteher receive Naloxone or NACL on day 2/day3
 P.pharmacological.day3          = 'Naloxone';
 P.toggles.doPainOnly            = 1; % VAS rating painful from 0 (not 50)
 P.toggles.doConfirmAdaptive     = 1; % do adaptive VAS target regression with confirmation
+P.debug                         = 0;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Maybe move this part to main scripts 
@@ -408,6 +409,7 @@ P.FTP.parameters.coolDown = 1;
 P.pain.PEEP.nBlocks                              = 4; % number of experimental blocks and exercises
 P.pain.PEEP.block                                = 1; % Counter for block wll be updated after each block
 P.pain.PEEP.blocks                              = [1,2,3,4];
+P.pain.PEEP.cyclingBlock                        = 1;
 P.pain.PEEP.nTrials                              = 18; %number of pains per block (4 pains 3 times)
 P.pain.PEEP.nStimuli                             = 3; % 3 different pain levels
 
@@ -479,43 +481,31 @@ if P.protocol.day == 2
 
     P.exercise.condition = exercise_conditions_all_subjects(P.protocol.subID,:);
 
-    fprintf('Exercise Conditions for Day 2 Loaded');
-%     P.pain.PEEP.painconditions_mat = painconditions_all_subjects_cpar_thermode(:,:,P.protocol.subID);
-% 
-%     fprintf('Pain Conditions for Day 2 Loaded');
-% 
-% elseif P.protocol.day == 3
-% 
-%     filespec = strcat("pain_conditions_cpar_thermode_", P.project.part, "_day3.mat");
-%     P.out.file.painConditions = fullfile(P.out.dirUtils,filespec);
-% 
-%     if exist(P.out.file.painConditions,'file')
-%         load(P.out.file.painConditions,'painconditions_all_subjects_cpar_thermode');
-%     else
-% 
-% 
-%     end
-% 
-%     P.pain.PEEP.painconditions_mat = painconditions_all_subjects_cpar_thermode(:,:,P.protocol.subID);
-% 
-%     fprintf('Pain Conditions for Day 3 Loaded');
-% 
-% end
+    fprintf('Exercise Conditions for Day 2 Loaded\n');
 
+ elseif P.protocol.day == 3
+    
+    filespec2                               = strcat("cycle_ints_day3_", P.project.part, ".mat");
+    P.out.file.cycleIntensities                 = fullfile(P.out.dirUtils,filespec2);
 
-if exist(P.out.file.cycleIntensities,'file')
-    load(P.out.file.cycleIntensities,'exercise_conditions_all_subjects');
-else
-    unique_permutations = unique(perms(conditions),'rows');
-    numel_uperm = size(unique_permutations,1);
-    repetitions = ceil(goal_N/numel_uperm);
-    conditions_list = repmat(unique_permutations, [repetitions 1]);
-    exercise_conditions_all_subjects = conditions_list(randperm(goal_N),:);
-%    save(['C:\Users\nold\PEEP\fMRI\Code\peep_functions\utils\cycle_ints_',P.project.part],'exercise_conditions_all_subjects');
+    if exist(P.out.file.cycleIntensities,'file')
+        load(P.out.file.cycleIntensities,'exercise_conditions_all_subjects');
+    else
+
+        warning('No Cycle Ints Loaded; Creating New Ones');
+        unique_permutations = unique(perms(conditions),'rows');
+        numel_uperm = size(unique_permutations,1);
+        repetitions = ceil(goal_N/numel_uperm);
+        conditions_list = repmat(unique_permutations, [repetitions 1]);
+        exercise_conditions_all_subjects = conditions_list(randperm(goal_N),:);
+
+    end
+
+    P.exercise.condition = exercise_conditions_all_subjects(P.protocol.subID,:);
+
+    fprintf('Exercise Conditions for Day 3 Loaded\n');
+
 end
-
-P.exercise.condition = exercise_conditions_all_subjects(P.protocol.subID,:);
-
 
 % % Create matrix for random order of painconditions and each exercise block
 
