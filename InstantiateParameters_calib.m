@@ -1,7 +1,7 @@
 function P = InstantiateParameters_calib(P)
 
 %% General settings (should be changed)
-P.protocol.subID                = 6; % subject ID
+P.protocol.subID                = 99; % subject ID
 P.protocol.day                  = 1; % Calib Day 1
 P.calibration.cuff_arm          = 1; %Arm for pressure CALIBRATION [1 = LEFT, 2 = RIGHT]
 P.experiment.cuff_arm           = P.calibration.cuff_arm; % Set calibration and experiment cuff to same arm

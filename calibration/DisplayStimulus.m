@@ -44,7 +44,7 @@
             UseThermoino('Set',temp); % open channel for arduino to ramp up      
 
             while GetSecs < tStimStart+sum(stimDuration(1:2)) % changed for thermoino, because we need to trigger the return, too
-                [countedDown]=CountDown(GetSecs-tStimStart,countedDown,'.');
+                [countedDown]=CountDown(P,GetSecs-tStimStart,countedDown,'.');
                 [abort]=LoopBreaker(P);
                 if abort; break; end % only break because we want the temp to be set to baseline before we crash out
             end
@@ -54,7 +54,7 @@
 
             if ~abort
                 while GetSecs < tStimStart+sum(stimDuration) % consider only fall time for wait
-                    [countedDown]=CountDown(GetSecs-tStimStart,countedDown,'.');
+                    [countedDown]=CountDown(P,GetSecs-tStimStart,countedDown,'.');
                     [abort]=LoopBreaker(P);
                     if abort; return; end
                 end      
@@ -65,7 +65,7 @@
            
             
             while GetSecs < tStimStart+sum(stimDuration)
-                [countedDown]=CountDown(GetSecs-tStimStart,countedDown,'.');
+                [countedDown]=CountDown(P,GetSecs-tStimStart,countedDown,'.');
                 [abort]=LoopBreaker(P);
                 if abort; return; end
             end            
